@@ -1,0 +1,17 @@
+.title {
+        margin-top: 20px;
+        padding: 20px
+}
+
+.img {
+        height: 100px;
+        width: 100%;
+        border: 1px solid #3a4a53;
+        background-color: #273A46;
+        border-radius: 5px;
+        padding: 10px
+}
+
+.tabular-nums {
+        color: white !important;
+}

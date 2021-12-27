@@ -1,0 +1,32 @@
+.MuiInputBase-input{
+  color:white !important;
+}
+
+.MuiNativeSelect-select{
+  color:white !important;
+}
+
+.textarea:focus{
+  border-color:transparent;
+}
+
+.css-1poimk-MuiPaper-root-MuiMenu-paper-MuiPaper-root-MuiPopover-paper{
+  background-color:#18252D !important;
+  color:#fff !important;
+}
+
+.css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root{
+  color:rgb(255, 255, 255) !important;
+}
+
+.css-1kty9di-MuiFormLabel-root-MuiInputLabel-root{
+  color:rgb(255, 255, 255) !important;
+}
+
+.css-hfutr2-MuiSvgIcon-root-MuiSelect-icon{
+  color:rgb(255, 255, 255) !important;
+}
+
+.css-7b8pr9-MuiPaper-root{
+  padding:5px !important;
+}
