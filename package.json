@@ -12,6 +12,7 @@
     "@mui/icons-material": "^5.2.0",
     "@mui/material": "^5.2.2",
     "@mui/styles": "^5.2.3",
+    "@openzeppelin/contracts": "^4.4.1",
     "@tailwindcss/forms": "^0.3.4",
     "@testing-library/jest-dom": "^5.15.0",
     "@testing-library/react": "^11.2.7",
@@ -44,7 +45,8 @@
     "react-transition-group": "^4.4.2",
     "sass": "^1.43.4",
     "tailwindcss": "^2.2.19",
-    "web-vitals": "^1.1.2"
+    "web-vitals": "^1.1.2",
+    "web3modal": "^1.9.4"
   },
   "scripts": {
     "start": "cross-env TAILWIND_MODE=watch craco start",
@@ -70,6 +72,11 @@
     ]
   },
   "devDependencies": {
+    "@nomiclabs/hardhat-ethers": "^2.0.3",
+    "@nomiclabs/hardhat-waffle": "^2.0.1",
+    "chai": "^4.3.4",
+    "ethereum-waffle": "^3.4.0",
+    "ethers": "^5.5.2",
     "hardhat": "^2.8.0"
   }
 }
