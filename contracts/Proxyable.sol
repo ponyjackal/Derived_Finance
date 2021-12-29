@@ -24,7 +24,8 @@ directly and through the proxy.
 */
 
 
-pragma solidity 0.8.4;
+//SPDX-License-Identifier: Unlicense
+pragma solidity ^0.8.0;
 
 import "./Owned.sol";
 import "./Proxy.sol";

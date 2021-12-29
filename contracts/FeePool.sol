@@ -35,7 +35,8 @@ Fees can be withdrawn in any synth currency.
 -----------------------------------------------------------------
 */
 
-pragma solidity 0.8.4;
+//SPDX-License-Identifier: Unlicense
+pragma solidity ^0.8.0;
 
 import "./Proxyable.sol";
 import "./SelfDestructible.sol";

@@ -1,4 +1,5 @@
-pragma solidity 0.8.4;
+//SPDX-License-Identifier: Unlicense
+pragma solidity ^0.8.0;
 
 contract ISynthetixState {
     // A struct for handing values associated with an individual user's debt position

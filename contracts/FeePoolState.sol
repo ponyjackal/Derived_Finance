@@ -22,7 +22,8 @@ owed to minters of the stablecoin total supply
 -----------------------------------------------------------------
 */
 
-pragma solidity 0.8.4;
+//SPDX-License-Identifier: Unlicense
+pragma solidity ^0.8.0;
 
 import "./SelfDestructible.sol";
 import "./SafeDecimalMath.sol";

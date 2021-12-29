@@ -30,7 +30,8 @@ into the underlying contract as the state parameter, messageSender.
 */
 
 
-pragma solidity 0.8.4;
+//SPDX-License-Identifier: Unlicense
+pragma solidity ^0.8.0;
 
 
 import "./Owned.sol";
@@ -94,7 +95,7 @@ contract Proxy is Owned {
         }
     }
 
-    function()
+    fallback()
         external
         payable
     {

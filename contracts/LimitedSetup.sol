@@ -21,7 +21,8 @@ conclusion of the configurable-length post-construction setup period.
 */
 
 
-pragma solidity 0.8.4;
+//SPDX-License-Identifier: Unlicense
+pragma solidity ^0.8.0;
 
 /**
  * @title Any function decorated with the modifier this contract provides

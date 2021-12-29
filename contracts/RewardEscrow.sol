@@ -21,7 +21,8 @@ can call vest in 12 months time.
 -----------------------------------------------------------------
 */
 
-pragma solidity 0.8.4;
+//SPDX-License-Identifier: Unlicense
+pragma solidity ^0.8.0;
 
 
 import "./SafeDecimalMath.sol";

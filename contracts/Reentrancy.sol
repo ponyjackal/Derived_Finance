@@ -20,7 +20,8 @@ external entry points to the contract with the modifier only.
 -----------------------------------------------------------------
 */
 
-pragma solidity 0.8.4;
+//SPDX-License-Identifier: Unlicense
+pragma solidity ^0.8.0;
 
 contract ReentrancyPreventer {
     /* ========== MODIFIERS ========== */

@@ -28,7 +28,8 @@ if they have not yet been taken up by another user.
 -----------------------------------------------------------------
 */
 
-pragma solidity 0.8.4;
+//SPDX-License-Identifier: Unlicense
+pragma solidity ^0.8.0;
 
 import "./SelfDestructible.sol";
 import "./Pausable.sol";
@@ -255,7 +256,7 @@ contract Depot is SelfDestructible, Pausable {
     /**
      * @notice Fallback function (exchanges ETH to sUSD)
      */
-    function ()
+    fallback()
         external
         payable
     {
