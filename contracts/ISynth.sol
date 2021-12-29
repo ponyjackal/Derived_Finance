@@ -1,4 +1,4 @@
-pragma solidity 0.4.25;
+pragma solidity 0.8.4;
 
 interface ISynth {
   function burn(address account, uint amount) external;

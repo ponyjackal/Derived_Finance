@@ -1,4 +1,4 @@
-pragma solidity 0.4.25;
+pragma solidity 0.8.4;
 
 contract ISynthetixState {
     // A struct for handing values associated with an individual user's debt position

@@ -20,7 +20,7 @@ inheriting contract to prevent actions while paused.
 -----------------------------------------------------------------
 */
 
-pragma solidity 0.4.25;
+pragma solidity 0.8.4;
 
 
 import "./Owned.sol";

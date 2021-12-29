@@ -22,7 +22,7 @@ owed to minters of the stablecoin total supply
 -----------------------------------------------------------------
 */
 
-pragma solidity 0.4.25;
+pragma solidity 0.8.4;
 
 import "./SelfDestructible.sol";
 import "./SafeDecimalMath.sol";

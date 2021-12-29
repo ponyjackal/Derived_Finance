@@ -24,7 +24,7 @@ accurately.
 -----------------------------------------------------------------
 */
 
-pragma solidity 0.4.25;
+pragma solidity 0.8.4;
 
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 

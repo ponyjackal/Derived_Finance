@@ -20,7 +20,7 @@ external entry points to the contract with the modifier only.
 -----------------------------------------------------------------
 */
 
-pragma solidity 0.4.25;
+pragma solidity 0.8.4;
 
 contract ReentrancyPreventer {
     /* ========== MODIFIERS ========== */

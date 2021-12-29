@@ -21,7 +21,7 @@ Please see EternalStorage.sol
 -----------------------------------------------------------------
 */
 
-pragma solidity 0.4.25;
+pragma solidity 0.8.4;
 
 import "./LimitedSetup.sol";
 import "./EternalStorage.sol";

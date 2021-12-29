@@ -35,7 +35,7 @@ Fees can be withdrawn in any synth currency.
 -----------------------------------------------------------------
 */
 
-pragma solidity 0.4.25;
+pragma solidity 0.8.4;
 
 import "./Proxyable.sol";
 import "./SelfDestructible.sol";

@@ -32,7 +32,7 @@ contract to the new one.
 -----------------------------------------------------------------
 */
 
-pragma solidity 0.4.25;
+pragma solidity 0.8.4;
 
 
 import "./State.sol";

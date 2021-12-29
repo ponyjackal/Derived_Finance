@@ -31,7 +31,7 @@ User's get staking rewards as part of the incentives of
 -----------------------------------------------------------------
 */
 
-pragma solidity 0.4.25;
+pragma solidity 0.8.4;
 
 import "./SafeDecimalMath.sol";
 import "./Owned.sol";

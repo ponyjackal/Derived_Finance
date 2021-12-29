@@ -24,12 +24,12 @@ for all other assets.
 -----------------------------------------------------------------
 */
 
-pragma solidity 0.4.25;
+pragma solidity 0.8.4;
 
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "./SafeDecimalMath.sol";
 import "./SelfDestructible.sol";
-import "chainlink/solidity/contracts/Chainlinked.sol"; // technically this is all we need
+import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol"; // technically this is all we need
 
 
 /**

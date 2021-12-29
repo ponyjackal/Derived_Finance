@@ -30,7 +30,7 @@ into the underlying contract as the state parameter, messageSender.
 */
 
 
-pragma solidity 0.4.25;
+pragma solidity 0.8.4;
 
 
 import "./Owned.sol";
