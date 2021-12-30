@@ -78,7 +78,7 @@ function CSSTransition({
         if (!removeFromDom) nodeRef.current.style.display = 'none';
       }}
     >
-      <Component ref={nodeRef} {...rest} style={{ display: !removeFromDom ? 'none': null }}>{children}</Component>
+      <Component ref={nodeRef} {...rest} style={{ display: !removeFromDom ? 'none' : null }}>{children}</Component>
     </ReactCSSTransition>
   )
 }
