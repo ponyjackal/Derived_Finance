@@ -49,6 +49,7 @@ function UserMenu() {
 
   const handleConnectWallet = () => {
     if (active) {
+      setVisible(false);
       disconnect();
     } else {
       setDropdownOpen(!dropdownOpen)
@@ -61,8 +62,8 @@ function UserMenu() {
       return;
     }
 
-    await connect(key, Connectors[key]);
     setVisible(true);
+    await connect(key, Connectors[key]);
   };
 
   return (
