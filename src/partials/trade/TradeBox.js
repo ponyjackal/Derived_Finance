@@ -59,7 +59,7 @@ export class TradeBox extends Component {
                   alignItems: "center",
                 }}
               >
-                <img src={busd} className="w-6" />
+                <img alt="BUSD Icon" src={busd} className="w-6" />
                 BUSD
               </InputLabel>
               <Select
@@ -117,7 +117,7 @@ export class TradeBox extends Component {
                   alignItems: "center",
                 }}
               >
-                <img src={usdc} className="w-6" />
+                <img alt="BUSD ICON" src={usdc} className="w-6" />
                 BUSD
               </InputLabel>
               <Select
