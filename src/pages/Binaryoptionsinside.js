@@ -24,7 +24,7 @@ function Binaryoptionsinside() {
         <main>
           <Topbar />
           <div className="px-4 sm:px-6 lg:px-8 py-8 w-full mx-auto bg-primary">
-            <div class="grid grid-cols-1 gap-4 md:grid-cols-12 transition-all">
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-12 transition-all">
               <DashboardCard05
                 style={{ height: "80%" }}
                 className="col-span-8"

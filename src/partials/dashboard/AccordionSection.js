@@ -51,11 +51,10 @@ class AccordionSection extends React.Component {
                   focusable="false"
                   data-prefix="fas"
                   data-icon="caret-down"
-                  class="svg-inline--fa fa-caret-down fa-w-10"
+                  className="svg-inline--fa fa-caret-down fa-w-10 h-5 w-5 ml-1"
                   role="img"
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 320 512"
-                  className="h-5 w-5 ml-1"
                 >
                   <path
                     fill="currentColor"
@@ -72,11 +71,10 @@ class AccordionSection extends React.Component {
                   focusable="false"
                   data-prefix="fas"
                   data-icon="caret-up"
-                  class="svg-inline--fa fa-caret-up fa-w-10"
+                  className="svg-inline--fa fa-caret-up fa-w-10 h-5 w-5 ml-1"
                   role="img"
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 320 512"
-                  className="h-5 w-5 ml-1"
                 >
                   <path
                     fill="currentColor"

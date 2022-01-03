@@ -37,3 +37,7 @@ export const formatValue = (value) => Intl.NumberFormat('en-US', {
 export const toShortAddress = (str, num = 3) => {
   return `${str.substring(0, num)}...${str.substring(str.length - num, str.length)}`;
 };
+
+export const toHexString = (num) => {
+  return `0x${num.toString(16)}`;
+};

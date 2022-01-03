@@ -9,11 +9,13 @@ import Wallet from "../../images/wallet-connect.png";
 import Portis from "../../images/portis.png";
 import Connectedtabs from "./Connectedtabs";
 
+import { useConnector } from "../../context/connector";
 import { ConnectorNames, Connectors } from "../../utils/Connectors";
 import { toShortAddress } from "../../utils/Utils";
 
 function UserMenu() {
-  const { active, account, activate, deactivate } = useWeb3React();
+  const { active, account } = useWeb3React();
+  const { connect, disconnect } = useConnector();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [visible, setVisible] = useState(false);
 
@@ -47,21 +49,19 @@ function UserMenu() {
 
   const handleConnectWallet = () => {
     if (active) {
-      deactivate();
-      localStorage.removeItem('connector');
+      disconnect();
     } else {
       setDropdownOpen(!dropdownOpen)
     }
   };
 
-  const connectWallet = (key) => {
+  const connectWallet = async (key) => {
     if (!ConnectorNames[key]) {
       console.error('Wallet connection error: not supported');
       return;
     }
 
-    localStorage.setItem('connector', ConnectorNames[key]);
-    activate(Connectors[key]);
+    await connect(key, Connectors[key]);
     setVisible(true);
   };
 
