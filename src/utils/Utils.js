@@ -28,3 +28,12 @@ export const formatValue = (value) => Intl.NumberFormat('en-US', {
   maximumSignificantDigits: 3,
   notation: 'compact',
 }).format(value);
+
+/**
+ * Convert to short address
+ * @param {String} str 
+ * @returns {String}
+ */
+export const toShortAddress = (str, num = 3) => {
+  return `${str.substring(0, num)}...${str.substring(str.length - num, str.length)}`;
+};
