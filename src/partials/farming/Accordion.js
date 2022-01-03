@@ -39,8 +39,9 @@ class Accordion extends React.Component {
 
     return (
       <div style={{ width: "100%" }}>
-        {children.map((child) => (
+        {children.map((idx, child) => (
           <AccordionSection
+            key={idx}
             isOpen={!!openSections[child.props.label]}
             label={child.props.label}
             onClick={onClick}
