@@ -199,7 +199,7 @@ contract Synthetix is ExternStateToken {
     {
         bytes4 currencyKey = synth.currencyKey();
 
-        require(synths[currencyKey] == Synth(0), "Synth already exists");
+        require(synths[currencyKey] == Synth(address(0)), "Synth already exists");
 
         availableSynths.push(synth);
         synths[currencyKey] = synth;
@@ -213,16 +213,16 @@ contract Synthetix is ExternStateToken {
         external
         optionalProxy_onlyOwner
     {
-        require(synths[currencyKey] != address(0), "Synth does not exist");
+        require(address(synths[currencyKey]) != address(0), "Synth does not exist");
         require(synths[currencyKey].totalSupply() == 0, "Synth supply exists");
         require(currencyKey != "XDR", "Cannot remove XDR synth");
 
         // Save the address we're removing for emitting the event at the end.
-        address synthToRemove = synths[currencyKey];
+        address synthToRemove = address(synths[currencyKey]);
 
         // Remove the synth from the availableSynths array.
         for (uint8 i = 0; i < availableSynths.length; i++) {
-            if (availableSynths[i] == synthToRemove) {
+            if (address(availableSynths[i]) == synthToRemove) {
                 delete availableSynths[i];
 
                 // Copy the last synth into the place of the one we just deleted
@@ -231,7 +231,7 @@ contract Synthetix is ExternStateToken {
                 availableSynths[i] = availableSynths[availableSynths.length - 1];
 
                 // Decrease the size of the array by one.
-                availableSynths.length--;
+                availableSynths.pop();
 
                 break;
             }
