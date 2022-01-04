@@ -118,7 +118,7 @@ contract ExchangeRates is ChainlinkClient, SelfDestructible {
 
         // The sUSD rate is always 1 and is never stale.
         rates["sUSD"] = SafeDecimalMath.unit();
-        lastRateUpdateTimes["sUSD"] = now;
+        lastRateUpdateTimes["sUSD"] = block.timestamp;
 
         // These are the currencies that make up the XDR basket.
         // These are hard coded because:
@@ -135,7 +135,7 @@ contract ExchangeRates is ChainlinkClient, SelfDestructible {
             bytes4("sGBP")
         ];
 
-        internalUpdateRates(_currencyKeys, _newRates, now);
+        internalUpdateRates(_currencyKeys, _newRates, block.timestamp);
 
         // Setup Chainlink props
         setChainlinkToken(_chainlinkToken);
@@ -174,7 +174,7 @@ contract ExchangeRates is ChainlinkClient, SelfDestructible {
         returns(bool)
     {
         require(currencyKeys.length == newRates.length, "Currency key array length must match rates array length.");
-        require(timeSent < (now + ORACLE_FUTURE_LIMIT), "Time is too far into the future");
+        require(timeSent < (block.timestamp + ORACLE_FUTURE_LIMIT), "Time is too far into the future");
 
         // Loop through each key and perform update.
         for (uint i = 0; i < currencyKeys.length; i++) {
@@ -464,7 +464,7 @@ contract ExchangeRates is ChainlinkClient, SelfDestructible {
         // sUSD is a special case and is never stale.
         if (currencyKey == "sUSD") return false;
 
-        return lastRateUpdateTimes[currencyKey].add(rateStalePeriod) < now;
+        return lastRateUpdateTimes[currencyKey].add(rateStalePeriod) < block.timestamp;
     }
 
     /**
@@ -492,7 +492,7 @@ contract ExchangeRates is ChainlinkClient, SelfDestructible {
 
         while (i < currencyKeys.length) {
             // sUSD is a special case and is never false
-            if (currencyKeys[i] != "sUSD" && lastRateUpdateTimes[currencyKeys[i]].add(rateStalePeriod) < now) {
+            if (currencyKeys[i] != "sUSD" && lastRateUpdateTimes[currencyKeys[i]].add(rateStalePeriod) < block.timestamp) {
                 return true;
             }
             i += 1;
@@ -522,7 +522,7 @@ contract ExchangeRates is ChainlinkClient, SelfDestructible {
         req.addStringArray("copyPath", path);
         req.addInt("times", int256(ORACLE_PRECISION));
 
-        requests[sendChainlinkRequest(req, ORACLE_PAYMENT)] = Request(now, currencyKey);
+        requests[sendChainlinkRequest(req, ORACLE_PAYMENT)] = Request(block.timestamp, currencyKey);
     }
 
     function fulfill(bytes32 _requestId, uint256 _price)
@@ -554,7 +554,7 @@ contract ExchangeRates is ChainlinkClient, SelfDestructible {
     }
 
     modifier validateTimestamp(bytes32 _requestId) {
-        require(requests[_requestId].timestamp > now - ORACLE_FUTURE_LIMIT, "Request has expired");
+        require(requests[_requestId].timestamp > block.timestamp - ORACLE_FUTURE_LIMIT, "Request has expired");
         _;
     }
     ////////////

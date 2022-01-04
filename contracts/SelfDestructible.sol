@@ -74,7 +74,7 @@ contract SelfDestructible is Owned {
         external
         onlyOwner
     {
-        initiationTime = now;
+        initiationTime = block.timestamp;
         selfDestructInitiated = true;
         emit SelfDestructInitiated(SELFDESTRUCT_DELAY);
     }
@@ -102,7 +102,7 @@ contract SelfDestructible is Owned {
         onlyOwner
     {
         require(selfDestructInitiated, "Self destruct has not yet been initiated");
-        require(initiationTime + SELFDESTRUCT_DELAY < now, "Self destruct delay has not yet elapsed");
+        require(initiationTime + SELFDESTRUCT_DELAY < block.timestamp, "Self destruct delay has not yet elapsed");
         address beneficiary = selfDestructBeneficiary;
         emit SelfDestructed(beneficiary);
         selfdestruct(beneficiary);

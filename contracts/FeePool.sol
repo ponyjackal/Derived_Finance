@@ -149,7 +149,7 @@ contract FeePool is Proxyable, SelfDestructible, LimitedSetup {
 
         // Set our initial fee period
         recentFeePeriods[0].feePeriodId = 1;
-        recentFeePeriods[0].startTime = now;
+        recentFeePeriods[0].startTime = block.timestamp;
     }
 
     /**
@@ -296,7 +296,7 @@ contract FeePool is Proxyable, SelfDestructible, LimitedSetup {
         external
         optionalProxy_onlyFeeAuthority
     {
-        require(recentFeePeriods[0].startTime <= (now - feePeriodDuration), "It is too early to close the current fee period");
+        require(recentFeePeriods[0].startTime <= (block.timestamp - feePeriodDuration), "It is too early to close the current fee period");
 
         FeePeriod memory secondLastFeePeriod = recentFeePeriods[FEE_PERIOD_LENGTH - 2];
         FeePeriod memory lastFeePeriod = recentFeePeriods[FEE_PERIOD_LENGTH - 1];
@@ -336,7 +336,7 @@ contract FeePool is Proxyable, SelfDestructible, LimitedSetup {
         // Increment periodId from the recent closed period feePeriodId
         recentFeePeriods[0].feePeriodId = recentFeePeriods[1].feePeriodId.add(1);
         recentFeePeriods[0].startingDebtIndex = synthetixState.debtLedgerLength();
-        recentFeePeriods[0].startTime = now;
+        recentFeePeriods[0].startTime = block.timestamp;
 
         emitFeePeriodClosed(recentFeePeriods[1].feePeriodId);
     }

@@ -125,16 +125,16 @@ contract SupplySchedule is Owned {
 
         /* solium-disable */
 
-        // Last mint event within current period will use difference in (now - lastMintEvent)
+        // Last mint event within current period will use difference in (block.timestamp - lastMintEvent)
         // Last mint event not set (0) / outside of current Period will use current Period
-        // start time resolved in (now - schedule.startPeriod)
+        // start time resolved in (block.timestamp - schedule.startPeriod)
         ScheduleData memory schedule = schedules[index];
 
         uint weeksInPeriod = (schedule.endPeriod - schedule.startPeriod).div(mintPeriodDuration);
 
         uint supplyPerWeek = schedule.totalSupply.divideDecimal(weeksInPeriod);
 
-        uint weeksToMint = lastMintEvent >= schedule.startPeriod ? _numWeeksRoundedDown(now.sub(lastMintEvent)) : _numWeeksRoundedDown(now.sub(schedule.startPeriod));
+        uint weeksToMint = lastMintEvent >= schedule.startPeriod ? _numWeeksRoundedDown(block.timestamp.sub(lastMintEvent)) : _numWeeksRoundedDown(block.timestamp.sub(schedule.startPeriod));
         // /* solium-enable */
 
         uint amountInPeriod = supplyPerWeek.multiplyDecimal(weeksToMint);
@@ -158,7 +158,7 @@ contract SupplySchedule is Owned {
         returns (bool)
     {
         bool mintable = false;
-        if (now - lastMintEvent > mintPeriodDuration && now <= schedules[6].endPeriod) // Ensure time is not after end of Year 7
+        if (block.timestamp - lastMintEvent > mintPeriodDuration && block.timestamp <= schedules[6].endPeriod) // Ensure time is not after end of Year 7
         {
             mintable = true;
         }
@@ -172,10 +172,10 @@ contract SupplySchedule is Owned {
         view
         returns (uint)
     {
-        require(now <= schedules[6].endPeriod, "Mintable periods have ended");
+        require(block.timestamp <= schedules[6].endPeriod, "Mintable periods have ended");
 
         for (uint i = 0; i < INFLATION_SCHEDULES_LENGTH; i++) {
-            if (schedules[i].startPeriod <= now && schedules[i].endPeriod >= now) {
+            if (schedules[i].startPeriod <= block.timestamp && schedules[i].endPeriod >= block.timestamp) {
                 return i;
             }
         }
@@ -222,9 +222,9 @@ contract SupplySchedule is Owned {
         // Update schedule.totalSupplyMinted for currentSchedule
         schedules[currentIndex].totalSupplyMinted = schedules[currentIndex].totalSupplyMinted.add(currentPeriodAmount);
         // Update mint event to now
-        lastMintEvent = now;
+        lastMintEvent = block.timestamp;
 
-        emit SupplyMinted(lastPeriodAmount, currentPeriodAmount, currentIndex, now);
+        emit SupplyMinted(lastPeriodAmount, currentPeriodAmount, currentIndex, block.timestamp);
         return true;
     }
 

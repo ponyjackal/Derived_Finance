@@ -151,7 +151,7 @@ contract Depot is SelfDestructible, Pausable {
         oracle = _oracle;
         usdToEthPrice = _usdToEthPrice;
         usdToSnxPrice = _usdToSnxPrice;
-        lastPriceUpdateTime = now;
+        lastPriceUpdateTime = block.timestamp;
     }
 
     /* ========== SETTERS ========== */
@@ -244,7 +244,7 @@ contract Depot is SelfDestructible, Pausable {
         /* Must be the most recently sent price, but not too far in the future.
          * (so we can't lock ourselves out of updating the oracle for longer than this) */
         require(lastPriceUpdateTime < timeSent, "Time must be later than last update");
-        require(timeSent < (now + ORACLE_FUTURE_LIMIT), "Time must be less than now + ORACLE_FUTURE_LIMIT");
+        require(timeSent < (block.timestamp + ORACLE_FUTURE_LIMIT), "Time must be less than now + ORACLE_FUTURE_LIMIT");
 
         usdToEthPrice = newEthPrice;
         usdToSnxPrice = newSynthetixPrice;
@@ -605,7 +605,7 @@ contract Depot is SelfDestructible, Pausable {
         view
         returns (bool)
     {
-        return lastPriceUpdateTime.add(priceStalePeriod) < now;
+        return lastPriceUpdateTime.add(priceStalePeriod) < block.timestamp;
     }
 
     /**
