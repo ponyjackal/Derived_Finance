@@ -50,7 +50,7 @@ contract Synth is ExternStateToken {
     /* ========== CONSTRUCTOR ========== */
 
     constructor(address _proxy, TokenState _tokenState, Synthetix _synthetix, IFeePool _feePool,
-        string _tokenName, string _tokenSymbol, address _owner, bytes4 _currencyKey
+        string memory _tokenName, string memory _tokenSymbol, address _owner, bytes4 _currencyKey
     )
         ExternStateToken(_proxy, _tokenState, _tokenName, _tokenSymbol, 0, DECIMALS, _owner)
         public
@@ -111,7 +111,7 @@ contract Synth is ExternStateToken {
      * @notice Override ERC223 transfer function in order to
      * subtract the transaction fee and send it to the fee pool
      * for SNX holders to claim. */
-    function transfer(address to, uint value, bytes data)
+    function transfer(address to, uint value, bytes memory data)
         public
         optionalProxy
         notFeeAddress(messageSender)
@@ -156,7 +156,7 @@ contract Synth is ExternStateToken {
      * @notice Override ERC223 transferFrom function in order to
      * subtract the transaction fee and send it to the fee pool
      * for SNX holders to claim. */
-    function transferFrom(address from, address to, uint value, bytes data)
+    function transferFrom(address from, address to, uint value, bytes memory data)
         public
         optionalProxy
         notFeeAddress(from)
@@ -196,7 +196,7 @@ contract Synth is ExternStateToken {
 
     /* Subtract the transfer fee from the senders account so the
      * receiver gets the exact amount specified to send. */
-    function transferSenderPaysFee(address to, uint value, bytes data)
+    function transferSenderPaysFee(address to, uint value, bytes memory data)
         public
         optionalProxy
         notFeeAddress(messageSender)
@@ -234,7 +234,7 @@ contract Synth is ExternStateToken {
 
     /* Subtract the transfer fee from the senders account so the
      * to address receives the exact amount specified to send. */
-    function transferFromSenderPaysFee(address from, address to, uint value, bytes data)
+    function transferFromSenderPaysFee(address from, address to, uint value, bytes memory data)
         public
         optionalProxy
         notFeeAddress(from)
@@ -253,7 +253,7 @@ contract Synth is ExternStateToken {
     }
 
     // Override our internal transfer to inject preferred currency support
-    function _internalTransfer(address from, address to, uint value, bytes data)
+    function _internalTransfer(address from, address to, uint value, bytes memory data)
         internal
         returns (bool)
     {
