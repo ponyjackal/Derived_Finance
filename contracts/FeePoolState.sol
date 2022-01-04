@@ -166,7 +166,7 @@ contract FeePoolState is SelfDestructible, LimitedSetup {
      * > recentFeePeriods[periodToInsert].startingDebtIndex
      * < recentFeePeriods[periodToInsert - 1].startingDebtIndex
      */
-    function importIssuerData(address[] accounts, uint[] ratios, uint periodToInsert, uint feePeriodCloseIndex)
+    function importIssuerData(address[] memory accounts, uint[] memory ratios, uint periodToInsert, uint feePeriodCloseIndex)
         external
         onlyOwner
         onlyDuringSetup
