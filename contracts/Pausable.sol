@@ -30,18 +30,18 @@ import "./Owned.sol";
 /**
  * @title A contract that can be paused by its owner
  */
-contract Pausable is Owned {
+abstract contract Pausable is Owned {
     
     uint public lastPauseTime;
     bool public paused;
 
     /**
      * @dev Constructor
-     * @param _owner The account which controls this contract.
      */
-    constructor(address _owner)
-        Owned(_owner)
+    constructor()
     {
+        // This contract is abstract, and thus cannot be instantiated directly
+        require(owner != address(0), "Owner must be set");
         // Paused will be false, and lastPauseTime will be 0 upon initialisation
     }
 

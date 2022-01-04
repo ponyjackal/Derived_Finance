@@ -31,7 +31,7 @@ import "./Owned.sol";
 import "./Proxy.sol";
 
 // This contract should be treated like an abstract contract
-contract Proxyable is Owned {
+abstract contract Proxyable is Owned {
     /* The proxy this contract exists behind. */
     Proxy public proxy;
 
@@ -40,14 +40,16 @@ contract Proxyable is Owned {
      * optionalProxy modifiers, otherwise their invocations can use stale values. */ 
     address messageSender; 
 
-    constructor(address _proxy, address _owner)
-        Owned(_owner)
+    constructor(address payable _proxy)
     {
+        // This contract is abstract, and thus cannot be instantiated directly
+        require(owner != address(0), "Owner must be set");
+
         proxy = Proxy(_proxy);
         emit ProxyUpdated(_proxy);
     }
 
-    function setProxy(address _proxy)
+    function setProxy(address payable _proxy)
         external
         onlyOwner
     {

@@ -141,7 +141,7 @@ contract Depot is SelfDestructible, Pausable {
     )
         /* Owned is initialised in SelfDestructible */
         SelfDestructible(_owner)
-        Pausable(_owner)
+        Pausable()
     {
         fundsWallet = _fundsWallet;
         synthetix = _synthetix;
@@ -312,8 +312,8 @@ contract Depot is SelfDestructible, Pausable {
                     // if the recipient is a non-payable contract. Send will just tell us it
                     // failed by returning false at which point we can continue.
                     // solium-disable-next-line security/no-send
-                    if(!deposit.user.send(ethToSend)) {
-                        fundsWallet.transfer(ethToSend);
+                    if(!payable(deposit.user).send(ethToSend)) {
+                        payable(fundsWallet).transfer(ethToSend);
                         emit NonPayableContract(deposit.user, ethToSend);
                     } else {
                         emit ClearedDeposit(msg.sender, deposit.user, ethToSend, remainingToFulfill, i);
@@ -348,8 +348,8 @@ contract Depot is SelfDestructible, Pausable {
                     // if the recipient is a non-payable contract. Send will just tell us it
                     // failed by returning false at which point we can continue.
                     // solium-disable-next-line security/no-send
-                    if(!deposit.user.send(ethToSend)) {
-                        fundsWallet.transfer(ethToSend);
+                    if(!payable(deposit.user).send(ethToSend)) {
+                        payable(fundsWallet).transfer(ethToSend);
                         emit NonPayableContract(deposit.user, ethToSend);
                     } else {
                         emit ClearedDeposit(msg.sender, deposit.user, ethToSend, deposit.amount, i);
@@ -371,7 +371,7 @@ contract Depot is SelfDestructible, Pausable {
         // Ok, if we're here and 'remainingToFulfill' isn't zero, then
         // we need to refund the remainder of their ETH back to them.
         if (remainingToFulfill > 0) {
-            msg.sender.transfer(remainingToFulfill.divideDecimal(usdToEthPrice));
+            payable(msg.sender).transfer(remainingToFulfill.divideDecimal(usdToEthPrice));
         }
 
         // How many did we actually give them?
@@ -417,7 +417,7 @@ contract Depot is SelfDestructible, Pausable {
         uint synthetixToSend = synthetixReceivedForEther(msg.value);
 
         // Store the ETH in our funds wallet
-        fundsWallet.transfer(msg.value);
+        payable(fundsWallet).transfer(msg.value);
 
         // And send them the SNX.
         synthetix.transfer(msg.sender, synthetixToSend);
@@ -558,7 +558,7 @@ contract Depot is SelfDestructible, Pausable {
         external
     {
         // Grab the amount of synths
-        synth.transferFrom(msg.sender, this, amount);
+        synth.transferFrom(msg.sender, payable(this), amount);
 
         // Note, we don't need to add them to the deposit list below, as the Synth contract itself will
         // call tokenFallback when the transfer happens, adding their deposit to the queue.

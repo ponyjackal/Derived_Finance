@@ -66,7 +66,7 @@ contract ExternStateToken is SelfDestructible, Proxyable, TokenFallbackCaller {
                 string memory _name, string memory _symbol, uint _totalSupply,
                 uint8 _decimals, address _owner)
         SelfDestructible(_owner)
-        Proxyable(_proxy, _owner)
+        Proxyable(_proxy)
     {
         tokenState = _tokenState;
 
