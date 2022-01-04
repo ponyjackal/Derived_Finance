@@ -570,7 +570,7 @@ contract Depot is SelfDestructible, Pausable {
      * @param from The address sending the sUSD
      * @param amount The amount of sUSD
      */
-    function tokenFallback(address from, uint amount, bytes data)
+    function tokenFallback(address from, uint amount, bytes memory data)
         external
         onlySynth
         returns (bool)
