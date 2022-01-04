@@ -1,7 +1,7 @@
 //SPDX-License-Identifier: Unlicense
 pragma solidity ^0.8.0;
 
-contract ISynthetixState {
+abstract contract ISynthetixState {
     // A struct for handing values associated with an individual user's debt position
     struct IssuanceData {
         // Percentage of the total debt owned at the time
@@ -20,12 +20,12 @@ contract ISynthetixState {
     uint public issuanceRatio;
     mapping(address => IssuanceData) public issuanceData;
 
-    function debtLedgerLength() external view returns (uint);
-    function hasIssued(address account) external view returns (bool);
-    function incrementTotalIssuerCount() external;
-    function decrementTotalIssuerCount() external;
-    function setCurrentIssuanceData(address account, uint initialDebtOwnership) external;
-    function lastDebtLedgerEntry() external view returns (uint);
-    function appendDebtLedgerValue(uint value) external;
-    function clearIssuanceData(address account) external;
+    function debtLedgerLength() external virtual view returns (uint);
+    function hasIssued(address account) external virtual view returns (bool);
+    function incrementTotalIssuerCount() external virtual;
+    function decrementTotalIssuerCount() external virtual;
+    function setCurrentIssuanceData(address account, uint initialDebtOwnership) external virtual;
+    function lastDebtLedgerEntry() external virtual view returns (uint);
+    function appendDebtLedgerValue(uint value) external virtual;
+    function clearIssuanceData(address account) external virtual;
 }
