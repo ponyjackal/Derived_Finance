@@ -38,7 +38,6 @@ contract FeePoolEternalStorage is EternalStorage, LimitedSetup {
     constructor(address _owner, address _feePool)
         EternalStorage(_owner, _feePool)
         LimitedSetup(6 weeks)
-        public
     {
     }
 

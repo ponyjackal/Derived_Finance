@@ -165,7 +165,6 @@ contract Synthetix is ExternStateToken {
         ISynthetixEscrow _rewardEscrow, ISynthetixEscrow _escrow, uint _totalSupply
     )
         ExternStateToken(_proxy, _tokenState, TOKEN_NAME, TOKEN_SYMBOL, _totalSupply, DECIMALS, _owner)
-        public
     {
         synthetixState = _synthetixState;
         exchangeRates = _exchangeRates;

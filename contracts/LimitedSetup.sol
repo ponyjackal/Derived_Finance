@@ -37,7 +37,6 @@ contract LimitedSetup {
      * @param setupDuration The time the setup period will last for.
      */
     constructor(uint setupDuration)
-        public
     {
         setupExpiryTime = block.timestamp + setupDuration;
     }

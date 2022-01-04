@@ -42,7 +42,6 @@ contract Owned {
      * @dev Owned Constructor
      */
     constructor(address _owner)
-        public
     {
         require(_owner != address(0), "Owner address cannot be 0");
         owner = _owner;

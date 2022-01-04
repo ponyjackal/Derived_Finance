@@ -44,7 +44,6 @@ contract SelfDestructible is Owned {
      */
     constructor(address _owner)
         Owned(_owner)
-        public
     {
         require(_owner != address(0), "Owner must not be the zero address");
         selfDestructBeneficiary = _owner;

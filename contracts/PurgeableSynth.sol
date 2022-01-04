@@ -48,7 +48,6 @@ contract PurgeableSynth is Synth {
         string memory _tokenName, string memory _tokenSymbol, address _owner, bytes4 _currencyKey, ExchangeRates _exchangeRates
     )
         Synth(_proxy, _tokenState, _synthetix, _feePool, _tokenName, _tokenSymbol, _owner, _currencyKey)
-        public
     {
         exchangeRates = _exchangeRates;
     }

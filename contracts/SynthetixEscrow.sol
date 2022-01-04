@@ -71,7 +71,6 @@ contract SynthetixEscrow is Owned, LimitedSetup(8 weeks) {
 
     constructor(address _owner, ISynthetix _synthetix)
         Owned(_owner)
-        public
     {
         synthetix = _synthetix;
     }

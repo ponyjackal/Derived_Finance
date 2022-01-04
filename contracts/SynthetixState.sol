@@ -93,7 +93,6 @@ contract SynthetixState is State, LimitedSetup {
     constructor(address _owner, address _associatedContract)
         State(_owner, _associatedContract)
         LimitedSetup(1 weeks)
-        public
     {}
 
     /* ========== SETTERS ========== */

@@ -49,7 +49,6 @@ contract DelegateApprovals is State {
      */
     constructor(address _owner, address _associatedContract)
         State(_owner, _associatedContract)
-        public
     {}
 
     function setApproval(address authoriser, address delegate)

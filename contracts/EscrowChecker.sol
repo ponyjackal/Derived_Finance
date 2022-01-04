@@ -1,14 +1,14 @@
 //SPDX-License-Identifier: Unlicense
 pragma solidity ^0.8.0;
 
-contract SynthetixEscrow {
-    function numVestingEntries(address account) public returns (uint);
-    function getVestingScheduleEntry(address account, uint index) public returns (uint[2] memory);
+abstract contract SynthetixEscrow {
+    function numVestingEntries(address account) public virtual returns (uint);
+    function getVestingScheduleEntry(address account, uint index) public virtual returns (uint[2] memory);
 }
 
 contract EscrowChecker {
     SynthetixEscrow public synthetix_escrow;
-    constructor(SynthetixEscrow _esc) public {
+    constructor(SynthetixEscrow _esc) {
         synthetix_escrow = _esc;
     }
 

@@ -132,7 +132,6 @@ contract FeePool is Proxyable, SelfDestructible, LimitedSetup {
         SelfDestructible(_owner)
         Proxyable(_proxy, _owner)
         LimitedSetup(3 weeks)
-        public
     {
         // Constructed fee rates should respect the maximum fee rates.
         require(_transferFeeRate <= MAX_TRANSFER_FEE_RATE, "Constructed transfer fee rate should respect the maximum fee rate");

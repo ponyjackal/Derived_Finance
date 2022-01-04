@@ -56,7 +56,6 @@ contract FeePoolState is SelfDestructible, LimitedSetup {
     constructor(address _owner, IFeePool _feePool)
         SelfDestructible(_owner)
         LimitedSetup(6 weeks)
-        public
     {
         feePool = _feePool;
     }

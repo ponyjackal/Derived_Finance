@@ -86,7 +86,6 @@ contract SupplySchedule is Owned {
 
     constructor(address _owner)
         Owned(_owner)
-        public
     {
         // ScheduleData(totalSupply, startPeriod, endPeriod, totalSupplyMinted)
         // Year 1 - Total supply 100,000,000

@@ -110,7 +110,6 @@ contract ExchangeRates is ChainlinkClient, SelfDestructible {
     )
         /* Owned is initialised in SelfDestructible */
         SelfDestructible(_owner)
-        public
     {
         require(_currencyKeys.length == _newRates.length, "Currency key length and rate length must match.");
 

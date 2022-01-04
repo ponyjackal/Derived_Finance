@@ -46,7 +46,6 @@ contract State is Owned {
 
     constructor(address _owner, address _associatedContract)
         Owned(_owner)
-        public
     {
         associatedContract = _associatedContract;
         emit AssociatedContractUpdated(_associatedContract);

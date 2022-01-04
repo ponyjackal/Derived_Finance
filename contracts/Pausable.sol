@@ -41,7 +41,6 @@ contract Pausable is Owned {
      */
     constructor(address _owner)
         Owned(_owner)
-        public
     {
         // Paused will be false, and lastPauseTime will be 0 upon initialisation
     }

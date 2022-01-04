@@ -42,7 +42,6 @@ contract Proxyable is Owned {
 
     constructor(address _proxy, address _owner)
         Owned(_owner)
-        public
     {
         proxy = Proxy(_proxy);
         emit ProxyUpdated(_proxy);

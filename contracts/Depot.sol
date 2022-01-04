@@ -142,7 +142,6 @@ contract Depot is SelfDestructible, Pausable {
         /* Owned is initialised in SelfDestructible */
         SelfDestructible(_owner)
         Pausable(_owner)
-        public
     {
         fundsWallet = _fundsWallet;
         synthetix = _synthetix;

@@ -45,7 +45,6 @@ contract Proxy is Owned {
 
     constructor(address _owner)
         Owned(_owner)
-        public
     {}
 
     function setTarget(Proxyable _target)

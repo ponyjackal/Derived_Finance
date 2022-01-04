@@ -67,7 +67,6 @@ contract RewardEscrow is Owned {
 
     constructor(address _owner, ISynthetix _synthetix, IFeePool _feePool)
     Owned(_owner)
-    public
     {
         synthetix = _synthetix;
         feePool = _feePool;

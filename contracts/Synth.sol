@@ -53,7 +53,6 @@ contract Synth is ExternStateToken {
         string memory _tokenName, string memory _tokenSymbol, address _owner, bytes4 _currencyKey
     )
         ExternStateToken(_proxy, _tokenState, _tokenName, _tokenSymbol, 0, DECIMALS, _owner)
-        public
     {
         require(_proxy != 0, "_proxy cannot be 0");
         require(address(_synthetix) != 0, "_synthetix cannot be 0");
