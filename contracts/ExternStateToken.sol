@@ -63,7 +63,7 @@ contract ExternStateToken is SelfDestructible, Proxyable, TokenFallbackCaller {
      * @param _owner The owner of this contract.
      */
     constructor(address _proxy, TokenState _tokenState,
-                string _name, string _symbol, uint _totalSupply,
+                string memory _name, string memory _symbol, uint _totalSupply,
                 uint8 _decimals, address _owner)
         SelfDestructible(_owner)
         Proxyable(_proxy, _owner)
@@ -118,7 +118,7 @@ contract ExternStateToken is SelfDestructible, Proxyable, TokenFallbackCaller {
         emitTokenStateUpdated(_tokenState);
     }
 
-    function _internalTransfer(address from, address to, uint value, bytes data) 
+    function _internalTransfer(address from, address to, uint value, bytes memory data) 
         internal
         returns (bool)
     { 
@@ -146,7 +146,7 @@ contract ExternStateToken is SelfDestructible, Proxyable, TokenFallbackCaller {
      * @dev Perform an ERC20 token transfer. Designed to be called by transfer functions possessing
      * the onlyProxy or optionalProxy modifiers.
      */
-    function _transfer_byProxy(address from, address to, uint value, bytes data)
+    function _transfer_byProxy(address from, address to, uint value, bytes memory data)
         internal
         returns (bool)
     {
@@ -157,7 +157,7 @@ contract ExternStateToken is SelfDestructible, Proxyable, TokenFallbackCaller {
      * @dev Perform an ERC20 token transferFrom. Designed to be called by transferFrom functions
      * possessing the optionalProxy or optionalProxy modifiers.
      */
-    function _transferFrom_byProxy(address sender, address from, address to, uint value, bytes data)
+    function _transferFrom_byProxy(address sender, address from, address to, uint value, bytes memory data)
         internal
         returns (bool)
     {
