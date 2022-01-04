@@ -340,12 +340,12 @@ contract Synth is ExternStateToken {
     event Issued(address indexed account, uint value);
     bytes32 constant ISSUED_SIG = keccak256("Issued(address,uint256)");
     function emitIssued(address account, uint value) internal {
-        proxy._emit(abi.encode(value), 2, ISSUED_SIG, bytes32(account), 0, 0);
+        proxy._emit(abi.encode(value), 2, ISSUED_SIG, addressToBytes32(account), 0, 0);
     }
 
     event Burned(address indexed account, uint value);
     bytes32 constant BURNED_SIG = keccak256("Burned(address,uint256)");
     function emitBurned(address account, uint value) internal {
-        proxy._emit(abi.encode(value), 2, BURNED_SIG, bytes32(account), 0, 0);
+        proxy._emit(abi.encode(value), 2, BURNED_SIG, addressToBytes32(account), 0, 0);
     }
 }
