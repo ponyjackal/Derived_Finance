@@ -45,7 +45,7 @@ contract PurgeableSynth is Synth {
     /* ========== CONSTRUCTOR ========== */
 
     constructor(address _proxy, TokenState _tokenState, Synthetix _synthetix, IFeePool _feePool,
-        string _tokenName, string _tokenSymbol, address _owner, bytes4 _currencyKey, ExchangeRates _exchangeRates
+        string memory _tokenName, string memory _tokenSymbol, address _owner, bytes4 _currencyKey, ExchangeRates _exchangeRates
     )
         Synth(_proxy, _tokenState, _synthetix, _feePool, _tokenName, _tokenSymbol, _owner, _currencyKey)
         public
@@ -59,7 +59,7 @@ contract PurgeableSynth is Synth {
      * @notice Function that allows owner to exchange any number of holders back to sUSD (for frozen or deprecated synths)
      * @param addresses The list of holders to purge
      */
-    function purge(address[] addresses)
+    function purge(address[] memory addresses)
         external
         optionalProxy_onlyOwner
     {
