@@ -71,13 +71,13 @@ contract SupplySchedule is Owned {
     uint constant SECONDS_IN_YEAR = 60 * 60 * 24 * 365;
 
     uint public constant START_DATE = 1520294400; // 2018-03-06T00:00:00+00:00
-    uint public constant YEAR_ONE = START_DATE + SECONDS_IN_YEAR.mul(1);
-    uint public constant YEAR_TWO = START_DATE + SECONDS_IN_YEAR.mul(2);
-    uint public constant YEAR_THREE = START_DATE + SECONDS_IN_YEAR.mul(3);
-    uint public constant YEAR_FOUR = START_DATE + SECONDS_IN_YEAR.mul(4);
-    uint public constant YEAR_FIVE = START_DATE + SECONDS_IN_YEAR.mul(5);
-    uint public constant YEAR_SIX = START_DATE + SECONDS_IN_YEAR.mul(6);
-    uint public constant YEAR_SEVEN = START_DATE + SECONDS_IN_YEAR.mul(7);
+    uint public constant YEAR_ONE = START_DATE + 60 * 60 * 24 * 365 * 1;
+    uint public constant YEAR_TWO = START_DATE + 60 * 60 * 24 * 365 * 2;
+    uint public constant YEAR_THREE = START_DATE + 60 * 60 * 24 * 365 * 3;
+    uint public constant YEAR_FOUR = START_DATE + 60 * 60 * 24 * 365 * 4;
+    uint public constant YEAR_FIVE = START_DATE + 60 * 60 * 24 * 365 * 5;
+    uint public constant YEAR_SIX = START_DATE + 60 * 60 * 24 * 365 * 6;
+    uint public constant YEAR_SEVEN = START_DATE + 60 * 60 * 24 * 365 * 7;
 
     uint8 constant public INFLATION_SCHEDULES_LENGTH = 7;
     ScheduleData[INFLATION_SCHEDULES_LENGTH] public schedules;
