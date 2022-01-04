@@ -3,7 +3,7 @@ pragma solidity ^0.8.0;
 
 contract SynthetixEscrow {
     function numVestingEntries(address account) public returns (uint);
-    function getVestingScheduleEntry(address account, uint index) public returns (uint[2]);
+    function getVestingScheduleEntry(address account, uint index) public returns (uint[2] memory);
 }
 
 contract EscrowChecker {
@@ -15,7 +15,7 @@ contract EscrowChecker {
     function checkAccountSchedule(address account)
         public
         view
-        returns (uint[16])
+        returns (uint[16] memory)
     {
         uint[16] memory _result;
         uint schedules = synthetix_escrow.numVestingEntries(account);
