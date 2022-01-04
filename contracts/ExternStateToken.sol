@@ -66,7 +66,7 @@ contract ExternStateToken is SelfDestructible, Proxyable, TokenFallbackCaller {
                 string memory _name, string memory _symbol, uint _totalSupply,
                 uint8 _decimals, address _owner)
         SelfDestructible(_owner)
-        Proxyable(_proxy)
+        Proxyable(payable(_proxy))
     {
         tokenState = _tokenState;
 
@@ -114,7 +114,7 @@ contract ExternStateToken is SelfDestructible, Proxyable, TokenFallbackCaller {
         optionalProxy_onlyOwner
     {
         tokenState = _tokenState;
-        emitTokenStateUpdated(_tokenState);
+        emitTokenStateUpdated(address(_tokenState));
     }
 
     function _internalTransfer(address from, address to, uint value, bytes memory data) 
@@ -182,17 +182,20 @@ contract ExternStateToken is SelfDestructible, Proxyable, TokenFallbackCaller {
     }
 
     /* ========== EVENTS ========== */
+    function addressToBytes32(address input) internal pure returns (bytes32) {
+        return bytes32(uint256(uint160(input)));
+    }
 
     event Transfer(address indexed from, address indexed to, uint value);
     bytes32 constant TRANSFER_SIG = keccak256("Transfer(address,address,uint256)");
     function emitTransfer(address from, address to, uint value) internal {
-        proxy._emit(abi.encode(value), 3, TRANSFER_SIG, bytes32(from), bytes32(to), 0);
+        proxy._emit(abi.encode(value), 3, TRANSFER_SIG, addressToBytes32(from), addressToBytes32(to), 0);
     }
 
     event Approval(address indexed owner, address indexed spender, uint value);
     bytes32 constant APPROVAL_SIG = keccak256("Approval(address,address,uint256)");
     function emitApproval(address owner, address spender, uint value) internal {
-        proxy._emit(abi.encode(value), 3, APPROVAL_SIG, bytes32(owner), bytes32(spender), 0);
+        proxy._emit(abi.encode(value), 3, APPROVAL_SIG, addressToBytes32(owner), addressToBytes32(spender), 0);
     }
 
     event TokenStateUpdated(address newTokenState);
