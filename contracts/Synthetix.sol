@@ -304,7 +304,7 @@ contract Synthetix is ExternStateToken {
     function availableCurrencyKeys()
         internal
         view
-        returns (bytes4[])
+        returns (bytes4[] memory)
     {
         bytes4[] memory availableCurrencyKeys = new bytes4[](availableSynths.length);
 
@@ -345,7 +345,7 @@ contract Synthetix is ExternStateToken {
      *         - Emits a standard ERC20 event without the bytes data parameter so as not to confuse
      *           tooling such as Etherscan.
      */
-    function transfer(address to, uint value, bytes data)
+    function transfer(address to, uint value, bytes memory data)
         public
         optionalProxy
         returns (bool)
@@ -376,7 +376,7 @@ contract Synthetix is ExternStateToken {
      *         - Emits a standard ERC20 event without the bytes data parameter so as not to confuse
      *           tooling such as Etherscan.
      */
-    function transferFrom(address from, address to, uint value, bytes data)
+    function transferFrom(address from, address to, uint value, bytes memory data)
         public
         optionalProxy
         returns (bool)
