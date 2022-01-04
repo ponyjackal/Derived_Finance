@@ -119,7 +119,7 @@ contract SynthetixEscrow is Owned, LimitedSetup(8 weeks) {
     function getVestingScheduleEntry(address account, uint index)
         public
         view
-        returns (uint[2])
+        returns (uint[2] memory)
     {
         return vestingSchedules[account][index];
     }
@@ -169,7 +169,7 @@ contract SynthetixEscrow is Owned, LimitedSetup(8 weeks) {
     function getNextVestingEntry(address account)
         public
         view
-        returns (uint[2])
+        returns (uint[2] memory)
     {
         uint index = getNextVestingIndex(account);
         if (index == numVestingEntries(account)) {
@@ -277,7 +277,7 @@ contract SynthetixEscrow is Owned, LimitedSetup(8 weeks) {
      * and that the sequence of timestamps is strictly increasing.
      * This may only be called by the owner during the contract's setup period.
      */
-    function addVestingSchedule(address account, uint[] times, uint[] quantities)
+    function addVestingSchedule(address account, uint[] memory times, uint[] memory quantities)
         external
         onlyOwner
         onlyDuringSetup
