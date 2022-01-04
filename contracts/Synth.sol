@@ -54,11 +54,11 @@ contract Synth is ExternStateToken {
     )
         ExternStateToken(_proxy, _tokenState, _tokenName, _tokenSymbol, 0, DECIMALS, _owner)
     {
-        require(_proxy != 0, "_proxy cannot be 0");
-        require(address(_synthetix) != 0, "_synthetix cannot be 0");
-        require(address(_feePool) != 0, "_feePool cannot be 0");
-        require(_owner != 0, "_owner cannot be 0");
-        require(_synthetix.synths(_currencyKey) == Synth(0), "Currency key is already in use");
+        require(_proxy != address(0), "_proxy cannot be 0");
+        require(address(_synthetix) != address(0), "_synthetix cannot be 0");
+        require(address(_feePool) != address(0), "_feePool cannot be 0");
+        require(_owner != address(0), "_owner cannot be 0");
+        require(_synthetix.synths(_currencyKey) == Synth(address(0)), "Currency key is already in use");
 
         feePool = _feePool;
         synthetix = _synthetix;
@@ -72,7 +72,7 @@ contract Synth is ExternStateToken {
         optionalProxy_onlyOwner
     {
         synthetix = _synthetix;
-        emitSynthetixUpdated(_synthetix);
+        emitSynthetixUpdated(address(_synthetix));
     }
 
     function setFeePool(IFeePool _feePool)
@@ -80,7 +80,7 @@ contract Synth is ExternStateToken {
         optionalProxy_onlyOwner
     {
         feePool = _feePool;
-        emitFeePoolUpdated(_feePool);
+        emitFeePoolUpdated(address(_feePool));
     }
 
     /* ========== MUTATIVE FUNCTIONS ========== */
@@ -96,7 +96,7 @@ contract Synth is ExternStateToken {
         returns (bool)
     {
         uint amountReceived = feePool.amountReceivedFromTransfer(value);
-        uint fee = value.sub(amountReceived);
+        uint fee = value - amountReceived;
 
         // Send the fee off to the fee pool.
         synthetix.synthInitiatedFeePayment(messageSender, currencyKey, fee);
@@ -117,7 +117,7 @@ contract Synth is ExternStateToken {
         returns (bool)
     {
         uint amountReceived = feePool.amountReceivedFromTransfer(value);
-        uint fee = value.sub(amountReceived);
+        uint fee = value - amountReceived;
 
         // Send the fee off to the fee pool, which we don't want to charge an additional fee on
         synthetix.synthInitiatedFeePayment(messageSender, currencyKey, fee);
@@ -138,11 +138,11 @@ contract Synth is ExternStateToken {
     {
         // The fee is deducted from the amount sent.
         uint amountReceived = feePool.amountReceivedFromTransfer(value);
-        uint fee = value.sub(amountReceived);
+        uint fee = value - amountReceived;
 
         // Reduce the allowance by the amount we're transferring.
         // The safeSub call will handle an insufficient allowance.
-        tokenState.setAllowance(from, messageSender, tokenState.allowance(from, messageSender).sub(value));
+        tokenState.setAllowance(from, messageSender, tokenState.allowance(from, messageSender) - value);
 
         // Send the fee off to the fee pool.
         synthetix.synthInitiatedFeePayment(from, currencyKey, fee);
@@ -163,11 +163,11 @@ contract Synth is ExternStateToken {
     {
         // The fee is deducted from the amount sent.
         uint amountReceived = feePool.amountReceivedFromTransfer(value);
-        uint fee = value.sub(amountReceived);
+        uint fee = value - amountReceived;
 
         // Reduce the allowance by the amount we're transferring.
         // The safeSub call will handle an insufficient allowance.
-        tokenState.setAllowance(from, messageSender, tokenState.allowance(from, messageSender).sub(value));
+        tokenState.setAllowance(from, messageSender, tokenState.allowance(from, messageSender) - value);
 
         // Send the fee off to the fee pool, which we don't want to charge an additional fee on
         synthetix.synthInitiatedFeePayment(from, currencyKey, fee);
@@ -222,7 +222,7 @@ contract Synth is ExternStateToken {
 
         // Reduce the allowance by the amount we're transferring.
         // The safeSub call will handle an insufficient allowance.
-        tokenState.setAllowance(from, messageSender, tokenState.allowance(from, messageSender).sub(value.add(fee)));
+        tokenState.setAllowance(from, messageSender, tokenState.allowance(from, messageSender) - value + fee);
 
         // Send the fee off to the fee pool, which we don't want to charge an additional fee on
         synthetix.synthInitiatedFeePayment(from, currencyKey, fee);
@@ -243,7 +243,7 @@ contract Synth is ExternStateToken {
 
         // Reduce the allowance by the amount we're transferring.
         // The safeSub call will handle an insufficient allowance.
-        tokenState.setAllowance(from, messageSender, tokenState.allowance(from, messageSender).sub(value.add(fee)));
+        tokenState.setAllowance(from, messageSender, tokenState.allowance(from, messageSender) - value + fee);
 
         // Send the fee off to the fee pool, which we don't want to charge an additional fee on
         synthetix.synthInitiatedFeePayment(from, currencyKey, fee);
@@ -273,8 +273,8 @@ contract Synth is ExternStateToken {
         external
         onlySynthetixOrFeePool
     {
-        tokenState.setBalanceOf(account, tokenState.balanceOf(account).add(amount));
-        totalSupply = totalSupply.add(amount);
+        tokenState.setBalanceOf(account, tokenState.balanceOf(account) + amount);
+        totalSupply = totalSupply + amount;
         emitTransfer(address(0), account, amount);
         emitIssued(account, amount);
     }
@@ -284,8 +284,8 @@ contract Synth is ExternStateToken {
         external
         onlySynthetixOrFeePool
     {
-        tokenState.setBalanceOf(account, tokenState.balanceOf(account).sub(amount));
-        totalSupply = totalSupply.sub(amount);
+        tokenState.setBalanceOf(account, tokenState.balanceOf(account) - amount);
+        totalSupply = totalSupply - amount;
         emitTransfer(account, address(0), amount);
         emitBurned(account, amount);
     }
