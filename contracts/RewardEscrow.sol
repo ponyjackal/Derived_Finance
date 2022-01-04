@@ -131,7 +131,7 @@ contract RewardEscrow is Owned {
     function getVestingScheduleEntry(address account, uint index)
     public
     view
-    returns (uint[2])
+    returns (uint[2] memory)
     {
         return vestingSchedules[account][index];
     }
@@ -181,7 +181,7 @@ contract RewardEscrow is Owned {
     function getNextVestingEntry(address account)
     public
     view
-    returns (uint[2])
+    returns (uint[2] memory)
     {
         uint index = getNextVestingIndex(account);
         if (index == numVestingEntries(account)) {
@@ -218,7 +218,7 @@ contract RewardEscrow is Owned {
     function checkAccountSchedule(address account)
         public
         view
-        returns (uint[520])
+        returns (uint[520] memory)
     {
         uint[520] memory _result;
         uint schedules = numVestingEntries(account);
