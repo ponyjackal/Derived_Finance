@@ -188,7 +188,7 @@ contract SynthetixState is State, LimitedSetup {
      * @notice Import issuer data from the old Synthetix contract before multicurrency
      * @dev Only callable by the contract owner, and only for 1 week after deployment.
      */
-    function importIssuerData(address[] accounts, uint[] sUSDAmounts)
+    function importIssuerData(address[] memory accounts, uint[] memory sUSDAmounts)
         external
         onlyOwner
         onlyDuringSetup
