@@ -30,13 +30,13 @@ pragma solidity ^0.8.0;
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "./SafeDecimalMath.sol";
 import "./SelfDestructible.sol";
-import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol"; // technically this is all we need
+import "@chainlink/contracts/src/v0.8/ChainlinkClient.sol"; // technically this is all we need
 
 
 /**
  * @title The repository for exchange rates
  */
-contract ExchangeRates is Chainlinked, SelfDestructible {
+contract ExchangeRates is ChainlinkClient, SelfDestructible {
 
 
     using SafeMath for uint;
