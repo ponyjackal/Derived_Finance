@@ -119,6 +119,7 @@ contract ExternStateToken is SelfDestructible, Proxyable, TokenFallbackCaller {
 
     function _internalTransfer(address from, address to, uint value, bytes memory data) 
         internal
+        virtual
         returns (bool)
     { 
         /* Disallow transfers to irretrievable-addresses. */

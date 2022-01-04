@@ -254,6 +254,7 @@ contract Synth is ExternStateToken {
     // Override our internal transfer to inject preferred currency support
     function _internalTransfer(address from, address to, uint value, bytes memory data)
         internal
+        override
         returns (bool)
     {
         bytes4 preferredCurrencyKey = synthetix.synthetixState().preferredCurrency(to);
