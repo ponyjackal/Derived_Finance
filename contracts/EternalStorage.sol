@@ -79,7 +79,7 @@ contract EternalStorage is State {
         return StringStorage[record];
     }
 
-    function setStringValue(bytes32 record, string value) external
+    function setStringValue(bytes32 record, string memory value) external
         onlyAssociatedContract
     {
         StringStorage[record] = value;
@@ -115,7 +115,7 @@ contract EternalStorage is State {
         return BytesStorage[record];
     }
 
-    function setBytesValue(bytes32 record, bytes value) external
+    function setBytesValue(bytes32 record, bytes memory value) external
         onlyAssociatedContract
     {
         BytesStorage[record] = value;
