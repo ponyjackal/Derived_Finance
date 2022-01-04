@@ -48,7 +48,7 @@ contract FeePoolEternalStorage is EternalStorage, LimitedSetup {
      * @param accounts Array of addresses that have claimed
      * @param feePeriodIDs Array feePeriodIDs with the accounts last claim
      */
-    function importFeeWithdrawalData(address[] accounts, uint[] feePeriodIDs)
+    function importFeeWithdrawalData(address[] memory accounts, uint[] memory feePeriodIDs)
         external
         onlyOwner
         onlyDuringSetup
