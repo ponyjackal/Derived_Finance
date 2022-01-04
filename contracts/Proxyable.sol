@@ -65,7 +65,7 @@ abstract contract Proxyable is Owned {
     }
 
     modifier onlyProxy {
-        require(Proxy(msg.sender) == proxy, "Only the proxy can call this function");
+        require(Proxy(payable(msg.sender)) == proxy, "Only the proxy can call this function");
         _;
     }
 

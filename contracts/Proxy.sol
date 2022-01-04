@@ -105,7 +105,7 @@ contract Proxy is Owned {
                 calldatacopy(free_ptr, 0, calldatasize())
 
                 /* Forward all gas and call data to the target contract. */
-                let result := delegatecall(gas(), sload(target_slot()), free_ptr, calldatasize(), 0, 0)
+                let result := delegatecall(gas(), sload(target.slot), free_ptr, calldatasize(), 0, 0)
                 returndatacopy(free_ptr, 0, returndatasize())
 
                 /* Revert if the call failed, otherwise return the result. */
@@ -121,7 +121,7 @@ contract Proxy is Owned {
                 calldatacopy(free_ptr, 0, calldatasize())
 
                 /* We must explicitly forward ether to the underlying contract as well. */
-                let result := call(gas(), sload(target_slot()), callvalue(), free_ptr, calldatasize(), 0, 0)
+                let result := call(gas(), sload(target.slot), callvalue(), free_ptr, calldatasize(), 0, 0)
                 returndatacopy(free_ptr, 0, returndatasize())
 
                 if iszero(result) { revert(free_ptr, returndatasize()) }
