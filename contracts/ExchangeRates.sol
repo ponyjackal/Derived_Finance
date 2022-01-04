@@ -37,7 +37,7 @@ import "@chainlink/contracts/src/v0.8/ChainlinkClient.sol"; // technically this 
  * @title The repository for exchange rates
  */
 contract ExchangeRates is ChainlinkClient, SelfDestructible {
-
+    using Chainlink for Chainlink.Request;
 
     using SafeMath for uint;
     using SafeDecimalMath for uint;
@@ -365,7 +365,7 @@ contract ExchangeRates is ChainlinkClient, SelfDestructible {
                 invertedKeys[i] = invertedKeys[invertedKeys.length - 1];
 
                 // Decrease the size of the array by one.
-                invertedKeys.length--;
+                invertedKeys.pop();
 
                 break;
             }
@@ -509,7 +509,7 @@ contract ExchangeRates is ChainlinkClient, SelfDestructible {
     public
     onlyOwner
     {
-        Chainlink.Request memory req = buildChainlinkRequest(oracleJobId, this, this.fulfill.selector);
+        Chainlink.Request memory req = buildChainlinkRequest(oracleJobId, address(this), this.fulfill.selector);
         req.add("sym", asset);
         req.add("convert", "USD");
         string[] memory path = new string[](5);
