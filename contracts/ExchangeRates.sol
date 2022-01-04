@@ -70,7 +70,7 @@ contract ExchangeRates is ChainlinkClient, SelfDestructible {
     }
 
     bytes32 public oracleJobId;
-    uint256 constant private ORACLE_PAYMENT = 1 * LINK; // solium-disable-line zeppelin/no-arithmetic-operations
+    uint256 constant private ORACLE_PAYMENT = 1 * 10 ** 18; // solium-disable-line zeppelin/no-arithmetic-operations
     mapping(bytes32 => Request) private requests;
     uint256 constant ORACLE_PRECISION = 1000000000000000000;
     // ------------------
@@ -100,8 +100,8 @@ contract ExchangeRates is ChainlinkClient, SelfDestructible {
 
         // Oracle values - Allows for rate updates
         address _snxOracle,
-        bytes4[] _currencyKeys,
-        uint[] _newRates,
+        bytes4[] memory _currencyKeys,
+        uint[] memory _newRates,
 
         // Chainlink requirementss
         address _chainlinkToken,
@@ -138,8 +138,8 @@ contract ExchangeRates is ChainlinkClient, SelfDestructible {
         internalUpdateRates(_currencyKeys, _newRates, now);
 
         // Setup Chainlink props
-        setLinkToken(_chainlinkToken);
-        setOracle(_chainlinkOracle);
+        setChainlinkToken(_chainlinkToken);
+        setChainlinkOracle(_chainlinkOracle);
         oracleJobId = _chainlinkJobId;
     }
 
@@ -153,7 +153,7 @@ contract ExchangeRates is ChainlinkClient, SelfDestructible {
      *                 This is useful because transactions can take a while to confirm, so this way we know how old the oracle's datapoint was exactly even
      *                 if it takes a long time for the transaction to confirm.
      */
-    function updateRates(bytes4[] currencyKeys, uint[] newRates, uint timeSent)
+    function updateRates(bytes4[] memory currencyKeys, uint[] memory newRates, uint timeSent)
         external
         onlySNXOracle
         returns(bool)
@@ -169,7 +169,7 @@ contract ExchangeRates is ChainlinkClient, SelfDestructible {
      *                 This is useful because transactions can take a while to confirm, so this way we know how old the oracle's datapoint was exactly even
      *                 if it takes a long time for the transaction to confirm.
      */
-    function internalUpdateRates(bytes4[] currencyKeys, uint[] newRates, uint timeSent)
+    function internalUpdateRates(bytes4[] memory currencyKeys, uint[] memory newRates, uint timeSent)
         internal
         returns(bool)
     {
@@ -411,10 +411,10 @@ contract ExchangeRates is ChainlinkClient, SelfDestructible {
     /**
      * @notice Retrieve the rates for a list of currencies
      */
-    function ratesForCurrencies(bytes4[] currencyKeys)
+    function ratesForCurrencies(bytes4[] memory currencyKeys)
         public
         view
-        returns (uint[])
+        returns (uint[] memory)
     {
         uint[] memory _rates = new uint[](currencyKeys.length);
 
@@ -439,10 +439,10 @@ contract ExchangeRates is ChainlinkClient, SelfDestructible {
     /**
      * @notice Retrieve the last update time for a specific currency
      */
-    function lastRateUpdateTimesForCurrencies(bytes4[] currencyKeys)
+    function lastRateUpdateTimesForCurrencies(bytes4[] memory currencyKeys)
         public
         view
-        returns (uint[])
+        returns (uint[] memory)
     {
         uint[] memory lastUpdateTimes = new uint[](currencyKeys.length);
 
@@ -482,7 +482,7 @@ contract ExchangeRates is ChainlinkClient, SelfDestructible {
     /**
      * @notice Check if any of the currency rates passed in haven't been updated for longer than the stale period.
      */
-    function anyRateIsStale(bytes4[] currencyKeys)
+    function anyRateIsStale(bytes4[] memory currencyKeys)
         external
         view
         returns (bool)
@@ -506,11 +506,11 @@ contract ExchangeRates is ChainlinkClient, SelfDestructible {
      * @notice Initiatiate a price request via chainlink. Provide both the
      * bytes4 currencyKey (for SNX) and the string representation (for Chainlink)
      */
-    function requestCryptoPrice(bytes4 currencyKey, string asset)
+    function requestCryptoPrice(bytes4 currencyKey, string memory asset)
     public
     onlyOwner
     {
-        Chainlink.Request memory req = newRequest(oracleJobId, this, this.fulfill.selector);
+        Chainlink.Request memory req = buildChainlinkRequest(oracleJobId, this, this.fulfill.selector);
         req.add("sym", asset);
         req.add("convert", "USD");
         string[] memory path = new string[](5);
@@ -522,7 +522,7 @@ contract ExchangeRates is ChainlinkClient, SelfDestructible {
         req.addStringArray("copyPath", path);
         req.addInt("times", int256(ORACLE_PRECISION));
 
-        requests[chainlinkRequest(req, ORACLE_PAYMENT)] = Request(now, currencyKey);
+        requests[sendChainlinkRequest(req, ORACLE_PAYMENT)] = Request(now, currencyKey);
     }
 
     function fulfill(bytes32 _requestId, uint256 _price)
@@ -541,15 +541,15 @@ contract ExchangeRates is ChainlinkClient, SelfDestructible {
     }
 
     function getChainlinkToken() public view returns (address) {
-        return chainlinkToken();
+        return chainlinkTokenAddress();
     }
 
     function getOracle() public view returns (address) {
-        return oracleAddress();
+        return chainlinkOracleAddress();
     }
 
     function withdrawLink() public onlyOwner {
-        LinkTokenInterface link = LinkTokenInterface(chainlinkToken());
+        LinkTokenInterface link = LinkTokenInterface(chainlinkTokenAddress());
         require(link.transfer(msg.sender, link.balanceOf(address(this))), "Unable to transfer");
     }
 
