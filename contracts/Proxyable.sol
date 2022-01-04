@@ -71,7 +71,7 @@ abstract contract Proxyable is Owned {
 
     modifier optionalProxy
     {
-        if (Proxy(msg.sender) != proxy) {
+        if (Proxy(payable(msg.sender)) != proxy) {
             messageSender = msg.sender;
         }
         _;
@@ -79,7 +79,7 @@ abstract contract Proxyable is Owned {
 
     modifier optionalProxy_onlyOwner
     {
-        if (Proxy(msg.sender) != proxy) {
+        if (Proxy(payable(msg.sender)) != proxy) {
             messageSender = msg.sender;
         }
         require(messageSender == owner, "This action can only be performed by the owner");
