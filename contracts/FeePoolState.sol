@@ -57,7 +57,7 @@ contract FeePoolState is SelfDestructible, LimitedSetup {
         SelfDestructible(_owner)
         LimitedSetup(6 weeks)
     {
-        feePool = _feePool;
+        feePool = address(_feePool);
     }
 
     /* ========== SETTERS ========== */
@@ -71,7 +71,7 @@ contract FeePoolState is SelfDestructible, LimitedSetup {
         external
         onlyOwner
     {
-        feePool = _feePool;
+        feePool = address(_feePool);
     }
 
     /* ========== VIEWS ========== */
