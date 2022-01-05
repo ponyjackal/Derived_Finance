@@ -83,7 +83,7 @@ contract RewardEscrow is Owned {
     onlyOwner
     {
         synthetix = _synthetix;
-        emit SynthetixUpdated(_synthetix);
+        emit SynthetixUpdated(address(_synthetix));
     }
 
     /**
@@ -95,7 +95,7 @@ contract RewardEscrow is Owned {
         onlyOwner
     {
         feePool = _feePool;
-        emit FeePoolUpdated(_feePool);
+        emit FeePoolUpdated(address(_feePool));
     }
 
 
@@ -250,7 +250,7 @@ contract RewardEscrow is Owned {
 
         /* There must be enough balance in the contract to provide for the vesting entry. */
         totalEscrowedBalance = totalEscrowedBalance.add(quantity);
-        require(totalEscrowedBalance <= synthetix.balanceOf(this), "Must be enough balance in the contract to provide for the vesting entry");
+        require(totalEscrowedBalance <= synthetix.balanceOf(address(this)), "Must be enough balance in the contract to provide for the vesting entry");
 
         /* Disallow arbitrarily long vesting schedules in light of the gas limit. */
         uint scheduleLength = vestingSchedules[account].length;
