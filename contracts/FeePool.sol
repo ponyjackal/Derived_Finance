@@ -63,13 +63,13 @@ contract FeePool is Proxyable, SelfDestructible, LimitedSetup {
     uint public transferFeeRate;
 
     // Transfer fee may not exceed 10%.
-    uint constant public MAX_TRANSFER_FEE_RATE = SafeDecimalMath.unit() / 10;
+    uint public MAX_TRANSFER_FEE_RATE = SafeDecimalMath.unit() / 10;
 
     // A percentage fee charged on each exchange between currencies.
     uint public exchangeFeeRate;
 
     // Exchange fee may not exceed 10%.
-    uint constant public MAX_EXCHANGE_FEE_RATE = SafeDecimalMath.unit() / 10;
+    uint public MAX_EXCHANGE_FEE_RATE = SafeDecimalMath.unit() / 10;
 
     // The address with the authority to distribute fees.
     address public feeAuthority;
@@ -130,7 +130,7 @@ contract FeePool is Proxyable, SelfDestructible, LimitedSetup {
         uint _transferFeeRate,
         uint _exchangeFeeRate)
         SelfDestructible(_owner)
-        Proxyable(_proxy, _owner)
+        Proxyable(payable(_proxy))
         LimitedSetup(3 weeks)
     {
         // Constructed fee rates should respect the maximum fee rates.
@@ -424,7 +424,7 @@ contract FeePool is Proxyable, SelfDestructible, LimitedSetup {
         public
         optionalProxy
     {
-        require(delegates != address(0), "Delegates Approval destination missing");
+        require(address(delegates) != address(0), "Delegates Approval destination missing");
         require(account != address(0), "Can't delegate to address(0)");
         delegates.setApproval(messageSender, account);
     }
@@ -433,7 +433,7 @@ contract FeePool is Proxyable, SelfDestructible, LimitedSetup {
         public
         optionalProxy
     {
-        require(delegates != address(0), "Delegates Approval destination missing");
+        require(address(delegates) != address(0), "Delegates Approval destination missing");
         delegates.withdrawApproval(messageSender, account);
     }
 
@@ -780,11 +780,13 @@ contract FeePool is Proxyable, SelfDestructible, LimitedSetup {
         uint debtEntryIndex;
         (userOwnershipPercentage, debtEntryIndex) = feePoolState.getAccountsDebtEntry(account, 0);
 
+        uint[2][FEE_PERIOD_LENGTH] memory nullResults;
+
         // If they don't have any debt ownership and they haven't minted, they don't have any fees
-        if (debtEntryIndex == 0 && userOwnershipPercentage == 0) return;
+        if (debtEntryIndex == 0 && userOwnershipPercentage == 0) return nullResults;
 
         // If there are no XDR synths, then they don't have any fees
-        if (synthetix.totalIssuedSynths("XDR") == 0) return;
+        if (synthetix.totalIssuedSynths("XDR") == 0) return nullResults;
 
         // The [0] fee period is not yet ready to claim, but it is a fee period that they can have
         // fees owing for, so we need to report on it anyway.
@@ -831,6 +833,7 @@ contract FeePool is Proxyable, SelfDestructible, LimitedSetup {
      */
     function _feesAndRewardsFromPeriod(uint period, uint ownershipPercentage, uint debtEntryIndex)
         internal
+        view
         returns (uint, uint)
     {
         // If it's zero, they haven't issued, and they have no fees OR rewards.
@@ -884,7 +887,7 @@ contract FeePool is Proxyable, SelfDestructible, LimitedSetup {
         require(period < FEE_PERIOD_LENGTH, "Period exceeds the FEE_PERIOD_LENGTH");
 
         // No debt minted during period as next period starts at 0
-        if (recentFeePeriods[period - 1].startingDebtIndex == 0) return;
+        if (recentFeePeriods[period - 1].startingDebtIndex == 0) return 0;
 
         uint closingDebtIndex = recentFeePeriods[period - 1].startingDebtIndex.sub(1);
 
@@ -937,7 +940,7 @@ contract FeePool is Proxyable, SelfDestructible, LimitedSetup {
 
     modifier optionalProxy_onlyFeeAuthority
     {
-        if (Proxy(msg.sender) != proxy) {
+        if (Proxy(payable(msg.sender)) != proxy) {
             messageSender = msg.sender;
         }
         require(msg.sender == feeAuthority, "Only the fee authority can perform this action");
@@ -956,11 +959,14 @@ contract FeePool is Proxyable, SelfDestructible, LimitedSetup {
     }
 
     /* ========== Proxy Events ========== */
+    function addressToBytes32(address input) internal pure returns (bytes32) {
+        return bytes32(uint256(uint160(input)));
+    }
 
     event IssuanceDebtRatioEntry(address indexed account, uint debtRatio, uint debtEntryIndex, uint feePeriodStartingDebtIndex);
     bytes32 constant ISSUANCEDEBTRATIOENTRY_SIG = keccak256("IssuanceDebtRatioEntry(address,uint256,uint256,uint256)");
     function emitIssuanceDebtRatioEntry(address account, uint debtRatio, uint debtEntryIndex, uint feePeriodStartingDebtIndex) internal {
-        proxy._emit(abi.encode(debtRatio, debtEntryIndex, feePeriodStartingDebtIndex), 2, ISSUANCEDEBTRATIOENTRY_SIG, bytes32(account), 0, 0);
+        proxy._emit(abi.encode(debtRatio, debtEntryIndex, feePeriodStartingDebtIndex), 2, ISSUANCEDEBTRATIOENTRY_SIG, addressToBytes32(account), 0, 0);
     }
 
     event TransferFeeUpdated(uint newFeeRate);
