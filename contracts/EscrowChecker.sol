@@ -2,8 +2,8 @@
 pragma solidity ^0.8.0;
 
 abstract contract SynthetixEscrow {
-    function numVestingEntries(address account) public virtual returns (uint);
-    function getVestingScheduleEntry(address account, uint index) public virtual returns (uint[2] memory);
+    function numVestingEntries(address account) public virtual view returns (uint);
+    function getVestingScheduleEntry(address account, uint index) public virtual view returns (uint[2] memory);
 }
 
 contract EscrowChecker {
