@@ -66,6 +66,8 @@ export const toTimer = (time) => {
 
     if (t !== 0) {
       str += `${t > 9 ? t : '0' + t}:`;
+    } else {
+      str += `00:`;
     }
 
     res = r;
