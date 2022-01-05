@@ -135,7 +135,7 @@ import "./IFeePool.sol";
  * but it also computes the quantity of fees each synthetix holder is entitled to.
  */
 contract Synthetix is ExternStateToken {
-
+    using SafeDecimalMath for uint;
     // ========== STATE VARIABLES ==========
 
     // Available Synths which can be used with the system
@@ -291,7 +291,7 @@ contract Synthetix is ExternStateToken {
             uint synthValue = availableSynths[i].totalSupply()
                 .multiplyDecimalRound(exchangeRates.rateForCurrency(availableSynths[i].currencyKey()))
                 .divideDecimalRound(currencyRate);
-            total = total.add(synthValue);
+            total = total + synthValue;
         }
 
         return total;
@@ -535,7 +535,7 @@ contract Synthetix is ExternStateToken {
 
         if (chargeFee) {
             amountReceived = feePool.amountReceivedFromExchange(destinationAmount);
-            fee = destinationAmount.sub(amountReceived);
+            fee = destinationAmount - amountReceived;
         }
 
         // Issue their new synths
@@ -577,7 +577,7 @@ contract Synthetix is ExternStateToken {
         uint totalDebtIssued = totalIssuedSynths("XDR");
 
         // What will the new total be including the new value?
-        uint newTotalDebtIssued = xdrValue.add(totalDebtIssued);
+        uint newTotalDebtIssued = xdrValue + totalDebtIssued;
 
         // What is their percentage (as a high precision int) of the total debt?
         uint debtPercentage = xdrValue.divideDecimalRoundPrecise(newTotalDebtIssued);
@@ -586,14 +586,14 @@ contract Synthetix is ExternStateToken {
         // The delta specifically needs to not take into account any existing debt as it's already
         // accounted for in the delta from when they issued previously.
         // The delta is a high precision integer.
-        uint delta = SafeDecimalMath.preciseUnit().sub(debtPercentage);
+        uint delta = SafeDecimalMath.preciseUnit() - debtPercentage;
 
         // How much existing debt do they have?
         uint existingDebt = debtBalanceOf(messageSender, "XDR");
 
         // And what does their debt ownership look like including this previous stake?
         if (existingDebt > 0) {
-            debtPercentage = xdrValue.add(existingDebt).divideDecimalRoundPrecise(newTotalDebtIssued);
+            debtPercentage = (xdrValue + existingDebt).divideDecimalRoundPrecise(newTotalDebtIssued);
         }
 
         // Are they a new issuer? If so, record them.
@@ -723,7 +723,7 @@ contract Synthetix is ExternStateToken {
         uint totalDebtIssued = totalIssuedSynths("XDR");
 
         // What will the new total after taking out the withdrawn amount
-        uint newTotalDebtIssued = totalDebtIssued.sub(debtToRemove);
+        uint newTotalDebtIssued = totalDebtIssued - debtToRemove;
 
         uint delta;
 
@@ -737,7 +737,7 @@ contract Synthetix is ExternStateToken {
             // And what effect does this percentage change have on the global debt holding of other issuers?
             // The delta specifically needs to not take into account any existing debt as it's already
             // accounted for in the delta from when they issued previously.
-            delta = SafeDecimalMath.preciseUnit().add(debtPercentage);
+            delta = SafeDecimalMath.preciseUnit() + debtPercentage;
         } else {
             delta = 0;
         }
@@ -748,7 +748,7 @@ contract Synthetix is ExternStateToken {
             synthetixState.decrementTotalIssuerCount();
         } else {
             // What percentage of the debt will they be left with?
-            uint newDebt = existingDebt.sub(debtToRemove);
+            uint newDebt = existingDebt - debtToRemove;
             uint newDebtPercentage = newDebt.divideDecimalRoundPrecise(newTotalDebtIssued);
 
             // Store the debt percentage and debt ledger as high precision integers
@@ -853,7 +853,7 @@ contract Synthetix is ExternStateToken {
         if (alreadyIssued >= max) {
             return 0;
         } else {
-            return max.sub(alreadyIssued);
+            return max - alreadyIssued;
         }
     }
 
@@ -870,12 +870,12 @@ contract Synthetix is ExternStateToken {
     {
         uint balance = tokenState.balanceOf(account);
 
-        if (escrow != address(0)) {
-            balance = balance.add(escrow.balanceOf(account));
+        if (address(escrow) != address(0)) {
+            balance = balance + escrow.balanceOf(account);
         }
 
-        if (rewardEscrow != address(0)) {
-            balance = balance.add(rewardEscrow.balanceOf(account));
+        if (address(rewardEscrow) != address(0)) {
+            balance = balance + rewardEscrow.balanceOf(account);
         }
 
         return balance;
@@ -908,7 +908,7 @@ contract Synthetix is ExternStateToken {
         if (lockedSynthetixValue >= balance) {
             return 0;
         } else {
-            return balance.sub(lockedSynthetixValue);
+            return balance - lockedSynthetixValue;
         }
     }
 
@@ -916,7 +916,7 @@ contract Synthetix is ExternStateToken {
         external
         returns (bool)
     {
-        require(rewardEscrow != address(0), "Reward Escrow destination missing");
+        require(address(rewardEscrow) != address(0), "Reward Escrow destination missing");
 
         uint supplyToMint = supplySchedule.mintableSupply();
         require(supplyToMint > 0, "No supply is mintable");
@@ -927,17 +927,17 @@ contract Synthetix is ExternStateToken {
         // Minus the minterReward and set balance of minter to add reward
         uint minterReward = supplySchedule.minterReward();
 
-        tokenState.setBalanceOf(rewardEscrow, tokenState.balanceOf(rewardEscrow).add(supplyToMint.sub(minterReward)));
-        emitTransfer(this, rewardEscrow, supplyToMint.sub(minterReward));
+        tokenState.setBalanceOf(address(rewardEscrow), tokenState.balanceOf(address(rewardEscrow)) + supplyToMint - minterReward);
+        emitTransfer(address(this), address(rewardEscrow), supplyToMint - minterReward);
 
         // Tell the FeePool how much it has to distribute
-        feePool.rewardsMinted(supplyToMint.sub(minterReward));
+        feePool.rewardsMinted(supplyToMint - minterReward);
 
         // Assign the minters reward.
-        tokenState.setBalanceOf(msg.sender, tokenState.balanceOf(msg.sender).add(minterReward));
-        emitTransfer(this, msg.sender, minterReward);
+        tokenState.setBalanceOf(msg.sender, tokenState.balanceOf(msg.sender) + minterReward);
+        emitTransfer(address(this), msg.sender, minterReward);
 
-        totalSupply = totalSupply.add(supplyToMint);
+        totalSupply = totalSupply + supplyToMint;
     }
 
     // ========== MODIFIERS ==========
@@ -957,7 +957,7 @@ contract Synthetix is ExternStateToken {
 
         // No need to repeatedly call this function either
         for (uint8 i = 0; i < availableSynths.length; i++) {
-            if (availableSynths[i] == msg.sender) {
+            if (address(availableSynths[i]) == msg.sender) {
                 isSynth = true;
                 break;
             }
@@ -977,7 +977,7 @@ contract Synthetix is ExternStateToken {
     event SynthExchange(address indexed account, bytes4 fromCurrencyKey, uint256 fromAmount, bytes4 toCurrencyKey,  uint256 toAmount, address toAddress);
     bytes32 constant SYNTHEXCHANGE_SIG = keccak256("SynthExchange(address,bytes4,uint256,bytes4,uint256,address)");
     function emitSynthExchange(address account, bytes4 fromCurrencyKey, uint256 fromAmount, bytes4 toCurrencyKey, uint256 toAmount, address toAddress) internal {
-        proxy._emit(abi.encode(fromCurrencyKey, fromAmount, toCurrencyKey, toAmount, toAddress), 2, SYNTHEXCHANGE_SIG, bytes32(account), 0, 0);
+        proxy._emit(abi.encode(fromCurrencyKey, fromAmount, toCurrencyKey, toAmount, toAddress), 2, SYNTHEXCHANGE_SIG, addressToBytes32(account), 0, 0);
     }
     /* solium-enable */
 }
