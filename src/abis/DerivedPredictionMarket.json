@@ -98,6 +98,18 @@
         "internalType": "uint256",
         "name": "fee",
         "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "long",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "short",
+        "type": "uint256"
       }
     ],
     "name": "QuestionCreated",
@@ -127,32 +139,8 @@
     "inputs": [
       {
         "indexed": false,
-        "internalType": "address",
-        "name": "collateral",
-        "type": "address"
-      },
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "trader",
-        "type": "address"
-      },
-      {
-        "indexed": false,
         "internalType": "uint256",
-        "name": "sharesAmount",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "collateralAmount",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "slotIndex",
+        "name": "questionId",
         "type": "uint256"
       },
       {

@@ -1,8 +1,11 @@
 import React, { useState, useEffect, useContext, createContext } from "react";
 import { useWeb3React } from "@web3-react/core";
 
-import { getMarketContract } from "../contracts";
-import { fetchAllQuestions } from "../../services/market";
+import { getDerivedTokenContract, getMarketContract } from "../contracts";
+import {
+  fetchAllOngoingQuestions,
+  fetchAllExpiredQuestions,
+} from "../../services/market";
 
 export const MarketContext = createContext({});
 
@@ -10,8 +13,10 @@ export const useMarket = () => useContext(MarketContext);
 
 export const MarketProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
-  const [contract, setContract] = useState(null);
-  const [questions, setQuestions] = useState([]);
+  const [MarketContract, setMarketContract] = useState(null);
+  const [DerivedTokenContract, setDerivedTokenContract] = useState(null);
+  const [liveQuestions, setLiveQuestions] = useState([]);
+  const [expiredQuestions, setExpiredQuestions] = useState([]);
 
   const { library, active, chainId } = useWeb3React();
 
@@ -20,10 +25,20 @@ export const MarketProvider = ({ children }) => {
       setLoading(true);
 
       const market = getMarketContract(chainId, library);
-      setContract(market);
+      setMarketContract(market);
 
-      const data = await fetchAllQuestions(chainId);
-      setQuestions(data);
+      const derivedToken = getDerivedTokenContract(chainId, library);
+      setDerivedTokenContract(derivedToken);
+
+      const ongoingQuzData = await fetchAllOngoingQuestions(chainId);
+      setLiveQuestions(ongoingQuzData);
+
+      console.log("DEBUG-ongoing", { ongoingQuzData });
+
+      const expiredQuzData = await fetchAllExpiredQuestions(chainId);
+      setExpiredQuestions(expiredQuzData);
+
+      console.log("DEBUG-expired", { expiredQuzData });
 
       setLoading(false);
     };
@@ -38,8 +53,10 @@ export const MarketProvider = ({ children }) => {
     <MarketContext.Provider
       value={{
         loading,
-        contract,
-        questions,
+        liveQuestions,
+        expiredQuestions,
+        MarketContract,
+        DerivedTokenContract,
       }}
     >
       {children}

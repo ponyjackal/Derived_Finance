@@ -1,3 +1,5 @@
+import dayjs from 'dayjs';
+
 import resolveConfig from 'tailwindcss/resolveConfig';
 import tailwindConfigFile from '../css/tailwind.config';
 
@@ -40,4 +42,38 @@ export const toShortAddress = (str, num = 3) => {
 
 export const toHexString = (num) => {
   return `0x${num.toString(16)}`;
+};
+
+export const toFriendlyTimeFormat = (time) => {
+  const d = new Date(time * 1000);
+  const day = dayjs(d).format('MMM DD, YY | hh:mm');
+
+  return day;
+};
+
+export const toTimer = (time) => {
+  const dividers = [
+    1000 * 60 * 60 * 24,
+    1000 * 60 * 60,
+    1000 * 60,
+    1000,
+  ];
+
+  let str = '', res = time;
+  for (const divier of dividers) {
+    const r = res % divier;
+    const t = (res - r) / divier;
+
+    if (t !== 0) {
+      str += `${t > 9 ? t : '0' + t}:`;
+    }
+
+    res = r;
+  }
+
+  if (str.length > 0) {
+    return str.slice(0, str.length - 1);
+  }
+
+  return "00:00:00:00";
 };
