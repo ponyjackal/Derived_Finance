@@ -1,0 +1,45 @@
+[
+  {
+    "inputs": [
+      {
+        "internalType": "contract SynthetixEscrow",
+        "name": "_esc",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+      }
+    ],
+    "name": "checkAccountSchedule",
+    "outputs": [
+      {
+        "internalType": "uint256[16]",
+        "name": "",
+        "type": "uint256[16]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "synthetix_escrow",
+    "outputs": [
+      {
+        "internalType": "contract SynthetixEscrow",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  }
+]
