@@ -83,7 +83,7 @@ contract SynthetixEscrow is Owned, LimitedSetup(8 weeks) {
         onlyOwner
     {
         synthetix = _synthetix;
-        emit SynthetixUpdated(_synthetix);
+        emit SynthetixUpdated(address(_synthetix));
     }
 
 
@@ -211,7 +211,7 @@ contract SynthetixEscrow is Owned, LimitedSetup(8 weeks) {
         onlyOwner
         onlyDuringSetup
     {
-        synthetix.transfer(synthetix, quantity);
+        synthetix.transfer(address(synthetix), quantity);
     }
 
     /**
@@ -251,7 +251,7 @@ contract SynthetixEscrow is Owned, LimitedSetup(8 weeks) {
 
         /* There must be enough balance in the contract to provide for the vesting entry. */
         totalVestedBalance = totalVestedBalance.add(quantity);
-        require(totalVestedBalance <= synthetix.balanceOf(this), "Must be enough balance in the contract to provide for the vesting entry");
+        require(totalVestedBalance <= synthetix.balanceOf(address(this)), "Must be enough balance in the contract to provide for the vesting entry");
 
         /* Disallow arbitrarily long vesting schedules in light of the gas limit. */
         uint scheduleLength = vestingSchedules[account].length;
