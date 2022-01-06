@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 import { Tabs, TabList, Tab, TabPanel } from "react-tabs";
 import "react-tabs/style/react-tabs.css";
 import Box from "@mui/material/Box";
@@ -10,27 +10,41 @@ import Button from "@mui/material/Button";
 import InputLabel from '@mui/material/InputLabel';
 import MonetizationOnOutlinedIcon from "@mui/icons-material/MonetizationOnOutlined";
 
-export class Withdrawtabs extends Component {
-  state = {
-    selectedIndex: 0,
+import { ethers } from "ethers";
+import Web3Modal from "web3modal";
+import Depot from "../../../artifacts/contracts/Depot.sol/Depot.json"
+
+const Withdrawtabs = (props) => {
+
+  const [selectedIndex, setSelectedIndex] = useState(0)
+  const [age, setAge] = useState(0)
+
+  const handleSelect = (index) => {
+    setSelectedIndex(index)
   };
-  handleSelect = (index) => {
-    this.setState({ selectedIndex: index });
+  const handleButtonClick = () => {
+    setSelectedIndex(0)
   };
-  handleButtonClick = () => {
-    this.setState({ selectedIndex: 0 });
+  const handleChange = (event) => {
+    setAge(event.target.value);
   };
-  handleChange = (event) => {
-    this.setState({ age: event.target.value });
-  };
-  handleChange1 = (event) => {
-    this.setState({ age1: event.target.value });
-  };
-  render() {
+  
+  const onDeposit = async () => {
+    const web3Modal = new Web3Modal({
+      network: "mainnet",
+      cacheProvider: true,
+    });
+    const connection = await web3Modal.connect();
+    const provider = new ethers.providers.Web3Provider(connection);
+    const signer = provider.getSigner();
+
+    const depotContract = new ethers.Contract()
+  }
+  
     return (
       <Tabs
-        selectedIndex={this.state.selectedIndex}
-        onSelect={this.handleSelect}
+        selectedIndex={selectedIndex}
+        onSelect={handleSelect}
       >
         <TabList style={{ width: "93%" }}>
           <Tab>Deposit</Tab>
@@ -77,8 +91,8 @@ export class Withdrawtabs extends Component {
                 <Select
                   labelId="demo-simple-select-label"
                   id="demo-simple-select"
-                  value={this.state.age}
-                  onChange={(e) => this.handleChange(e)}
+                  value={age}
+                  onChange={handleChange}
                 >
                   <MenuItem value={1}>
                     <MonetizationOnOutlinedIcon />
@@ -108,6 +122,7 @@ export class Withdrawtabs extends Component {
                 margin: "20px 9px",
                 fontSize: "20px",
               }}
+              onClick={onDeposit}
             >
               Deposit
             </Button>
@@ -340,7 +355,6 @@ export class Withdrawtabs extends Component {
         </TabPanel>
       </Tabs>
     );
-  }
 }
 
 export default Withdrawtabs;
