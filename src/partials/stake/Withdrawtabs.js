@@ -12,7 +12,9 @@ import MonetizationOnOutlinedIcon from "@mui/icons-material/MonetizationOnOutlin
 
 import { ethers } from "ethers";
 import Web3Modal from "web3modal";
-import Depot from "../../../artifacts/contracts/Depot.sol/Depot.json"
+
+import Depot from "../../abis/Depot.json"
+import { depotAddress } from "../../config"
 
 const Withdrawtabs = (props) => {
 
@@ -38,7 +40,8 @@ const Withdrawtabs = (props) => {
     const provider = new ethers.providers.Web3Provider(connection);
     const signer = provider.getSigner();
 
-    const depotContract = new ethers.Contract()
+    const depotContract = new ethers.Contract(depotAddress, Depot.abi, signer)
+
   }
   
     return (

@@ -1,88 +1,97 @@
-[
-  {
-    "inputs": [
-      {
-        "internalType": "bytes4[]",
-        "name": "currencyKeys",
-        "type": "bytes4[]"
-      }
-    ],
-    "name": "anyRateIsStale",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "bytes4",
-        "name": "sourceCurrencyKey",
-        "type": "bytes4"
-      },
-      {
-        "internalType": "uint256",
-        "name": "sourceAmount",
-        "type": "uint256"
-      },
-      {
-        "internalType": "bytes4",
-        "name": "destinationCurrencyKey",
-        "type": "bytes4"
-      }
-    ],
-    "name": "effectiveValue",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "bytes4",
-        "name": "currencyKey",
-        "type": "bytes4"
-      }
-    ],
-    "name": "rateForCurrency",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "bytes4",
-        "name": "currencyKey",
-        "type": "bytes4"
-      }
-    ],
-    "name": "rateIsStale",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  }
-]
+{
+  "_format": "hh-sol-artifact-1",
+  "contractName": "IExchangeRates",
+  "sourceName": "contracts/IExchangeRates.sol",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "bytes4[]",
+          "name": "currencyKeys",
+          "type": "bytes4[]"
+        }
+      ],
+      "name": "anyRateIsStale",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes4",
+          "name": "sourceCurrencyKey",
+          "type": "bytes4"
+        },
+        {
+          "internalType": "uint256",
+          "name": "sourceAmount",
+          "type": "uint256"
+        },
+        {
+          "internalType": "bytes4",
+          "name": "destinationCurrencyKey",
+          "type": "bytes4"
+        }
+      ],
+      "name": "effectiveValue",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes4",
+          "name": "currencyKey",
+          "type": "bytes4"
+        }
+      ],
+      "name": "rateForCurrency",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes4",
+          "name": "currencyKey",
+          "type": "bytes4"
+        }
+      ],
+      "name": "rateIsStale",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x",
+  "deployedBytecode": "0x",
+  "linkReferences": {},
+  "deployedLinkReferences": {}
+}

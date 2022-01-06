@@ -1,13 +1,22 @@
-[
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "setupDuration",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "nonpayable",
-    "type": "constructor"
-  }
-]
+{
+  "_format": "hh-sol-artifact-1",
+  "contractName": "LimitedSetup",
+  "sourceName": "contracts/LimitedSetup.sol",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "setupDuration",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    }
+  ],
+  "bytecode": "0x608060405234801561001057600080fd5b5060405161017b38038061017b8339818101604052810190610032919061005f565b804261003e9190610088565b6000819055505061012e565b60008151905061005981610117565b92915050565b60006020828403121561007157600080fd5b600061007f8482850161004a565b91505092915050565b6000610093826100de565b915061009e836100de565b9250827fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff038211156100d3576100d26100e8565b5b828201905092915050565b6000819050919050565b7f4e487b7100000000000000000000000000000000000000000000000000000000600052601160045260246000fd5b610120816100de565b811461012b57600080fd5b50565b603f8061013c6000396000f3fe6080604052600080fdfea2646970667358221220ffc13e3b6cd4ae361e2d8fac2e35e485408200e59a14a9c9cde4619eadaab85d64736f6c63430008040033",
+  "deployedBytecode": "0x6080604052600080fdfea2646970667358221220ffc13e3b6cd4ae361e2d8fac2e35e485408200e59a14a9c9cde4619eadaab85d64736f6c63430008040033",
+  "linkReferences": {},
+  "deployedLinkReferences": {}
+}
