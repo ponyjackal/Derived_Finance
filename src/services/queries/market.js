@@ -14,6 +14,7 @@ export const FETCH_QUESTIONS = (limit = 10, page = 0) => {
         maker
         resolver
         title
+        createTime
         resolveTime
         funding
         fee
@@ -43,6 +44,7 @@ export const FETCH_ONGOING_QUESTIOINS = (limit = 10, page = 0) => {
       maker
       resolver
       title
+      createTime
       resolveTime
       funding
       fee
@@ -72,6 +74,7 @@ export const FETCH_EXPIRED_QUESTIONS = (limit = 10, page = 0) => {
       maker
       resolver
       title
+      createTime
       resolveTime
       funding
       fee
