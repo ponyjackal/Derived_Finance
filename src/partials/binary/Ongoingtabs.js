@@ -23,22 +23,26 @@ const Ongoingtabs = () => {
         <Tab>Expired</Tab>
       </TabList>
       <TabPanel>
-        <div className="grid md:grid-cols-3 grid-cols-1 gap-4">
-          {liveQuestions && liveQuestions.length > 0 ? liveQuestions.map(question => (
-            <Singlebinaryblock key={question.id} {...question} />
-          )) : (
-            <h3 className="text-center">No live questions</h3>
-          )}
-        </div>
+        {liveQuestions && liveQuestions.length > 0 ? (
+          <div className="grid md:grid-cols-3 grid-cols-1 gap-4">
+            {liveQuestions.map(question => (
+              <Singlebinaryblock key={question.id} {...question} />
+            ))}
+          </div>
+        ) : (
+          <h3 className="text-center">No live questions</h3>
+        )}
       </TabPanel>
       <TabPanel>
-        <div className="grid md:grid-cols-3 grid-cols-1 gap-4">
-          {expiredQuestions && expiredQuestions.length > 0 ? liveQuestions.map(question => (
-            <Singlebinaryblock key={question.id} {...question} />
-          )) : (
-            <h3 className="text-center">No expired questions</h3>
-          )}
-        </div>
+        {expiredQuestions && expiredQuestions.length > 0 ? (
+          <div className="grid md:grid-cols-3 grid-cols-1 gap-4">
+            {liveQuestions.map(question => (
+              <Singlebinaryblock key={question.id} {...question} />
+            ))}
+          </div>
+        ) : (
+          <h3 className="text-center">No expired questions</h3>
+        )}
       </TabPanel>
     </Tabs>
   );
