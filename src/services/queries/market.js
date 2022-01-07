@@ -10,7 +10,7 @@ export const FETCH_QUESTIONS = (limit = 10, page = 0) => {
       {
         id
         questionId
-        collateral
+        token
         maker
         resolver
         title
@@ -18,6 +18,7 @@ export const FETCH_QUESTIONS = (limit = 10, page = 0) => {
         resolveTime
         funding
         fee
+        strikePrice
         status
         answer
         long
@@ -40,7 +41,7 @@ export const FETCH_ONGOING_QUESTIOINS = (limit = 10, page = 0) => {
     {
       id
       questionId
-      collateral
+      token
       maker
       resolver
       title
@@ -48,6 +49,7 @@ export const FETCH_ONGOING_QUESTIOINS = (limit = 10, page = 0) => {
       resolveTime
       funding
       fee
+      strikePrice
       status
       answer
       long
@@ -70,7 +72,7 @@ export const FETCH_EXPIRED_QUESTIONS = (limit = 10, page = 0) => {
     {
       id
       questionId
-      collateral
+      token
       maker
       resolver
       title
@@ -78,6 +80,7 @@ export const FETCH_EXPIRED_QUESTIONS = (limit = 10, page = 0) => {
       resolveTime
       funding
       fee
+      strikePrice
       status
       answer
       long

@@ -1,6 +1,12 @@
 [
   {
-    "inputs": [],
+    "inputs": [
+      {
+        "internalType": "contract IERC20",
+        "name": "_collateral",
+        "type": "address"
+      }
+    ],
     "stateMutability": "nonpayable",
     "type": "constructor"
   },
@@ -54,7 +60,7 @@
       {
         "indexed": true,
         "internalType": "address",
-        "name": "collateral",
+        "name": "token",
         "type": "address"
       },
       {
@@ -97,6 +103,12 @@
         "indexed": false,
         "internalType": "uint256",
         "name": "fee",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "strikePrice",
         "type": "uint256"
       },
       {
@@ -370,10 +382,23 @@
     "type": "function"
   },
   {
+    "inputs": [],
+    "name": "collateral",
+    "outputs": [
+      {
+        "internalType": "contract IERC20",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [
       {
         "internalType": "address",
-        "name": "_collateral",
+        "name": "_token",
         "type": "address"
       },
       {
@@ -399,6 +424,11 @@
       {
         "internalType": "uint256",
         "name": "_fee",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_strikePrice",
         "type": "uint256"
       }
     ],
@@ -684,7 +714,7 @@
     "outputs": [
       {
         "internalType": "address",
-        "name": "collateral",
+        "name": "token",
         "type": "address"
       },
       {
@@ -725,6 +755,11 @@
       {
         "internalType": "uint256",
         "name": "slotIndex",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "strikePrice",
         "type": "uint256"
       },
       {
