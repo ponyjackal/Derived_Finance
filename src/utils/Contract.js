@@ -21,3 +21,7 @@ export const toShortAmount = async (address, amount, library) => {
     return 0;
   }
 };
+
+export const toShort18 = (num) => {
+  return new BigNumber(num).dividedBy(new BigNumber(10).pow(18));
+};

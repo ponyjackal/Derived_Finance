@@ -89,3 +89,32 @@ export const FETCH_EXPIRED_QUESTIONS = (limit = 10, page = 0) => {
   }
 `);
 };
+
+export const FETCH_QUESTION_DETAIL = (questionId) => {
+  return gql(`
+  query transactions {
+    questions(
+      where: {
+        questionId: "${questionId}"
+      }
+    )
+    {
+      id
+      questionId
+      token
+      maker
+      resolver
+      title
+      createTime
+      resolveTime
+      funding
+      fee
+      strikePrice
+      status
+      answer
+      long
+      short
+    }
+  }
+`);
+};

@@ -108,7 +108,7 @@ const Singlebinaryblock = ({ title, questionId, resolveTime, createTime, strikeP
           color="warning"
         />{" "} */}
       </div>
-      <Link to="/Binaryoptionsinside">
+      <Link to={`/Binaryoptionsinside/${questionId}`}>
         <div>
           <div className="flex items-center justify-between px-5 py-2">
             <p className="text-gray-400">Binary Option ID</p>
