@@ -11,7 +11,7 @@ import { toShortAmount } from "../../utils/Contract";
 
 const label = { inputProps: { "aria-label": "Checkbox demo" } };
 
-const Singlebinaryblock = ({ title, questionId, resolveTime, createTime, strikePrice, token }) => {
+const Singlebinaryblock = ({ title, questionId, resolveTime, createTime, strikePrice, token, status }) => {
   const { library, active } = useWeb3React();
   const [time, setTime] = useState("00:00:00:00");
   const [progress, setProgress] = useState(100);
@@ -89,7 +89,7 @@ const Singlebinaryblock = ({ title, questionId, resolveTime, createTime, strikeP
           </div>
           <div className="flex items-center justify-between px-5 py-2">
             <p className="text-gray-400">Strike Price</p>
-            <p className="text-white">$ {endPrice}</p>
+            <p className="text-white">${endPrice}</p>
           </div>
           {/* <div className="flex items-center justify-between px-5 py-2">
             <p className="text-gray-400">Current Asset Price</p>
@@ -105,6 +105,12 @@ const Singlebinaryblock = ({ title, questionId, resolveTime, createTime, strikeP
           className="text-white"
         />
       </Link>
+      {status === "READY" && (
+        <div className="flex items-center justify-between px-5 py-2">
+          <button className="px-6 py-2 text-sm text-white font-medium bg-headings rounded-md">LONG</button>
+          <button className="px-6 py-2 text-sm text-white font-medium bg-red-600 rounded-md">SHORT</button>
+        </div>
+      )}
     </div>
   );
 }
