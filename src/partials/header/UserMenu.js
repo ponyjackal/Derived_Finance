@@ -26,7 +26,7 @@ function UserMenu() {
   useEffect(() => {
     const clickHandler = ({ target }) => {
       if (
-        !dropdownOpen ||
+        !dropdownOpen || !dropdownOpen.current ||
         dropdown.current.contains(target) ||
         trigger.current.contains(target)
       )

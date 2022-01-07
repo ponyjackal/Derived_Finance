@@ -170,8 +170,8 @@ const Withdrawtabs = (props) => {
                 <Select
                   labelId="demo-simple-select-label"
                   id="demo-simple-select"
-                  value={this.state.age}
-                  onChange={(e) => this.handleChange(e)}
+                  value={age}
+                  onChange={handleChange}
                 >
                   <MenuItem value={1}>
                     <MonetizationOnOutlinedIcon />
@@ -245,8 +245,8 @@ const Withdrawtabs = (props) => {
                 <Select
                   labelId="demo-simple-select-label"
                   id="demo-simple-select"
-                  value={this.state.age}
-                  onChange={(e) => this.handleChange(e)}
+                  value={age}
+                  onChange={handleChange}
                 >
                   <MenuItem value={1}>
                     <MonetizationOnOutlinedIcon />
@@ -320,8 +320,8 @@ const Withdrawtabs = (props) => {
                 <Select
                   labelId="demo-simple-select-label"
                   id="demo-simple-select"
-                  value={this.state.age}
-                  onChange={(e) => this.handleChange(e)}
+                  value={age}
+                  onChange={handleChange}
                 >
                   <MenuItem value={1}>
                     <MonetizationOnOutlinedIcon />
