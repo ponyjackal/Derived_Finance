@@ -36,7 +36,7 @@ export const formatValue = (value) => Intl.NumberFormat('en-US', {
  * @param {String} str 
  * @returns {String}
  */
-export const toShortAddress = (str, num = 3) => {
+export const toShortAddress = (str = '', num = 3) => {
   return `${str.substring(0, num)}...${str.substring(str.length - num, str.length)}`;
 };
 
@@ -47,6 +47,13 @@ export const toHexString = (num) => {
 export const toFriendlyTimeFormat = (time) => {
   const d = new Date(time * 1000);
   const day = dayjs(d).format('MMM DD, YY | hh:mm');
+
+  return day;
+};
+
+export const toFriendlyTime = (time) => {
+  const d = new Date(time * 1000);
+  const day = dayjs(d).format('MMM DD, YYYY');
 
   return day;
 };

@@ -3,8 +3,7 @@ import React, { useState } from "react";
 import Sidebar from "../partials/Sidebar";
 import Header from "../partials/Header";
 import Footer from "../partials/Footer";
-import Topbar from "../partials/binaryoptions/Topbar";
-import BinaryInside from "../partials/binaryoptions/Inside";
+import BinaryInside from "../partials/binaryoptions";
 
 
 function Binaryoptionsinside() {
@@ -19,10 +18,7 @@ function Binaryoptionsinside() {
       <div className="relative flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
         {/*  Site header */}
         <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
-        <main>
-          <Topbar />
-          <BinaryInside />
-        </main>
+        <BinaryInside />
         <Footer />
       </div>
     </div>
