@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useWeb3React } from "@web3-react/core";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import Checkbox from "@mui/material/Checkbox";
+import Skeleton from '@mui/material/Skeleton';
 import { Link } from "react-router-dom";
 
 import Progressbar from "./Progressbar";
@@ -13,6 +14,7 @@ const label = { inputProps: { "aria-label": "Checkbox demo" } };
 
 const Singlebinaryblock = ({ title, questionId, resolveTime, createTime, strikePrice, token, status }) => {
   const { library, active } = useWeb3React();
+  const [loading, setLoading] = useState(false);
   const [time, setTime] = useState("00:00:00:00");
   const [progress, setProgress] = useState(100);
   const [endPrice, setEndPrice] = useState(0);
@@ -48,9 +50,12 @@ const Singlebinaryblock = ({ title, questionId, resolveTime, createTime, strikeP
     if (!strikePrice || !token || !library || !active) return;
 
     const initialize = async () => {
-      const amount = await toShortAmount(token, strikePrice, library);
+      setLoading(true);
 
+      const amount = await toShortAmount(token, strikePrice, library);
       setEndPrice(amount);
+
+      setLoading(false);
     };
 
     initialize();
@@ -89,7 +94,9 @@ const Singlebinaryblock = ({ title, questionId, resolveTime, createTime, strikeP
           </div>
           <div className="flex items-center justify-between px-5 py-2">
             <p className="text-gray-400">Strike Price</p>
-            <p className="text-white">${endPrice}</p>
+            {loading ? <Skeleton variant="text" /> : (
+              <p className="text-white">${endPrice}</p>
+            )}
           </div>
           {/* <div className="flex items-center justify-between px-5 py-2">
             <p className="text-gray-400">Current Asset Price</p>
@@ -98,18 +105,24 @@ const Singlebinaryblock = ({ title, questionId, resolveTime, createTime, strikeP
         </div>
       </Link>
       <Link to="/Binaryoptionsinside">
-        <Progressbar
-          bgcolor="#86C440"
-          progress={progress}
-          height={15}
-          className="text-white"
-        />
+        {loading ? <Skeleton variant="text" /> : (
+          <Progressbar
+            bgcolor="#86C440"
+            progress={progress}
+            height={15}
+            className="text-white"
+          />
+        )}
       </Link>
       {status === "READY" && (
-        <div className="flex items-center justify-between px-5 py-2">
-          <button className="px-6 py-2 text-sm text-white font-medium bg-headings rounded-md">LONG</button>
-          <button className="px-6 py-2 text-sm text-white font-medium bg-red-600 rounded-md">SHORT</button>
-        </div>
+        <>
+          {loading ? <Skeleton variant="text" /> : (
+            <div className="flex items-center justify-between px-5 py-2">
+              <button className="px-6 py-2 text-sm text-white font-medium bg-headings rounded-md cursor-pointer">LONG</button>
+              <button className="px-6 py-2 text-sm text-white font-medium bg-red-600 rounded-md cursor-pointer">SHORT</button>
+            </div>
+          )}
+        </>
       )}
     </div>
   );
