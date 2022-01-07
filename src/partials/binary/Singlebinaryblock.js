@@ -82,8 +82,6 @@ const Singlebinaryblock = ({ title, questionId, resolveTime, createTime, strikeP
       const long = await MarketContract.balanceOf(account, longId);
       const short = await MarketContract.balanceOf(account, shortId);
 
-      console.log('DEBUG-balance', { long: long, short, longId, shortId });
-
       setBalances({
         long: new BigNumber(long.toString()).toFixed(),
         short: new BigNumber(short.toString()).toFixed(),
@@ -136,8 +134,6 @@ const Singlebinaryblock = ({ title, questionId, resolveTime, createTime, strikeP
             <p className="text-white">238$</p>
           </div> */}
         </div>
-      </Link>
-      <Link to="/Binaryoptionsinside">
         {loading ? <Skeleton variant="text" /> : (
           <Progressbar
             bgcolor="#86C440"
@@ -146,23 +142,23 @@ const Singlebinaryblock = ({ title, questionId, resolveTime, createTime, strikeP
             className="text-white"
           />
         )}
+        {loadingBalance ? (<Skeleton variant="text" />) : (
+          <div className="flex items-center justify-between px-5 py-2">
+            <p className="text-white font-medium">{balances.long}</p>
+            <p className="text-white font-medium">{balances.short}</p>
+          </div>
+        )}
+        {status === "READY" && (
+          <>
+            {loading ? <Skeleton variant="text" /> : (
+              <div className="flex items-center justify-between px-5 py-2">
+                <button className="px-6 py-2 text-sm text-white font-medium bg-headings rounded-md cursor-pointer">LONG</button>
+                <button className="px-6 py-2 text-sm text-white font-medium bg-red-600 rounded-md cursor-pointer">SHORT</button>
+              </div>
+            )}
+          </>
+        )}
       </Link>
-      {loadingBalance ? (<Skeleton variant="text" />) : (
-        <div className="flex items-center justify-between px-5 py-2">
-          <p className="text-white font-medium">{balances.long}</p>
-          <p className="text-white font-medium">{balances.short}</p>
-        </div>
-      )}
-      {status === "READY" && (
-        <>
-          {loading ? <Skeleton variant="text" /> : (
-            <div className="flex items-center justify-between px-5 py-2">
-              <button className="px-6 py-2 text-sm text-white font-medium bg-headings rounded-md cursor-pointer">LONG</button>
-              <button className="px-6 py-2 text-sm text-white font-medium bg-red-600 rounded-md cursor-pointer">SHORT</button>
-            </div>
-          )}
-        </>
-      )}
     </div>
   );
 }
