@@ -1,23 +1,32 @@
 import React, { useState, useEffect } from "react";
 import { useWeb3React } from "@web3-react/core";
-import StarBorderIcon from "@mui/icons-material/StarBorder";
-import Checkbox from "@mui/material/Checkbox";
+// import StarBorderIcon from "@mui/icons-material/StarBorder";
+// import Checkbox from "@mui/material/Checkbox";
 import Skeleton from '@mui/material/Skeleton';
 import { Link } from "react-router-dom";
+import { BigNumber } from 'bignumber.js';
 
+import { useMarket } from "../../context/market";
 import Progressbar from "./Progressbar";
-import image from "../../images/user-36-05.jpg";
+// import image from "../../images/user-36-05.jpg";
 import { toShortAddress, toFriendlyTimeFormat, toTimer } from "../../utils/Utils";
 import { toShortAmount } from "../../utils/Contract";
 
-const label = { inputProps: { "aria-label": "Checkbox demo" } };
+// const label = { inputProps: { "aria-label": "Checkbox demo" } };
 
 const Singlebinaryblock = ({ title, questionId, resolveTime, createTime, strikePrice, token, status }) => {
-  const { library, active } = useWeb3React();
+  const { library, active, account } = useWeb3React();
+  const { MarketContract } = useMarket();
+
   const [loading, setLoading] = useState(false);
+  const [loadingBalance, setLoadingBalance] = useState(false);
   const [time, setTime] = useState("00:00:00:00");
   const [progress, setProgress] = useState(100);
   const [endPrice, setEndPrice] = useState(0);
+  const [balances, setBalances] = useState({
+    long: 0,
+    short: 0,
+  });
 
   useEffect(() => {
     if (!resolveTime || !createTime) return;
@@ -61,21 +70,45 @@ const Singlebinaryblock = ({ title, questionId, resolveTime, createTime, strikeP
     initialize();
   }, [strikePrice, token, library, active]);
 
+  useEffect(() => {
+    if (!questionId || !MarketContract || !account) return;
+
+    const initialize = async () => {
+      setLoadingBalance(true);
+
+      const longId = await MarketContract.generateAnswerId(questionId, 0);
+      const shortId = await MarketContract.generateAnswerId(questionId, 0);
+
+      const long = await MarketContract.balanceOf(account, longId);
+      const short = await MarketContract.balanceOf(account, shortId);
+
+      console.log('DEBUG-balance', { long: long, short, longId, shortId });
+
+      setBalances({
+        long: new BigNumber(long.toString()).toFixed(),
+        short: new BigNumber(short.toString()).toFixed(),
+      });
+      setLoadingBalance(false);
+    };
+
+    initialize();
+  }, [questionId, account, MarketContract]);
+
   return (
     <div className="p-2 bg-secondary rounded-lg">
       <div className="flex items-center justify-between">
-        <Link to="/Binaryoptionsinside" className="flex items-center justify-between">
-          <img src={image} className="rounded-full w-12 p-1" alt="" />
-          <p className="text-white text-sm">
+        <Link to="/Binaryoptionsinside" className="flex items-center justify-between p-4">
+          {/* <img src={image} className="rounded-full w-12 p-1" alt="" /> */}
+          <p className="text-white text-md">
             {title}
           </p>
         </Link>
-        <Checkbox
+        {/* <Checkbox
           {...label}
           icon={<StarBorderIcon />}
           checkedIcon={<StarBorderIcon />}
           color="warning"
-        />{" "}
+        />{" "} */}
       </div>
       <Link to="/Binaryoptionsinside">
         <div>
@@ -114,6 +147,12 @@ const Singlebinaryblock = ({ title, questionId, resolveTime, createTime, strikeP
           />
         )}
       </Link>
+      {loadingBalance ? (<Skeleton variant="text" />) : (
+        <div className="flex items-center justify-between px-5 py-2">
+          <p className="text-white font-medium">{balances.long}</p>
+          <p className="text-white font-medium">{balances.short}</p>
+        </div>
+      )}
       {status === "READY" && (
         <>
           {loading ? <Skeleton variant="text" /> : (
