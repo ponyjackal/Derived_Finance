@@ -1,12 +1,26 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Tabs, TabList, Tab, TabPanel } from "react-tabs";
 import "react-tabs/style/react-tabs.css";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 
+import { getPrice } from "../../services/coingecko";
+
 const Buysell = ({ fee, strikePrice, long, short }) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [currentPrice, setCurrentPrice] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(async () => {
+      const data = await getPrice('wrapped-bitcoin');
+      setCurrentPrice(data);
+    }, 1000);
+
+    return () => {
+      clearInterval(timer);
+    };
+  }, []);
 
   const handleSelect = (index) => {
     setSelectedIndex(index);
@@ -93,7 +107,7 @@ const Buysell = ({ fee, strikePrice, long, short }) => {
             </div>
             <div className="flex items-center justify-between px-5 py-1">
               <p className="text-gray-400 text-xs">Current Asset Price</p>
-              <p className="text-white text-xs">238$</p>
+              <p className="text-white text-xs">${currentPrice}</p>
             </div>
           </div>
           <div className="flex justify-center md:justify-start">
