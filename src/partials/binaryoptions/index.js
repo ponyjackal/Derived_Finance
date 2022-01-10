@@ -75,10 +75,6 @@ const BinaryInside = () => {
     initialize();
   }, [params, chainId, library, account, MarketContract]);
 
-  useEffect(() => {
-    console.log('DEBUG-updating-question', { question });
-  }, [question]);
-
   return (
     <main>
       <div>
