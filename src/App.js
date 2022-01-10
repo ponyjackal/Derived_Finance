@@ -41,7 +41,7 @@ function App() {
         <Route exact path="/Farming">
           <Farming />
         </Route>
-        <Route exact path="/Binaryoptionsinside">
+        <Route exact path="/Binaryoptionsinside/:questionId">
           <Binaryoptionsinside />
         </Route>
       </Switch>
