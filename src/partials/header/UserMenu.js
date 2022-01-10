@@ -63,7 +63,13 @@ function UserMenu() {
     }
 
     setVisible(true);
-    await connect(key, Connectors[key]);
+    if (!connect) {
+      setTimeout(() => {
+        connectWallet(key);
+      }, 500);
+    } else {
+      connect(key, Connectors[key]);
+    }
   };
 
   return (
