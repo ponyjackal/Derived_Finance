@@ -78,7 +78,7 @@
       {
         "indexed": false,
         "internalType": "string",
-        "name": "title",
+        "name": "meta",
         "type": "string"
       },
       {
@@ -408,7 +408,7 @@
       },
       {
         "internalType": "string",
-        "name": "_title",
+        "name": "_meta",
         "type": "string"
       },
       {
@@ -481,7 +481,7 @@
       },
       {
         "internalType": "string",
-        "name": "_title",
+        "name": "_meta",
         "type": "string"
       }
     ],
@@ -729,7 +729,7 @@
       },
       {
         "internalType": "string",
-        "name": "title",
+        "name": "meta",
         "type": "string"
       },
       {
