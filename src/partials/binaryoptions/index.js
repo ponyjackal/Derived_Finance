@@ -93,6 +93,10 @@ const BinaryInside = () => {
     initialize();
   }, [params, chainId, library, account, MarketContract]);
 
+  useEffect(() => {
+    console.log("DEBUG-question: ", { question });
+  }, [question]);
+
   return (
     <main>
       <div>
@@ -215,6 +219,9 @@ const BinaryInside = () => {
       </p>
       <div className="m-8">
         <p className="text-white font-base">
+          {question.details && question.details.description}
+        </p>
+        {/* <p className="text-white font-base">
           Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec
           eget ultricies dolor, id semper purus. Nam egestas vel nisl eget
           blandit. Nunc hendrerit purus id consequat auctor.{" "}
@@ -225,9 +232,24 @@ const BinaryInside = () => {
           blandit. Nunc hendrerit purus id consequat auctor. Maecenas
           pharetra nisi ligula, vel ultrices nunc imperdiet{" "}
           <span className="text-blue-500">.....read more </span>
+        </p> */}
+      </div>
+      <div className="bg-secondary m-7 rounded-lg">
+        <p className="text-white p-5">
+          Resolution Source{" "}
+          <span className="text-blue-500 mr-10 block">
+            <a href={question.details && question.details.link} target="blank" className="truncate block">
+              {question.details && question.details.link}
+            </a>
+          </span>
+        </p>
+        <p className="text-white p-5">
+          Resolver{" "}
+          <span className="text-blue-500 mr-10">
+            <a href={`https://bscscan.com/address/${question.resolver}`} target="blank">{question.resolver}</a>
+          </span>
         </p>
       </div>
-      <Aboutmarkettab />
 
       <div className="flex bg-secondary p-3 flex-col m-7 rounded-lg">
         <h1 className=" text-white text-2xl font-bold">Recent Trading</h1>
