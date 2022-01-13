@@ -21,14 +21,23 @@ export const MarketProvider = ({ children }) => {
   const { library, active, chainId } = useWeb3React();
 
   useEffect(() => {
-    const initialize = async () => {
-      setLoading(true);
-
+    const initialize = () => {
       const market = getMarketContract(chainId, library);
       setMarketContract(market);
 
       const derivedToken = getDerivedTokenContract(chainId, library);
       setDerivedTokenContract(derivedToken);
+    };
+
+    if (library && active && chainId) {
+      initialize();
+    } else {
+    }
+  }, [library, active, chainId]);
+
+  useEffect(() => {
+    const initialize = async () => {
+      setLoading(true);
 
       const ongoingQuzData = await fetchAllOngoingQuestions(chainId);
       setLiveQuestions(ongoingQuzData);
@@ -43,11 +52,8 @@ export const MarketProvider = ({ children }) => {
       setLoading(false);
     };
 
-    if (library && active && chainId) {
-      initialize();
-    } else {
-    }
-  }, [library, active, chainId]);
+    initialize();
+  }, [chainId]);
 
   return (
     <MarketContext.Provider
