@@ -31,9 +31,9 @@ const BinaryInside = () => {
   const [question, setQuestion] = useState({});
 
   const scanlink = useMemo(() => {
-    if (chainId === '56') return `https://bscscan.com/`;
+    if (chainId === '56') return `https://bscscan.com`;
 
-    return `https://testnet.bscscan.com/`;
+    return `https://testnet.bscscan.com`;
   }, [chainId]);
 
   useEffect(() => {
@@ -97,10 +97,6 @@ const BinaryInside = () => {
 
     initialize();
   }, [params, chainId, library, account, MarketContract]);
-
-  useEffect(() => {
-    console.log("DEBUG-question", { question });
-  }, [question]);
 
   return (
     <main>
@@ -186,9 +182,9 @@ const BinaryInside = () => {
                 {loading ? (
                   <Skeleton width={100} height={30} />
                 ) : (
-                  <p className="text-white text-sm mx-2 text-headings">
+                  <a href={`${scanlink}/address/${question.resolver}`} target="blank" className="text-white text-sm mx-2 text-headings">
                     {toShortAddress(question.maker, 6)}
-                  </p>
+                  </a>
                 )}
               </div>
               &nbsp;&nbsp;&nbsp;
@@ -199,9 +195,9 @@ const BinaryInside = () => {
                 {loading ? (
                   <Skeleton width={100} height={30} />
                 ) : (
-                  <p className="text-white text-sm mx-2 text-headings">
+                  <a href={`${scanlink}/address/${question.resolver}`} target="blank" className="text-white text-sm mx-2 text-headings">
                     {toShortAddress(question.resolver, 6)}
-                  </p>
+                  </a>
                 )}
               </div>
             </div>
