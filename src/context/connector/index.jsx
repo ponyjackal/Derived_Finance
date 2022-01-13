@@ -64,7 +64,7 @@ export const ConnectorProvider = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    const connector = localStorage.getItem("connector");
+    const connector = localStorage.getItem(CONNECTOR_LOCAL_KEY);
 
     switch (connector) {
       case ConnectorNames.injected:
