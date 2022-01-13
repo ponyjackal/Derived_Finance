@@ -15,8 +15,12 @@ import Transactiontable from "../../partials/trade/Transactiontable";
 // import Valueblockstwo from "../binary/Valueblockstwo";
 
 import { fetchQuestionDetail } from "../../services/market";
-import { toShortAmount, toShort18 } from "../../utils/Contract";
+import {
+  // toShortAmount,
+  toShort18,
+} from "../../utils/Contract";
 import { toFriendlyTime, toShortAddress } from "../../utils/Utils";
+import { getJsonIpfs } from "../../utils/Ipfs";
 import { useMarket } from "../../context/market";
 
 const BinaryInside = () => {
@@ -28,7 +32,7 @@ const BinaryInside = () => {
   const [question, setQuestion] = useState({});
 
   useEffect(() => {
-    if (!params || !params.questionId || !chainId || !MarketContract || !library) return;
+    // if (!params || !params.questionId || !chainId || !MarketContract || !library) return;
 
     const { questionId } = params;
 
@@ -43,30 +47,44 @@ const BinaryInside = () => {
         return;
       }
 
-      const longId = await MarketContract.generateAnswerId(questionId, 0);
-      const shortId = await MarketContract.generateAnswerId(questionId, 0);
+      let payload = {};
 
-      const longBalance = await MarketContract.balanceOf(account, longId);
-      const shortBalance = await MarketContract.balanceOf(account, shortId);
+      if (MarketContract) {
+        const longId = await MarketContract.generateAnswerId(questionId, 0);
+        const shortId = await MarketContract.generateAnswerId(questionId, 0);
 
-      const { lpVolume, tradeVolume } = await MarketContract.markets(questionId);
+        const longBalance = await MarketContract.balanceOf(account, longId);
+        const shortBalance = await MarketContract.balanceOf(account, shortId);
 
-      const strikePrice = await toShortAmount(data.token, data.strikePrice, library);
-      const liquidity = await toShortAmount(data.token, lpVolume.toString(), library);
+        // const { lpVolume, tradeVolume } = await MarketContract.markets(questionId);
+
+        // const liquidity = await toShort18(lpVolume.toString());
+
+        payload = {
+          longBalance: new BigNumber(longBalance.toString()).toFixed(),
+          shortBalance: new BigNumber(shortBalance.toString()).toFixed(),
+          // liquidity: liquidity.toFixed(2),
+          // trade: new BigNumber(tradeVolume.toString()).toFixed(),
+        };
+      }
+
+
+      const details = await getJsonIpfs(data.meta);
 
       const long = toShort18(data.long);
       const short = toShort18(data.short);
+      const lpVolume = toShort18(data.lpVolume);
+      const tradeVolume = toShort18(data.tradeVolume);
 
       setQuestion({
         ...data,
-        strikePrice,
+        ...payload,
+        details,
         resolveTime: toFriendlyTime((+data.resolveTime) || 0),
         long: long.toFixed(2),
         short: short.toFixed(2),
-        longBalance: new BigNumber(longBalance.toString()).toFixed(),
-        shortBalance: new BigNumber(shortBalance.toString()).toFixed(),
-        liquidity,
-        trade: new BigNumber(tradeVolume.toString()).toFixed(),
+        liquidity: lpVolume.toFixed(2),
+        trade: tradeVolume.toFixed(2),
       });
 
       setLoading(false);
@@ -85,7 +103,7 @@ const BinaryInside = () => {
                 <Skeleton variant="text" width={450} height={80} />
               ) : (
                 <p className="text-white text-2xl font-bold" style={{ width: 450 }}>
-                  {question.title}
+                  {question.details && question.details.title}
                 </p>
               )}
             </div>
@@ -114,7 +132,7 @@ const BinaryInside = () => {
                     <div className="flex flex-col w-full">
                       <div className="flex mb-4 justify-center">
                         <p className="text-gray-100 font-heading text-sm subpixel-antialiased group-hover:text-secondary font-black">
-                          Debt Status
+                          Trade volume
                         </p>
                       </div>
                       <div className="flex justify-center">
@@ -132,7 +150,7 @@ const BinaryInside = () => {
                     <div className="flex flex-col w-full">
                       <div className="flex mb-4 justify-center">
                         <p className="text-gray-100 font-heading text-sm subpixel-antialiased group-hover:text-secondary font-black">
-                          Amount Of USDx
+                          Liquidity Volume
                         </p>
                       </div>
                       <div className="flex justify-center">

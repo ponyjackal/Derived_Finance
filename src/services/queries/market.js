@@ -10,19 +10,19 @@ export const FETCH_QUESTIONS = (limit = 10, page = 0) => {
       {
         id
         questionId
-        token
         maker
         resolver
-        title
+        meta
         createTime
         resolveTime
         funding
         fee
-        strikePrice
         status
         answer
         long
         short
+        lpVolume
+        tradeVolume
       }
     }
   `);
@@ -41,19 +41,14 @@ export const FETCH_ONGOING_QUESTIOINS = (limit = 10, page = 0) => {
     {
       id
       questionId
-      token
-      maker
-      resolver
-      title
       createTime
       resolveTime
-      funding
-      fee
-      strikePrice
       status
       answer
       long
       short
+      lpVolume
+      tradeVolume
     }
   }
 `);
@@ -72,19 +67,14 @@ export const FETCH_EXPIRED_QUESTIONS = (limit = 10, page = 0) => {
     {
       id
       questionId
-      token
-      maker
-      resolver
-      title
       createTime
       resolveTime
-      funding
-      fee
-      strikePrice
       status
       answer
       long
       short
+      lpVolume
+      tradeVolume
     }
   }
 `);
@@ -101,19 +91,19 @@ export const FETCH_QUESTION_DETAIL = (questionId) => {
     {
       id
       questionId
-      token
       maker
       resolver
-      title
+      meta
       createTime
       resolveTime
       funding
       fee
-      strikePrice
       status
       answer
       long
       short
+      lpVolume
+      tradeVolume
     }
   }
 `);
