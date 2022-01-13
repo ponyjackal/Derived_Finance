@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useParams } from "react-router-dom";
 import { useWeb3React } from "@web3-react/core";
 import { BigNumber } from 'bignumber.js';
@@ -9,7 +9,6 @@ import AttachMoneyOutlinedIcon from "@mui/icons-material/AttachMoneyOutlined";
 import DashboardCard05 from "../../partials/dashboard/DashboardCard05";
 import Buysell from "../../partials/binary/Buysell";
 import Marketposition from "../../partials/binary/Marketposition";
-import Aboutmarkettab from "../../partials/binary/Aboutmarkettab";
 import Transactiontable from "../../partials/trade/Transactiontable";
 
 // import Valueblockstwo from "../binary/Valueblockstwo";
@@ -30,6 +29,12 @@ const BinaryInside = () => {
 
   const [loading, setLoading] = useState(false);
   const [question, setQuestion] = useState({});
+
+  const scanlink = useMemo(() => {
+    if (chainId === '56') return `https://bscscan.com/`;
+
+    return `https://testnet.bscscan.com/`;
+  }, [chainId]);
 
   useEffect(() => {
     // if (!params || !params.questionId || !chainId || !MarketContract || !library) return;
@@ -94,7 +99,7 @@ const BinaryInside = () => {
   }, [params, chainId, library, account, MarketContract]);
 
   useEffect(() => {
-    console.log("DEBUG-question: ", { question });
+    console.log("DEBUG-question", { question });
   }, [question]);
 
   return (
@@ -246,7 +251,7 @@ const BinaryInside = () => {
         <p className="text-white p-5">
           Resolver{" "}
           <span className="text-blue-500 mr-10">
-            <a href={`https://bscscan.com/address/${question.resolver}`} target="blank">{question.resolver}</a>
+            <a href={`${scanlink}/address/${question.resolver}`} target="blank">{question.resolver}</a>
           </span>
         </p>
       </div>
