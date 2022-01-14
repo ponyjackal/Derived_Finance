@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useParams } from "react-router-dom";
 import { useWeb3React } from "@web3-react/core";
 import { BigNumber } from 'bignumber.js';
@@ -9,12 +9,11 @@ import AttachMoneyOutlinedIcon from "@mui/icons-material/AttachMoneyOutlined";
 import DashboardCard05 from "../../partials/dashboard/DashboardCard05";
 import Buysell from "../../partials/binary/Buysell";
 import Marketposition from "../../partials/binary/Marketposition";
-import Aboutmarkettab from "../../partials/binary/Aboutmarkettab";
 import Transactiontable from "../../partials/trade/Transactiontable";
 
 // import Valueblockstwo from "../binary/Valueblockstwo";
 
-import { fetchQuestionDetail } from "../../services/market";
+import { fetchQuestionDetail, fetchTradesByQuestion } from "../../services/market";
 import {
   // toShortAmount,
   toShort18,
@@ -30,6 +29,13 @@ const BinaryInside = () => {
 
   const [loading, setLoading] = useState(false);
   const [question, setQuestion] = useState({});
+  const [trades, setTrades] = useState([]);
+
+  const scanlink = useMemo(() => {
+    if (chainId === '56') return `https://bscscan.com`;
+
+    return `https://testnet.bscscan.com`;
+  }, [chainId]);
 
   useEffect(() => {
     // if (!params || !params.questionId || !chainId || !MarketContract || !library) return;
@@ -46,6 +52,9 @@ const BinaryInside = () => {
         setLoading(false);
         return;
       }
+
+      const tradeData = await fetchTradesByQuestion(chainId, data.id);
+      setTrades(tradeData);
 
       let payload = {};
 
@@ -177,9 +186,9 @@ const BinaryInside = () => {
                 {loading ? (
                   <Skeleton width={100} height={30} />
                 ) : (
-                  <p className="text-white text-sm mx-2 text-headings">
+                  <a href={`${scanlink}/address/${question.resolver}`} target="blank" className="text-white text-sm mx-2 text-headings">
                     {toShortAddress(question.maker, 6)}
-                  </p>
+                  </a>
                 )}
               </div>
               &nbsp;&nbsp;&nbsp;
@@ -190,9 +199,9 @@ const BinaryInside = () => {
                 {loading ? (
                   <Skeleton width={100} height={30} />
                 ) : (
-                  <p className="text-white text-sm mx-2 text-headings">
+                  <a href={`${scanlink}/address/${question.resolver}`} target="blank" className="text-white text-sm mx-2 text-headings">
                     {toShortAddress(question.resolver, 6)}
-                  </p>
+                  </a>
                 )}
               </div>
             </div>
@@ -215,6 +224,9 @@ const BinaryInside = () => {
       </p>
       <div className="m-8">
         <p className="text-white font-base">
+          {question.details && question.details.description}
+        </p>
+        {/* <p className="text-white font-base">
           Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec
           eget ultricies dolor, id semper purus. Nam egestas vel nisl eget
           blandit. Nunc hendrerit purus id consequat auctor.{" "}
@@ -225,16 +237,31 @@ const BinaryInside = () => {
           blandit. Nunc hendrerit purus id consequat auctor. Maecenas
           pharetra nisi ligula, vel ultrices nunc imperdiet{" "}
           <span className="text-blue-500">.....read more </span>
+        </p> */}
+      </div>
+      <div className="bg-secondary m-7 rounded-lg">
+        <p className="text-white p-5">
+          Resolution Source{" "}
+          <span className="text-blue-500 mr-10 block">
+            <a href={question.details && question.details.link} target="blank" className="truncate block">
+              {question.details && question.details.link}
+            </a>
+          </span>
+        </p>
+        <p className="text-white p-5">
+          Resolver{" "}
+          <span className="text-blue-500 mr-10">
+            <a href={`${scanlink}/address/${question.resolver}`} target="blank">{question.resolver}</a>
+          </span>
         </p>
       </div>
-      <Aboutmarkettab />
 
       <div className="flex bg-secondary p-3 flex-col m-7 rounded-lg">
         <h1 className=" text-white text-2xl font-bold">Recent Trading</h1>
-        <p className=" text-gray-600 text-md">
+        {/* <p className=" text-gray-600 text-md">
           Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-        </p>
-        <Transactiontable />
+        </p> */}
+        <Transactiontable trades={trades} />
       </div>
     </main>
   );

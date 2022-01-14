@@ -4,23 +4,27 @@ import "react-tabs/style/react-tabs.css";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
+import { useWeb3React } from "@web3-react/core";
 
 import { getPrice } from "../../services/coingecko";
 
-const Buysell = ({ fee, strikePrice, long, short }) => {
+const Buysell = ({ fee, details, long, short }) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [currentPrice, setCurrentPrice] = useState(0);
+  const { active } = useWeb3React();
 
   useEffect(() => {
+    if (!details || details.type !== 'crypto') return;
+
     const timer = setInterval(async () => {
-      const data = await getPrice('wrapped-bitcoin');
+      const data = await getPrice(details.coinId);
       setCurrentPrice(data);
     }, 1000);
 
     return () => {
       clearInterval(timer);
     };
-  }, []);
+  }, [details]);
 
   const handleSelect = (index) => {
     setSelectedIndex(index);
@@ -101,30 +105,36 @@ const Buysell = ({ fee, strikePrice, long, short }) => {
               <p className="text-gray-400 text-xs">Expiry Date</p>
               <p className="text-white text-xs">Nov 30, 21 | 00:30</p>
             </div>
-            <div className="flex items-center justify-between px-5 py-1">
-              <p className="text-gray-400 text-xs">Strike Price</p>
-              <p className="text-white text-xs">{strikePrice}$</p>
-            </div>
-            <div className="flex items-center justify-between px-5 py-1">
-              <p className="text-gray-400 text-xs">Current Asset Price</p>
-              <p className="text-white text-xs">${currentPrice}</p>
-            </div>
+            {details && details.type === 'crypto' && (
+              <>
+                <div className="flex items-center justify-between px-5 py-1">
+                  <p className="text-gray-400 text-xs">Strike Price</p>
+                  <p className="text-white text-xs">{details.coinStrikePrice}$</p>
+                </div>
+                <div className="flex items-center justify-between px-5 py-1">
+                  <p className="text-gray-400 text-xs">Current Asset Price</p>
+                  <p className="text-white text-xs">${currentPrice}</p>
+                </div>
+              </>
+            )}
           </div>
           <div className="flex justify-center md:justify-start">
-            <Button
-              variant="contained"
-              style={{
-                backgroundColor: "#4A6D83",
-                padding: "5px",
-                textAlign: "center",
-                margin: "20px 9px",
-                fontSize: "15px",
-                width: "100%",
-                fontWeignt: "bold",
-              }}
-            >
-              Sign Up To Trade
-            </Button>
+            {!active && (
+              <Button
+                variant="contained"
+                style={{
+                  backgroundColor: "#4A6D83",
+                  padding: "5px",
+                  textAlign: "center",
+                  margin: "20px 9px",
+                  fontSize: "15px",
+                  width: "100%",
+                  fontWeignt: "bold",
+                }}
+              >
+                Connect wallet to Trade
+              </Button>
+            )}
           </div>
         </TabPanel>
         <TabPanel>
@@ -196,20 +206,22 @@ const Buysell = ({ fee, strikePrice, long, short }) => {
             </div>
           </div>
           <div className="flex justify-center md:justify-start">
-            <Button
-              variant="contained"
-              style={{
-                backgroundColor: "#4A6D83",
-                padding: "5px",
-                textAlign: "center",
-                margin: "20px 9px",
-                fontSize: "15px",
-                width: "100%",
-                fontWeignt: "bold",
-              }}
-            >
-              Sign Up To Trade
-            </Button>
+            {!active && (
+              <Button
+                variant="contained"
+                style={{
+                  backgroundColor: "#4A6D83",
+                  padding: "5px",
+                  textAlign: "center",
+                  margin: "20px 9px",
+                  fontSize: "15px",
+                  width: "100%",
+                  fontWeignt: "bold",
+                }}
+              >
+                Connect wallet to Trade
+              </Button>
+            )}
           </div>
         </TabPanel>
       </Tabs>
