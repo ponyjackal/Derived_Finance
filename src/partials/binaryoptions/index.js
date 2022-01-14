@@ -13,7 +13,7 @@ import Transactiontable from "../../partials/trade/Transactiontable";
 
 // import Valueblockstwo from "../binary/Valueblockstwo";
 
-import { fetchQuestionDetail } from "../../services/market";
+import { fetchQuestionDetail, fetchTradesByQuestion } from "../../services/market";
 import {
   // toShortAmount,
   toShort18,
@@ -29,6 +29,7 @@ const BinaryInside = () => {
 
   const [loading, setLoading] = useState(false);
   const [question, setQuestion] = useState({});
+  const [trades, setTrades] = useState([]);
 
   const scanlink = useMemo(() => {
     if (chainId === '56') return `https://bscscan.com`;
@@ -51,6 +52,9 @@ const BinaryInside = () => {
         setLoading(false);
         return;
       }
+
+      const tradeData = await fetchTradesByQuestion(chainId, data.id);
+      setTrades(tradeData);
 
       let payload = {};
 
@@ -257,7 +261,7 @@ const BinaryInside = () => {
         {/* <p className=" text-gray-600 text-md">
           Lorem ipsum dolor sit amet, consectetur adipiscing elit.
         </p> */}
-        <Transactiontable />
+        <Transactiontable trades={trades} />
       </div>
     </main>
   );

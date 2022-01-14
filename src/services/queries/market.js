@@ -108,3 +108,27 @@ export const FETCH_QUESTION_DETAIL = (questionId) => {
   }
 `);
 };
+
+export const FETCH_TRADES_BY_QUESTION = (id, limit = 10, page = 0) => {
+  return gql(`
+    query transactions {
+      trades (
+        first: ${limit}
+        skip: ${page * limit}
+        where: {
+          question: "${id}"
+        }
+      ) {
+        id
+        long
+        short
+        timestamp
+        amount
+        transaction
+        trader
+        status
+        answer
+      }
+    }
+  `);
+};
