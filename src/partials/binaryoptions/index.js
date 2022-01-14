@@ -6,7 +6,8 @@ import { BigNumber } from 'bignumber.js';
 import Skeleton from '@mui/material/Skeleton';
 import AttachMoneyOutlinedIcon from "@mui/icons-material/AttachMoneyOutlined";
 
-import DashboardCard05 from "../../partials/dashboard/DashboardCard05";
+import Chart from "../../partials/dashboard/Chart";
+// import DashboardCard05 from "../../partials/dashboard/DashboardCard05";
 import Buysell from "../../partials/binary/Buysell";
 import Marketposition from "../../partials/binary/Marketposition";
 import Transactiontable from "../../partials/trade/Transactiontable";
@@ -30,6 +31,28 @@ const BinaryInside = () => {
   const [loading, setLoading] = useState(false);
   const [question, setQuestion] = useState({});
   const [trades, setTrades] = useState([]);
+  const [prices, setPrices] = useState([]);
+
+  const positions = useMemo(() => {
+    if (!account) return [];
+
+    return trades.filter(trade => trade.trader.toLowerCase() === account.toLowerCase())
+  }, [account, trades]);
+
+  // const prices = useMemo(() => {
+  //   return [
+  //     {
+  //       index: 0,
+  //       long: 0.5,
+  //       short: 0.5,
+  //     },
+  //     ...trades.sort((tradeA, tradeB) => parseInt(tradeA.timestamp, 10) - parseInt(tradeB.timestamp, 10)).map((trade, index) => ({
+  //       index: index + 1,
+  //       long: parseFloat(toShort18(trade.long).toFixed(2)),
+  //       short: parseFloat(toShort18(trade.short).toFixed(2)),
+  //     }))
+  //   ];
+  // }, [trades]);
 
   const scanlink = useMemo(() => {
     if (chainId === '56') return `https://bscscan.com`;
@@ -55,6 +78,21 @@ const BinaryInside = () => {
 
       const tradeData = await fetchTradesByQuestion(chainId, data.id);
       setTrades(tradeData);
+
+      setPrices(
+        [
+          {
+            index: (+data.createTime) * 1000,
+            long: 0.5,
+            short: 0.5,
+          },
+          ...tradeData.sort((tradeA, tradeB) => parseInt(tradeA.timestamp, 10) - parseInt(tradeB.timestamp, 10)).map(trade => ({
+            index: (+trade.timestamp) * 1000,
+            long: parseFloat(toShort18(trade.long).toFixed(2)),
+            short: parseFloat(toShort18(trade.short).toFixed(2)),
+          }))
+        ]
+      );
 
       let payload = {};
 
@@ -210,15 +248,16 @@ const BinaryInside = () => {
       </div>
       <div className="px-4 sm:px-6 lg:px-8 py-8 w-full mx-auto bg-primary">
         <div className="grid grid-cols-1 gap-4 md:grid-cols-12 transition-all">
-          <DashboardCard05
+          {/* <DashboardCard05
             style={{ height: "80%" }}
             className="col-span-8"
-          />
+          /> */}
+          <Chart prices={prices} />
           <Buysell {...question} />
         </div>
       </div>
       <p className="text-white text-2xl font-bold mx-8">Market Positions</p>
-      <Marketposition />
+      <Marketposition positions={positions} />
       <p className="text-white text-2xl font-bold underline decoration-secondary mx-8">
         About This Market
       </p>

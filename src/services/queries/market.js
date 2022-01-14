@@ -115,6 +115,8 @@ export const FETCH_TRADES_BY_QUESTION = (id, limit = 10, page = 0) => {
       trades (
         first: ${limit}
         skip: ${page * limit}
+        orderBy: timestamp,
+        orderDirection: desc
         where: {
           question: "${id}"
         }
