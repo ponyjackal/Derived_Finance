@@ -192,8 +192,8 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
         <div className="flex mb-7 pr-3 sm:pr-2 my-4">
           {/* Logo */}
           <NavLink exact to="/" className="flex items-center ">
-            <img alt="derived logo" src={LogoIcon} className="hidden md:block lg:hidden xl:block" />
-            <img alt="drivedd logo" src={MobileLogoIcon} className="hidden lg:block xl:hidden" />
+            <img alt="derived logo" src={LogoIcon} className="hidden xl:block" />
+            <img alt="drivedd logo" src={MobileLogoIcon} className="block xl:hidden" />
           </NavLink>
         </div>
 

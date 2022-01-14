@@ -254,9 +254,9 @@ const BinaryInside = () => {
 
       <div className="flex bg-secondary p-3 flex-col m-7 rounded-lg">
         <h1 className=" text-white text-2xl font-bold">Recent Trading</h1>
-        <p className=" text-gray-600 text-md">
+        {/* <p className=" text-gray-600 text-md">
           Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-        </p>
+        </p> */}
         <Transactiontable />
       </div>
     </main>
