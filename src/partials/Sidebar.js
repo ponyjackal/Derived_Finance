@@ -169,7 +169,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
         </button>
 
         {/* Expand / collapse button */}
-        <div className="hidden lg:inline-flex 2xl:hidden justify-end">
+        <div className="hidden lg:inline-flex 2xl:hidden justify-center">
           <div>
             <button
               onClick={() => setSidebarExpanded(!sidebarExpanded)}
@@ -191,9 +191,9 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
         </div>
         <div className="flex mb-7 pr-3 sm:pr-2 my-4">
           {/* Logo */}
-          <NavLink exact to="/" className="flex items-center ">
-            <img alt="derived logo" src={LogoIcon} className="hidden xl:block" />
-            <img alt="drivedd logo" src={MobileLogoIcon} className="block xl:hidden" />
+          <NavLink exact to="/" className="flex items-center p-2">
+            <img alt="derived logo" src={LogoIcon} className={sidebarExpanded ? "block" : "hidden 2xl:block"} />
+            <img alt="drivedd logo" src={MobileLogoIcon} className={sidebarExpanded ? "hidden" : "block 2xl:hidden"} />
           </NavLink>
         </div>
 
