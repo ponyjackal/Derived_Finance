@@ -152,6 +152,12 @@
       {
         "indexed": false,
         "internalType": "uint256",
+        "name": "slotIndex",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
         "name": "long",
         "type": "uint256"
       },

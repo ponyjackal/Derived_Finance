@@ -1,17 +1,19 @@
 import React, { useEffect } from "react";
 import { Switch, Route, useLocation } from "react-router-dom";
-import "./css/style.scss";
 import { focusHandling } from "cruip-js-toolkit";
-import "./charts/ChartjsConfig";
+
 // Import pages
 import Dashboard from "./pages/Dashboard";
 import Trade from "./pages/Trade";
 import Stake from "./pages/Stake";
 import Binary from "./pages/Binary";
-import Binaryoptionsinside from "./pages/Binaryoptionsinside";
 import Farming from "./pages/Farming";
+import Binaryoptionsinside from "./pages/Binaryoptionsinside";
+
 import "./App.css"
+import "./css/style.scss";
 import "./css/react-tabs.css"
+import "./charts/ChartjsConfig";
 
 function App() {
   const location = useLocation();
@@ -22,31 +24,28 @@ function App() {
     document.querySelector("html").style.scrollBehavior = "";
     focusHandling("outline");
   }, [location.pathname]);
-  // triggered on route change
 
   return (
-    <>
-      <Switch>
-        <Route exact path="/">
-          <Dashboard />
-        </Route>
-        <Route exact path="/Trade">
-          <Trade />
-        </Route>
-        <Route exact path="/Stake">
-          <Stake />
-        </Route>
-        <Route exact path="/Binary">
-          <Binary />
-        </Route>
-        <Route exact path="/Farming">
-          <Farming />
-        </Route>
-        <Route exact path="/Binaryoptionsinside/:questionId">
-          <Binaryoptionsinside />
-        </Route>
-      </Switch>
-    </>
+    <Switch>
+      <Route exact path="/">
+        <Dashboard />
+      </Route>
+      <Route exact path="/Trade">
+        <Trade />
+      </Route>
+      <Route exact path="/Stake">
+        <Stake />
+      </Route>
+      <Route exact path="/Binary">
+        <Binary />
+      </Route>
+      <Route exact path="/Farming">
+        <Farming />
+      </Route>
+      <Route exact path="/Binaryoptionsinside/:questionId">
+        <Binaryoptionsinside />
+      </Route>
+    </Switch>
   );
 }
 

@@ -16,8 +16,6 @@ const Chart = ({ prices }) => {
     return (prices && prices.map(price => price.index)) || [];
   }, [prices]);
 
-  console.log("DEBUG-prices: ", { longPrices, shortPrices });
-
   const chartData = {
     labels,
     datasets: [

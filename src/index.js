@@ -6,12 +6,10 @@ import App from "./App";
 import Providers from "./Providers";
 
 ReactDOM.render(
-  <React.StrictMode>
-    <Providers>
-      <Router>
-        <App />
-      </Router>
-    </Providers>
-  </React.StrictMode>,
+  <Providers>
+    <Router>
+      <App />
+    </Router>
+  </Providers>,
   document.getElementById("root")
 );
