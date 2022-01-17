@@ -49,19 +49,16 @@ const BinaryInside = () => {
     const data = await fetchQuestionDetail(chainId, questionId);
     if (!data) {
       console.error('Fetching question error: ', questionId);
+    } else {
+      const long = toShort18(data.long);
+      const short = toShort18(data.short);
 
-      setLoadingPrice(false);
-      return;
+      setQuestion(val => ({
+        ...val,
+        long: long.toFixed(2),
+        short: short.toFixed(2),
+      }));
     }
-
-    const long = toShort18(data.long);
-    const short = toShort18(data.short);
-
-    setQuestion(val => ({
-      ...val,
-      long: long.toFixed(2),
-      short: short.toFixed(2),
-    }));
 
     setLoadingPrice(false);
   };
@@ -73,45 +70,42 @@ const BinaryInside = () => {
       const data = await fetchQuestionDetail(chainId, questionId);
       if (!data) {
         console.error('Fetching question error: ', questionId);
+      } else {
+        const tradeData = await fetchTradesByQuestion(chainId, data.id);
+        setTrades(tradeData);
 
-        setLoading(false);
-        return;
+        setPrices(
+          [
+            {
+              index: (+data.createTime) * 1000,
+              long: 0.5,
+              short: 0.5,
+            },
+            ...tradeData.sort((tradeA, tradeB) => parseInt(tradeA.timestamp, 10) - parseInt(tradeB.timestamp, 10)).map(trade => ({
+              index: (+trade.timestamp) * 1000,
+              long: parseFloat(toShort18(trade.long).toFixed(2)),
+              short: parseFloat(toShort18(trade.short).toFixed(2)),
+            }))
+          ]
+        );
+
+        const details = await getJsonIpfs(data.meta);
+
+        const long = toShort18(data.long);
+        const short = toShort18(data.short);
+        const lpVolume = toShort18(data.lpVolume);
+        const tradeVolume = toShort18(data.tradeVolume);
+
+        setQuestion({
+          ...data,
+          details,
+          resolveTime: toFriendlyTime((+data.resolveTime) || 0),
+          long: long.toFixed(2),
+          short: short.toFixed(2),
+          liquidity: lpVolume.toFixed(2),
+          trade: tradeVolume.toFixed(2),
+        });
       }
-
-      const tradeData = await fetchTradesByQuestion(chainId, data.id);
-      setTrades(tradeData);
-
-      setPrices(
-        [
-          {
-            index: (+data.createTime) * 1000,
-            long: 0.5,
-            short: 0.5,
-          },
-          ...tradeData.sort((tradeA, tradeB) => parseInt(tradeA.timestamp, 10) - parseInt(tradeB.timestamp, 10)).map(trade => ({
-            index: (+trade.timestamp) * 1000,
-            long: parseFloat(toShort18(trade.long).toFixed(2)),
-            short: parseFloat(toShort18(trade.short).toFixed(2)),
-          }))
-        ]
-      );
-
-      const details = await getJsonIpfs(data.meta);
-
-      const long = toShort18(data.long);
-      const short = toShort18(data.short);
-      const lpVolume = toShort18(data.lpVolume);
-      const tradeVolume = toShort18(data.tradeVolume);
-
-      setQuestion({
-        ...data,
-        details,
-        resolveTime: toFriendlyTime((+data.resolveTime) || 0),
-        long: long.toFixed(2),
-        short: short.toFixed(2),
-        liquidity: lpVolume.toFixed(2),
-        trade: tradeVolume.toFixed(2),
-      });
 
       setLoading(false);
     };
