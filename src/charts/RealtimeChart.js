@@ -17,8 +17,10 @@ function RealtimeChart({
 }) {
 
   const canvas = useRef(null);
-  const chartValue = useRef(null);
-  const chartDeviation = useRef(null);
+  const longValue = useRef(null);
+  const longChange = useRef(null);
+  const shortValue = useRef(null);
+  const shortChange = useRef(null);
 
   useEffect(() => {
     const ctx = canvas.current;
@@ -91,27 +93,50 @@ function RealtimeChart({
   // Update header values
   useEffect(() => {
     if (data.datasets[0].data.length === 0) {
-      chartValue.current.innerHTML = "0.00";
+      longValue.current.innerHTML = "0.00";
+      shortValue.current.innerHTML = "0.00";
     } else {
-      const currentValue = data.datasets[0].data[data.datasets[0].data.length - 1];
-      const previousValue = data.datasets[0].data[data.datasets[0].data.length - 2];
-      const diff = ((currentValue - previousValue) / previousValue) * 100;
-      chartValue.current.innerHTML = data.datasets[0].data[data.datasets[0].data.length - 1] || 0;
-      if (diff < 0) {
-        chartDeviation.current.style.backgroundColor = tailwindConfig().theme.colors.yellow[500];
+      const currentLongValue = data.datasets[0].data[data.datasets[0].data.length - 1];
+      const previousLongValue = data.datasets[0].data[data.datasets[0].data.length - 2];
+      const longDiff = ((currentLongValue - previousLongValue) / previousLongValue) * 100;
+
+      const currentShortValue = data.datasets[1].data[data.datasets[1].data.length - 1];
+      const previousShortValue = data.datasets[1].data[data.datasets[1].data.length - 2];
+      const shortDiff = ((currentShortValue - previousShortValue) / previousShortValue) * 100;
+
+      longValue.current.innerHTML = data.datasets[0].data[data.datasets[0].data.length - 1] || 0;
+      shortValue.current.innerHTML = data.datasets[1].data[data.datasets[1].data.length - 1] || 0;
+
+      if (longDiff < 0) {
+        longChange.current.style.backgroundColor = tailwindConfig().theme.colors.yellow[500];
       } else {
-        chartDeviation.current.style.backgroundColor = tailwindConfig().theme.colors.green[500];
+        longChange.current.style.backgroundColor = tailwindConfig().theme.colors.green[500];
       }
-      chartDeviation.current.innerHTML = `${diff > 0 ? '+' : ''}${diff.toFixed(2)}%`;
+
+      if (shortDiff < 0) {
+        shortChange.current.style.backgroundColor = tailwindConfig().theme.colors.yellow[500];
+      } else {
+        shortChange.current.style.backgroundColor = tailwindConfig().theme.colors.green[500];
+      }
+
+      longChange.current.innerHTML = !longDiff ? '0.00%' : `${longDiff > 0 ? '+' : ''}${longDiff.toFixed(2)}%`;
+      shortChange.current.innerHTML = !shortDiff ? '0.00%' : `${shortDiff > 0 ? '+' : ''}${shortDiff.toFixed(2)}%`;
     }
   }, [data]);
 
   return (
     <React.Fragment>
       <div className="px-5 py-3">
-        <div className="flex items-start">
-          <div className="text-3xl font-bold text-gray-800 mr-2 tabular-nums">$<span ref={chartValue}>57.81</span></div>
-          <div ref={chartDeviation} className="text-sm font-semibold text-white px-1.5 rounded-full"></div>
+        <div className="flex items-start justify-between">
+          <div className="flex items-center">
+            <div className="text-3xl font-bold text-gray-800 mr-2 tabular-nums">$<span ref={longValue}>0.5</span></div>
+            <div ref={longChange} className="text-sm font-semibold text-white px-1.5 rounded-full"></div>
+          </div>
+          &nbsp;&nbsp;&nbsp;
+          <div className="flex items-center">
+            <div className="text-3xl font-bold text-gray-800 mr-2 tabular-nums">$<span ref={shortValue}>0.5</span></div>
+            <div ref={shortChange} className="text-sm font-semibold text-white px-1.5 rounded-full"></div>
+          </div>
         </div>
       </div>
       <div className="flex-grow">

@@ -8,6 +8,7 @@ import AttachMoneyOutlinedIcon from "@mui/icons-material/AttachMoneyOutlined";
 
 import Chart from "../../partials/dashboard/Chart";
 import Buysell from "../../partials/binary/Buysell";
+import ExpiredTab from "../../partials/binary/ExpiredTab";
 import Marketposition from "../../partials/binary/Marketposition";
 import Transactiontable from "../../partials/trade/Transactiontable";
 import { fetchQuestionDetail, fetchTradesByQuestion } from "../../services/market";
@@ -243,12 +244,16 @@ const BinaryInside = () => {
       <div className="px-4 sm:px-6 lg:px-8 py-8 w-full mx-auto bg-primary">
         <div className="grid grid-cols-1 gap-4 md:grid-cols-12 transition-all">
           <Chart prices={prices} />
-          <Buysell
-            {...question}
-            loading={loadingPrice}
-            balances={balances}
-            onRefreshPrice={handleRefreshPrice}
-          />
+          {question.status === 'READY' ? (
+            <Buysell
+              {...question}
+              loading={loadingPrice}
+              balances={balances}
+              onRefreshPrice={handleRefreshPrice}
+            />
+          ) : (
+            <ExpiredTab {...question} balances={balances} />
+          )}
         </div>
       </div>
       <p className="text-white text-2xl font-bold mx-8">Market Positions</p>
