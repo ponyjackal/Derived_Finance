@@ -42,12 +42,8 @@ export const MarketProvider = ({ children }) => {
       const ongoingQuzData = await fetchAllOngoingQuestions(chainId);
       setLiveQuestions(ongoingQuzData);
 
-      console.log("DEBUG-ongoingQuzData: ", { ongoingQuzData });
-
       const expiredQuzData = await fetchAllExpiredQuestions(chainId);
       setExpiredQuestions(expiredQuzData);
-
-      console.log("DEBUG-expiredQuzData: ", { expiredQuzData });
 
       setLoading(false);
     };
