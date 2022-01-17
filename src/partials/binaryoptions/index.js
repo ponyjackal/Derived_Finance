@@ -6,16 +6,13 @@ import { BigNumber } from 'bignumber.js';
 import Skeleton from '@mui/material/Skeleton';
 import AttachMoneyOutlinedIcon from "@mui/icons-material/AttachMoneyOutlined";
 
-import DashboardCard05 from "../../partials/dashboard/DashboardCard05";
+import Chart from "../../partials/dashboard/Chart";
 import Buysell from "../../partials/binary/Buysell";
 import Marketposition from "../../partials/binary/Marketposition";
 import Transactiontable from "../../partials/trade/Transactiontable";
-
-// import Valueblockstwo from "../binary/Valueblockstwo";
-
 import { fetchQuestionDetail, fetchTradesByQuestion } from "../../services/market";
+
 import {
-  // toShortAmount,
   toShort18,
 } from "../../utils/Contract";
 import { toFriendlyTime, toShortAddress } from "../../utils/Utils";
@@ -23,13 +20,22 @@ import { getJsonIpfs } from "../../utils/Ipfs";
 import { useMarket } from "../../context/market";
 
 const BinaryInside = () => {
-  const params = useParams();
-  const { chainId, library, account } = useWeb3React();
+  const { questionId } = useParams();
   const { MarketContract } = useMarket();
+  const { chainId, library, account } = useWeb3React();
 
   const [loading, setLoading] = useState(false);
+  const [loadingPrice, setLoadingPrice] = useState(false);
   const [question, setQuestion] = useState({});
   const [trades, setTrades] = useState([]);
+  const [prices, setPrices] = useState([]);
+  const [balances, setBalances] = useState({ 0: new BigNumber(0), 1: new BigNumber(0) });
+
+  const positions = useMemo(() => {
+    if (!account) return [];
+
+    return trades.filter(trade => trade.trader.toLowerCase() === account.toLowerCase())
+  }, [account, trades]);
 
   const scanlink = useMemo(() => {
     if (chainId === '56') return `https://bscscan.com`;
@@ -37,70 +43,96 @@ const BinaryInside = () => {
     return `https://testnet.bscscan.com`;
   }, [chainId]);
 
+  const handleRefreshPrice = async () => {
+    setLoadingPrice(true);
+
+    const data = await fetchQuestionDetail(chainId, questionId);
+    if (!data) {
+      console.error('Fetching question error: ', questionId);
+    } else {
+      const long = toShort18(data.long);
+      const short = toShort18(data.short);
+
+      setQuestion(val => ({
+        ...val,
+        long: long.toFixed(2),
+        short: short.toFixed(2),
+      }));
+    }
+
+    setLoadingPrice(false);
+  };
+
   useEffect(() => {
-    // if (!params || !params.questionId || !chainId || !MarketContract || !library) return;
-
-    const { questionId } = params;
-
     const initialize = async () => {
       setLoading(true);
 
       const data = await fetchQuestionDetail(chainId, questionId);
       if (!data) {
         console.error('Fetching question error: ', questionId);
+      } else {
+        const tradeData = await fetchTradesByQuestion(chainId, data.id);
+        setTrades(tradeData);
 
-        setLoading(false);
-        return;
+        setPrices(
+          [
+            {
+              index: (+data.createTime) * 1000,
+              long: 0.5,
+              short: 0.5,
+            },
+            ...tradeData.sort((tradeA, tradeB) => parseInt(tradeA.timestamp, 10) - parseInt(tradeB.timestamp, 10)).map(trade => ({
+              index: (+trade.timestamp) * 1000,
+              long: parseFloat(toShort18(trade.long).toFixed(2)),
+              short: parseFloat(toShort18(trade.short).toFixed(2)),
+            }))
+          ]
+        );
+
+        const details = await getJsonIpfs(data.meta);
+
+        const long = toShort18(data.long);
+        const short = toShort18(data.short);
+        const lpVolume = toShort18(data.lpVolume);
+        const tradeVolume = toShort18(data.tradeVolume);
+
+        setQuestion({
+          ...data,
+          details,
+          resolveTime: toFriendlyTime((+data.resolveTime) || 0),
+          long: long.toFixed(2),
+          short: short.toFixed(2),
+          liquidity: lpVolume.toFixed(2),
+          trade: tradeVolume.toFixed(2),
+        });
       }
-
-      const tradeData = await fetchTradesByQuestion(chainId, data.id);
-      setTrades(tradeData);
-
-      let payload = {};
-
-      if (MarketContract) {
-        const longId = await MarketContract.generateAnswerId(questionId, 0);
-        const shortId = await MarketContract.generateAnswerId(questionId, 0);
-
-        const longBalance = await MarketContract.balanceOf(account, longId);
-        const shortBalance = await MarketContract.balanceOf(account, shortId);
-
-        // const { lpVolume, tradeVolume } = await MarketContract.markets(questionId);
-
-        // const liquidity = await toShort18(lpVolume.toString());
-
-        payload = {
-          longBalance: new BigNumber(longBalance.toString()).toFixed(),
-          shortBalance: new BigNumber(shortBalance.toString()).toFixed(),
-          // liquidity: liquidity.toFixed(2),
-          // trade: new BigNumber(tradeVolume.toString()).toFixed(),
-        };
-      }
-
-
-      const details = await getJsonIpfs(data.meta);
-
-      const long = toShort18(data.long);
-      const short = toShort18(data.short);
-      const lpVolume = toShort18(data.lpVolume);
-      const tradeVolume = toShort18(data.tradeVolume);
-
-      setQuestion({
-        ...data,
-        ...payload,
-        details,
-        resolveTime: toFriendlyTime((+data.resolveTime) || 0),
-        long: long.toFixed(2),
-        short: short.toFixed(2),
-        liquidity: lpVolume.toFixed(2),
-        trade: tradeVolume.toFixed(2),
-      });
 
       setLoading(false);
     };
 
     initialize();
-  }, [params, chainId, library, account, MarketContract]);
+  }, [questionId, chainId, library, account, MarketContract]);
+
+  useEffect(() => {
+    const initialize = async () => {
+      setLoading(true);
+
+      const longId = await MarketContract.generateAnswerId(questionId, 0);
+      const shortId = await MarketContract.generateAnswerId(questionId, 1);
+
+      const longBalance = await MarketContract.balanceOf(account, longId);
+      const shortBalance = await MarketContract.balanceOf(account, shortId);
+
+      setBalances({
+        0: toShort18(longBalance.toString()),
+        1: toShort18(shortBalance.toString()),
+      });
+
+      setLoading(false);
+    };
+
+    questionId && account && MarketContract && initialize();
+  }, [questionId, account, MarketContract]);
 
   return (
     <main>
@@ -210,15 +242,17 @@ const BinaryInside = () => {
       </div>
       <div className="px-4 sm:px-6 lg:px-8 py-8 w-full mx-auto bg-primary">
         <div className="grid grid-cols-1 gap-4 md:grid-cols-12 transition-all">
-          <DashboardCard05
-            style={{ height: "80%" }}
-            className="col-span-8"
+          <Chart prices={prices} />
+          <Buysell
+            {...question}
+            loading={loadingPrice}
+            balances={balances}
+            onRefreshPrice={handleRefreshPrice}
           />
-          <Buysell {...question} />
         </div>
       </div>
       <p className="text-white text-2xl font-bold mx-8">Market Positions</p>
-      <Marketposition />
+      <Marketposition positions={positions} />
       <p className="text-white text-2xl font-bold underline decoration-secondary mx-8">
         About This Market
       </p>
@@ -226,18 +260,6 @@ const BinaryInside = () => {
         <p className="text-white font-base">
           {question.details && question.details.description}
         </p>
-        {/* <p className="text-white font-base">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec
-          eget ultricies dolor, id semper purus. Nam egestas vel nisl eget
-          blandit. Nunc hendrerit purus id consequat auctor.{" "}
-        </p>
-        <p className="text-white font-base">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec
-          eget ultricies dolor, id semper purus. Nam egestas vel nisl eget
-          blandit. Nunc hendrerit purus id consequat auctor. Maecenas
-          pharetra nisi ligula, vel ultrices nunc imperdiet{" "}
-          <span className="text-blue-500">.....read more </span>
-        </p> */}
       </div>
       <div className="bg-secondary m-7 rounded-lg">
         <p className="text-white p-5">
@@ -258,9 +280,6 @@ const BinaryInside = () => {
 
       <div className="flex bg-secondary p-3 flex-col m-7 rounded-lg">
         <h1 className=" text-white text-2xl font-bold">Recent Trading</h1>
-        {/* <p className=" text-gray-600 text-md">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-        </p> */}
         <Transactiontable trades={trades} />
       </div>
     </main>

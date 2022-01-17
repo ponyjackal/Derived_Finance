@@ -17,6 +17,7 @@ module.exports = {
         gray: colors.blueGray,
         "light-blue": colors.sky,
         red: colors.rose,
+        error: "#b91c1c",
         secondary: "#273A46",
         primary: "#18252D",
         headings: "#86C440",

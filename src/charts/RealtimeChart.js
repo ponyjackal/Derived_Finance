@@ -35,8 +35,8 @@ function RealtimeChart({
             grid: {
               drawBorder: false,
             },
-            suggestedMin: 30,
-            suggestedMax: 80,
+            suggestedMin: 0,
+            suggestedMax: 1,
             ticks: {
               maxTicksLimit: 5,
               callback: (value) => formatValue(value),
@@ -90,16 +90,20 @@ function RealtimeChart({
 
   // Update header values
   useEffect(() => {
-    const currentValue = data.datasets[0].data[data.datasets[0].data.length - 1];
-    const previousValue = data.datasets[0].data[data.datasets[0].data.length - 2];
-    const diff = ((currentValue - previousValue) / previousValue) * 100;
-    chartValue.current.innerHTML = data.datasets[0].data[data.datasets[0].data.length - 1];
-    if (diff < 0) {
-      chartDeviation.current.style.backgroundColor = tailwindConfig().theme.colors.yellow[500];
+    if (data.datasets[0].data.length === 0) {
+      chartValue.current.innerHTML = "0.00";
     } else {
-      chartDeviation.current.style.backgroundColor = tailwindConfig().theme.colors.green[500];
+      const currentValue = data.datasets[0].data[data.datasets[0].data.length - 1];
+      const previousValue = data.datasets[0].data[data.datasets[0].data.length - 2];
+      const diff = ((currentValue - previousValue) / previousValue) * 100;
+      chartValue.current.innerHTML = data.datasets[0].data[data.datasets[0].data.length - 1] || 0;
+      if (diff < 0) {
+        chartDeviation.current.style.backgroundColor = tailwindConfig().theme.colors.yellow[500];
+      } else {
+        chartDeviation.current.style.backgroundColor = tailwindConfig().theme.colors.green[500];
+      }
+      chartDeviation.current.innerHTML = `${diff > 0 ? '+' : ''}${diff.toFixed(2)}%`;
     }
-    chartDeviation.current.innerHTML = `${diff > 0 ? '+' : ''}${diff.toFixed(2)}%`;
   }, [data]);
 
   return (

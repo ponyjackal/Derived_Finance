@@ -68,7 +68,6 @@ export const fetchQuestionDetail = async (chainId = 97, questionId) => {
 };
 
 export const fetchTradesByQuestion = async (chainId = 97, id) => {
-  console.log("DEBUG-id: ", { id });
   const client = new GraphQLClient(GRAPH_API[chainId]);
 
   let limit = 10, page = 0, data = [];
