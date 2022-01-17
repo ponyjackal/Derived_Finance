@@ -71,11 +71,11 @@ const Singlebinaryblock = ({ title, questionId, resolveTime, createTime, long, s
             <p className="text-white">{toFriendlyTimeFormat(+resolveTime || 0)}</p>
           </div>
           <div className="flex items-center justify-between px-5 py-2">
-            <p className="text-gray-400">Long</p>
+            <p className="text-gray-400">YES</p>
             <p className="text-white">${toShort18(new BigNumber(long || 0)).toFixed(2)}</p>
           </div>
           <div className="flex items-center justify-between px-5 py-2">
-            <p className="text-gray-400">Short</p>
+            <p className="text-gray-400">NO</p>
             <p className="text-white">${toShort18(new BigNumber(short || 0)).toFixed(2)}</p>
           </div>
         </div>

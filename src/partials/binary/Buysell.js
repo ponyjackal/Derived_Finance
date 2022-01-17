@@ -128,14 +128,14 @@ const Buysell = ({ loading, questionId, fee, details, long, short, balances, res
             <div className="flex items-center justify-between">
               <div className={`${slotIndex === 0 ? "bg-green-500" : "bg-gray-500"} px-4 py-2 text-white rounded-lg cursor-pointer`} onClick={() => setSlotIndex(0)}>
                 <p className="flex">
-                  LONG &nbsp;&nbsp;&nbsp;<span className="text-black">
+                  YES &nbsp;&nbsp;&nbsp;<span className="text-black">
                     {loading ? (<Skeleton variant="rectangular" width={40} height={25} />) : `$ ${long || ''}`}
                   </span>
                 </p>
               </div>
               <div className={`${slotIndex === 1 ? "bg-red-500" : "bg-gray-500"} px-4 py-2 text-white rounded-lg cursor-pointer`} onClick={() => setSlotIndex(1)}>
                 <p className="flex">
-                  SHORT &nbsp;&nbsp;&nbsp;<span className="text-black">
+                  NO &nbsp;&nbsp;&nbsp;<span className="text-black">
                     {loading ? (<Skeleton variant="rectangular" width={40} height={25} />) : `$ ${short || ''}`}
                   </span>
                 </p>
@@ -226,14 +226,14 @@ const Buysell = ({ loading, questionId, fee, details, long, short, balances, res
             <div className="flex items-center justify-between">
               <div className={`${slotIndex === 0 ? "bg-green-500" : "bg-gray-500"} px-4 py-2 text-white rounded-lg cursor-pointer`} onClick={() => setSlotIndex(0)}>
                 <p className="flex">
-                  LONG &nbsp;&nbsp;&nbsp;<span className="text-black">
+                  YES &nbsp;&nbsp;&nbsp;<span className="text-black">
                     {loading ? (<Skeleton variant="rectangular" width={40} height={25} />) : `$ ${long || ''}`}
                   </span>
                 </p>
               </div>
               <div className={`${slotIndex === 1 ? "bg-red-500" : "bg-gray-500"} px-4 py-2 text-white rounded-lg cursor-pointer`} onClick={() => setSlotIndex(1)}>
                 <p className="flex">
-                  SHORT &nbsp;&nbsp;&nbsp;<span className="text-black">
+                  NO &nbsp;&nbsp;&nbsp;<span className="text-black">
                     {loading ? (<Skeleton variant="rectangular" width={40} height={25} />) : `$ ${short || ''}`}
                   </span>
                 </p>
