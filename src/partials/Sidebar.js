@@ -288,13 +288,13 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
               </li>
               {/* Binary Options */}
               <li
-                className={`px-3 py-2 rounded-lg mb-0.5 last:mb-0 ${pathname === "/Binary" && "bg-headings"
+                className={`px-3 py-2 rounded-lg mb-0.5 last:mb-0 ${(pathname === "/Binary" || pathname.includes("Binaryoptionsinside")) && "bg-headings"
                   }`}
               >
                 <NavLink
                   exact
                   to="/"
-                  className={`block text-white hover:text-gray-200 truncate transition duration-150 font-black ${pathname === "/Binary" && "bg-headings"
+                  className={`block text-white hover:text-gray-200 truncate transition duration-150 font-black ${(pathname === "/Binary" || pathname.includes("Binaryoptionsinside")) && "bg-headings"
                     }`}
                 >
                   <Link to="/Binary">

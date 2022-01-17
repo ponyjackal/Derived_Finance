@@ -14,7 +14,7 @@ import { getPrice } from "../../services/coingecko";
 import { useMarket } from "../../context/market";
 import { toLong18 } from "../../utils/Contract";
 
-const Buysell = ({ loading, questionId, fee, details, long, short, balances, onRefreshPrice }) => {
+const Buysell = ({ loading, questionId, fee, details, long, short, balances, resolveTime, onRefreshPrice }) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [currentPrice, setCurrentPrice] = useState(0);
   const [buyAmount, setBuyAmount] = useState('');
@@ -64,23 +64,30 @@ const Buysell = ({ loading, questionId, fee, details, long, short, balances, onR
   const handleBuy = async () => {
     setPendingTransaction(true);
 
-    const order = toLong18(buyAmount);
-    const allowance = await DerivedTokenContract.allowance(account, MarketContract.address);
+    try {
+      const order = toLong18(buyAmount);
+      const allowance = await DerivedTokenContract.allowance(account, MarketContract.address);
 
-    if (order.gt(allowance)) {
-      const totalSupply = await DerivedTokenContract.totalSupply();
+      if (order.gt(allowance)) {
+        const totalSupply = await DerivedTokenContract.totalSupply();
 
-      const tx = await DerivedTokenContract.approve(
-        MarketContract.address,
-        totalSupply.toString()
-      );
+        const tx = await DerivedTokenContract.approve(
+          MarketContract.address,
+          totalSupply.toString()
+        );
+        await tx.wait();
+      }
+
+      const tx = await MarketContract.buy(questionId, order.toString(), slotIndex);
       await tx.wait();
+
+      await onRefreshPrice();
+
+      setBuyAmount(0);
+    } catch (error) {
+      console.error('Buying Shares error: ', error.message);
     }
 
-    const tx = await MarketContract.buy(questionId, order.toString(), slotIndex);
-    await tx.wait();
-
-    setBuyAmount(0);
     setPendingTransaction(false);
   };
 
@@ -160,13 +167,13 @@ const Buysell = ({ loading, questionId, fee, details, long, short, balances, onR
               <p className="text-gray-400 text-xs">LP Fee</p>
               <p className="text-white text-xs">{fee}%</p>
             </div>
-            <div className="flex items-center justify-between px-5 py-1">
+            {/* <div className="flex items-center justify-between px-5 py-1">
               <p className="text-gray-400 text-xs">Time Remaining</p>
               <p className="text-white text-xs">20:01:01:01</p>
-            </div>
+            </div> */}
             <div className="flex items-center justify-between px-5 py-1">
               <p className="text-gray-400 text-xs">Expiry Date</p>
-              <p className="text-white text-xs">Nov 30, 21 | 00:30</p>
+              <p className="text-white text-xs">{resolveTime}</p>
             </div>
             {details && details.type === 'crypto' && (
               <>

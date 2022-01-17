@@ -140,10 +140,6 @@ const BinaryInside = () => {
     questionId && account && MarketContract && initialize();
   }, [questionId, account, MarketContract]);
 
-  useEffect(() => {
-    console.log("DEBUG-question: ", { question, balances });
-  }, [question, balances]);
-
   return (
     <main>
       <div>
@@ -270,18 +266,6 @@ const BinaryInside = () => {
         <p className="text-white font-base">
           {question.details && question.details.description}
         </p>
-        {/* <p className="text-white font-base">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec
-          eget ultricies dolor, id semper purus. Nam egestas vel nisl eget
-          blandit. Nunc hendrerit purus id consequat auctor.{" "}
-        </p>
-        <p className="text-white font-base">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec
-          eget ultricies dolor, id semper purus. Nam egestas vel nisl eget
-          blandit. Nunc hendrerit purus id consequat auctor. Maecenas
-          pharetra nisi ligula, vel ultrices nunc imperdiet{" "}
-          <span className="text-blue-500">.....read more </span>
-        </p> */}
       </div>
       <div className="bg-secondary m-7 rounded-lg">
         <p className="text-white p-5">
@@ -302,9 +286,6 @@ const BinaryInside = () => {
 
       <div className="flex bg-secondary p-3 flex-col m-7 rounded-lg">
         <h1 className=" text-white text-2xl font-bold">Recent Trading</h1>
-        {/* <p className=" text-gray-600 text-md">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-        </p> */}
         <Transactiontable trades={trades} />
       </div>
     </main>
