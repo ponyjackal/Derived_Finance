@@ -1,19 +1,19 @@
 import { useMemo } from "react";
 
-import RealtimeChart from "../../charts/RealtimeChart";
-import { tailwindConfig, hexToRGB } from '../../utils/Utils';
+import TradeChart from "../../charts/TradeChart";
+import { tailwindConfig, hexToRGB } from "../../utils/Utils";
 
 const Chart = ({ prices }) => {
   const longPrices = useMemo(() => {
-    return (prices && prices.map(price => price.long)) || [];
+    return (prices && prices.map((price) => price.long)) || [];
   }, [prices]);
 
   const shortPrices = useMemo(() => {
-    return (prices && prices.map(price => price.short)) || [];
+    return (prices && prices.map((price) => price.short)) || [];
   }, [prices]);
 
   const labels = useMemo(() => {
-    return (prices && prices.map(price => price.index)) || [];
+    return (prices && prices.map((price) => price.index)) || [];
   }, [prices]);
 
   const chartData = {
@@ -23,7 +23,9 @@ const Chart = ({ prices }) => {
       {
         data: longPrices,
         fill: true,
-        backgroundColor: `rgba(${hexToRGB(tailwindConfig().theme.colors.blue[500])}, 0.08)`,
+        backgroundColor: `rgba(${hexToRGB(
+          tailwindConfig().theme.colors.blue[500]
+        )}, 0.08)`,
         borderColor: tailwindConfig().theme.colors.headings,
         borderWidth: 2,
         tension: 0,
@@ -35,7 +37,9 @@ const Chart = ({ prices }) => {
       {
         data: shortPrices,
         fill: true,
-        backgroundColor: `rgba(${hexToRGB(tailwindConfig().theme.colors.red[500])}, 0.08)`,
+        backgroundColor: `rgba(${hexToRGB(
+          tailwindConfig().theme.colors.red[500]
+        )}, 0.08)`,
         borderColor: tailwindConfig().theme.colors.error,
         borderWidth: 2,
         tension: 0,
@@ -54,7 +58,12 @@ const Chart = ({ prices }) => {
       </header>
       {/* Chart built with Chart.js 3 */}
       {/* Change the height attribute to adjust the chart height */}
-      <RealtimeChart data={chartData} width={595} height={200} className="text-white" />
+      <TradeChart
+        data={chartData}
+        width={595}
+        height={200}
+        className="text-white"
+      />
     </div>
   );
 };
