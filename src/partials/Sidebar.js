@@ -191,7 +191,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
         </div>
         <div className="flex mb-7 pr-3 sm:pr-2 my-4">
           {/* Logo */}
-          <NavLink exact to="/" className="flex items-center p-2">
+          <NavLink id="derived-logo" exact to="/" className="flex items-center p-2">
             <img alt="derived logo" src={LogoIcon} className={sidebarExpanded ? "block" : "hidden 2xl:block"} />
             <img alt="drivedd logo" src={MobileLogoIcon} className={sidebarExpanded ? "hidden" : "block 2xl:hidden"} />
           </NavLink>
@@ -207,105 +207,70 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
                 className={`px-3 py-2 rounded-lg mb-0.5 last:mb-0 ${pathname === "/" && "bg-headings"
                   }`}
               >
-                <NavLink
-                  exact
-                  to="/"
-                  className={`block text-white hover:text-gray-200 truncate transition duration-150 ${pathname === "/" && "bg-headings"
-                    }`}
-                >
-                  <Link to="/">
-                    <div className="flex items-center">
-                      <DashboardOutlinedIcon />
-                      <span className="font-heading text-base font-bold ml-3 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
-                        Dashboard
-                      </span>
-                    </div>
-                  </Link>
-                </NavLink>
+                <Link to="/">
+                  <div className="flex items-center text-white hover:text-gray-200 truncate transition duration-150">
+                    <DashboardOutlinedIcon />
+                    <span className="font-heading text-base font-bold ml-3 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
+                      Dashboard
+                    </span>
+                  </div>
+                </Link>
               </li>
               {/* Trade */}
               <li
                 className={`px-3 py-2 rounded-lg mb-0.5 last:mb-0 ${pathname === "/Trade" && "bg-headings"
                   }`}
               >
-                <NavLink
-                  exact
-                  to="/Trade"
-                  className={`block text-white hover:text-gray-200 truncate transition duration-150 ${pathname === "/trade" && "bg-headings"
-                    }`}
-                >
-                  <Link to="/Trade">
-                    <div className="flex items-center">
-                      <CompareArrowsOutlinedIcon />
-                      <span className=" font-heading text-base font-bold ml-3 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
-                        Trade
-                      </span>
-                    </div>
-                  </Link>
-                </NavLink>
+                <Link to="/Trade">
+                  <div className="flex items-center text-white hover:text-gray-200 truncate transition duration-150">
+                    <CompareArrowsOutlinedIcon />
+                    <span className=" font-heading text-base font-bold ml-3 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
+                      Trade
+                    </span>
+                  </div>
+                </Link>
               </li>
               {/* Stake */}
               <li
                 className={`px-3 py-2 rounded-lg mb-0.5 last:mb-0 ${pathname === "/Stake" && "bg-headings"
                   }`}
               >
-                <NavLink
-                  exact
-                  to="/"
-                  className={`block text-white hover:text-gray-200 truncate transition duration-150 ${pathname === "/Stake" && "bg-headings"
-                    }`}
-                >
-                  <Link to="/Stake">
-                    <div className="flex items-center">
-                      <PriceCheckOutlinedIcon />
-                      <span className="font-heading text-base font-bold ml-3 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
-                        Stake
-                      </span>
-                    </div>
-                  </Link>
-                </NavLink>
+                <Link to="/Stake">
+                  <div className="flex items-center text-white hover:text-gray-200 truncate transition duration-150">
+                    <PriceCheckOutlinedIcon />
+                    <span className="font-heading text-base font-bold ml-3 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
+                      Stake
+                    </span>
+                  </div>
+                </Link>
               </li>
               {/* Farming/LP */}
               <li
                 className={`px-3 py-2 rounded-lg mb-0.5 last:mb-0 ${pathname === "/Farming" && "bg-headings"
                   }`}
               >
-                <NavLink
-                  exact
-                  to="/"
-                  className={`block text-white hover:text-gray-200 truncate transition duration-150 ${pathname === "/Farming" && "bg-headings"
-                    }`}
-                >
-                  <Link to="/Farming">
-                    <div className="flex items-center">
-                      <CorporateFareOutlinedIcon />
-                      <span className=" font-heading text-base font-bold ml-3 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
-                        Farming/LP
-                      </span>
-                    </div>
-                  </Link>
-                </NavLink>
+                <Link to="/Farming">
+                  <div className="flex items-center text-white hover:text-gray-200 truncate transition duration-150">
+                    <CorporateFareOutlinedIcon />
+                    <span className=" font-heading text-base font-bold ml-3 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
+                      Farming/LP
+                    </span>
+                  </div>
+                </Link>
               </li>
               {/* Binary Options */}
               <li
                 className={`px-3 py-2 rounded-lg mb-0.5 last:mb-0 ${(pathname === "/Binary" || pathname.includes("Binaryoptionsinside")) && "bg-headings"
                   }`}
               >
-                <NavLink
-                  exact
-                  to="/"
-                  className={`block text-white hover:text-gray-200 truncate transition duration-150 font-black ${(pathname === "/Binary" || pathname.includes("Binaryoptionsinside")) && "bg-headings"
-                    }`}
-                >
-                  <Link to="/Binary">
-                    <div className="flex items-center">
-                      <ReceiptLongOutlinedIcon />
-                      <span className=" font-heading text-base font-bold ml-3 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200 hover:text-white">
-                        Binary Options
-                      </span>
-                    </div>
-                  </Link>
-                </NavLink>
+                <Link to="/Binary">
+                  <div className="flex items-center text-white hover:text-gray-200 truncate transition duration-150">
+                    <ReceiptLongOutlinedIcon />
+                    <span className=" font-heading text-base font-bold ml-3 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200 hover:text-white">
+                      Binary Options
+                    </span>
+                  </div>
+                </Link>
               </li>
             </ul>
           </div>
