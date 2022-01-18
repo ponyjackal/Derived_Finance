@@ -1,7 +1,6 @@
 const { ethers } = require("hardhat");
 const { expect } = require("chai");
 const { utils } = require("ethers");
-const { accounts } = require("./accounts");
 
 describe("DelegateApprovals", async () => {
   let deployerAccount, owner, account1, account2;
