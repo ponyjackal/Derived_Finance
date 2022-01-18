@@ -10,10 +10,11 @@ import Button from "@mui/material/Button";
 import Skeleton from '@mui/material/Skeleton';
 import CircularProgress from '@mui/material/CircularProgress';
 
+import BigNumber from "bignumber.js";
+
 import { getPrice } from "../../services/coingecko";
 import { useMarket } from "../../context/market";
 import { toLong18 } from "../../utils/Contract";
-import BigNumber from "bignumber.js";
 
 const Buysell = ({ loading, questionId, fee, details, long, short, balances, resolveTime, onRefreshPrice }) => {
   const [selectedIndex, setSelectedIndex] = useState(0);

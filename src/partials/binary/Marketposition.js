@@ -5,11 +5,6 @@ import {
 import ReactTable from "react-table-6";
 import "react-table-6/react-table.css"
 
-// import { useWeb3React } from "@web3-react/core";
-// import { useParams } from "react-router-dom";
-// import { useMarket } from "../../context/market";
-// import { toShort18 } from "../../utils/Contract";
-
 import { BigNumber } from 'bignumber.js';
 import "../../css/table.css"
 

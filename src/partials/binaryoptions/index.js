@@ -32,12 +32,6 @@ const BinaryInside = () => {
   const [prices, setPrices] = useState([]);
   const [balances, setBalances] = useState({ 0: new BigNumber(0), 1: new BigNumber(0) });
 
-  // const positions = useMemo(() => {
-  //   if (!account) return [];
-
-  //   return trades.filter(trade => trade.trader.toLowerCase() === account.toLowerCase());
-  // }, [account, trades]);
-
   const scanlink = useMemo(() => {
     if (chainId === '56') return `https://bscscan.com`;
 
