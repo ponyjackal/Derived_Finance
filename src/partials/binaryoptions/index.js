@@ -32,11 +32,11 @@ const BinaryInside = () => {
   const [prices, setPrices] = useState([]);
   const [balances, setBalances] = useState({ 0: new BigNumber(0), 1: new BigNumber(0) });
 
-  const positions = useMemo(() => {
-    if (!account) return [];
+  // const positions = useMemo(() => {
+  //   if (!account) return [];
 
-    return trades.filter(trade => trade.trader.toLowerCase() === account.toLowerCase())
-  }, [account, trades]);
+  //   return trades.filter(trade => trade.trader.toLowerCase() === account.toLowerCase());
+  // }, [account, trades]);
 
   const scanlink = useMemo(() => {
     if (chainId === '56') return `https://bscscan.com`;
@@ -73,7 +73,11 @@ const BinaryInside = () => {
         console.error('Fetching question error: ', questionId);
       } else {
         const tradeData = await fetchTradesByQuestion(chainId, data.id);
-        setTrades(tradeData);
+        setTrades((tradeData || []).map((trade, index) => ({
+          ...trade,
+          prevLong: index === 0 ? "500000000000000000" : tradeData[index - 1].long,
+          prevShort: index === 0 ? "500000000000000000" : tradeData[index - 1].short,
+        })));
 
         setPrices(
           [
@@ -134,8 +138,6 @@ const BinaryInside = () => {
 
     questionId && account && MarketContract && initialize();
   }, [questionId, account, MarketContract]);
-
-  console.log("DEBUG-question: ", { question });
 
   return (
     <main>
@@ -259,7 +261,7 @@ const BinaryInside = () => {
         </div>
       </div>
       <p className="text-white text-2xl font-bold mx-8">Market Positions</p>
-      <Marketposition positions={positions} />
+      <Marketposition {...question} balances={balances} />
       <p className="text-white text-2xl font-bold underline decoration-secondary mx-8">
         About This Market
       </p>
