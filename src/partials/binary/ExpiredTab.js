@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import Button from "@mui/material/Button";
 import CircularProgress from '@mui/material/CircularProgress';
+import { BigNumber } from 'bignumber.js';
 
 import { useMarket } from "../../context/market";
 
@@ -8,10 +9,20 @@ const ExpiredTab = ({ questionId, answer, balances }) => {
   const [pendingTransaction, setPendingTransaction] = useState(false);
   const { MarketContract } = useMarket();
 
+
   const answers = {
     LONG: "YES",
     SHORT: "NO"
   };
+
+  const isDisabled = useMemo(() => {
+    const mapAnswers = {
+      LONG: 0,
+      SHORT: 1,
+    };
+
+    return balances[mapAnswers[answer]].isEqualTo(new BigNumber(0));
+  }, [answer, balances]);
 
   const handleClaim = async () => {
     setPendingTransaction(true);
@@ -48,11 +59,11 @@ const ExpiredTab = ({ questionId, answer, balances }) => {
             fontSize: "15px",
             fontWeignt: "bold",
           }}
-            disabled={pendingTransaction}
+            disabled={pendingTransaction || isDisabled}
             onClick={handleClaim}
           >
             {pendingTransaction && (<><CircularProgress size={20} />&nbsp;&nbsp;&nbsp;</>)}
-            Claim Winnings
+            {isDisabled ? "Nothing to claim" : "Claim Winnings"}
           </Button>
         </div>
       </div>
