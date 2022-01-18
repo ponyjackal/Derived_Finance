@@ -23,7 +23,7 @@ import { useMarket } from "../../context/market";
 const BinaryInside = () => {
   const { questionId } = useParams();
   const { MarketContract } = useMarket();
-  const { chainId, library, account } = useWeb3React();
+  const { chainId, account } = useWeb3React();
 
   const [loading, setLoading] = useState(false);
   const [loadingPrice, setLoadingPrice] = useState(false);
@@ -111,8 +111,8 @@ const BinaryInside = () => {
       setLoading(false);
     };
 
-    initialize();
-  }, [questionId, chainId, library, account, MarketContract]);
+    questionId && chainId && initialize();
+  }, [questionId, chainId]);
 
   useEffect(() => {
     const initialize = async () => {
@@ -134,6 +134,8 @@ const BinaryInside = () => {
 
     questionId && account && MarketContract && initialize();
   }, [questionId, account, MarketContract]);
+
+  console.log("DEBUG-question: ", { question });
 
   return (
     <main>
@@ -244,15 +246,15 @@ const BinaryInside = () => {
       <div className="px-4 sm:px-6 lg:px-8 py-8 w-full mx-auto bg-primary">
         <div className="grid grid-cols-1 gap-4 md:grid-cols-12 transition-all">
           <Chart prices={prices} />
-          {question.status === 'READY' ? (
+          {question.status === 'END' ? (
+            <ExpiredTab {...question} balances={balances} />
+          ) : (
             <Buysell
               {...question}
               loading={loadingPrice}
               balances={balances}
               onRefreshPrice={handleRefreshPrice}
             />
-          ) : (
-            <ExpiredTab {...question} balances={balances} />
           )}
         </div>
       </div>

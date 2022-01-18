@@ -13,6 +13,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import { getPrice } from "../../services/coingecko";
 import { useMarket } from "../../context/market";
 import { toLong18 } from "../../utils/Contract";
+import BigNumber from "bignumber.js";
 
 const Buysell = ({ loading, questionId, fee, details, long, short, balances, resolveTime, onRefreshPrice }) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -66,8 +67,15 @@ const Buysell = ({ loading, questionId, fee, details, long, short, balances, res
 
     try {
       const order = toLong18(buyAmount);
-      const allowance = await DerivedTokenContract.allowance(account, MarketContract.address);
+      const balance = await DerivedTokenContract.balanceOf(account);
+      const balanceBN = new BigNumber(balance.toString());
 
+      if (order.lt(balanceBN)) {
+        console.error('Not enough USDx balance');
+        return;
+      }
+
+      const allowance = await DerivedTokenContract.allowance(account, MarketContract.address);
       if (order.gt(allowance)) {
         const totalSupply = await DerivedTokenContract.totalSupply();
 
@@ -92,7 +100,26 @@ const Buysell = ({ loading, questionId, fee, details, long, short, balances, res
   };
 
   const handleSell = async () => {
-    // onSell(sellAmount, slotIndex)
+    setPendingTransaction(true);
+
+    try {
+      const order = toLong18(sellAmount);
+      if (order.lt(balances[slotIndex])) {
+        console.error('Not enough Shares balance');
+        return;
+      }
+
+      const tx = await MarketContract.sell(questionId, order.toString(), slotIndex);
+      await tx.wait();
+
+      await onRefreshPrice();
+
+      setSellAmount(0);
+    } catch (error) {
+      console.error('Selling Shares error: ', error.message);
+    }
+
+    setPendingTransaction(false);
   };
 
   return (
