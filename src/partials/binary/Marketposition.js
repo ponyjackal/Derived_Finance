@@ -1,114 +1,75 @@
 import {
-  // useEffect,
+  useEffect,
   useState
 } from "react";
 import ReactTable from "react-table-6";
 import "react-table-6/react-table.css"
 
-// import { useWeb3React } from "@web3-react/core";
-// import { useParams } from "react-router-dom";
-// import { useMarket } from "../../context/market";
-// import { toShort18 } from "../../utils/Contract";
-
+import { BigNumber } from 'bignumber.js';
 import "../../css/table.css"
 
-// export class Marketposition extends Component {
-//   render() {
-//     const data = [
-//     ];
-//     const columns = [
-//       {
-//         Header: "Outcome",
-//         accessor: "outcome",
-//       },
-//       {
-//         Header: "Price: Avg | Cur.",
-//         accessor: "price",
-//       },
-//       {
-//         Header: "P/L: $ | %",
-//         accessor: "pl",
-//       },
-//       {
-//         Header: "Value: Init. | Cur.",
-//         accessor: "value",
-//       },
-//       {
-//         Header: "Max. Payout",
-//         accessor: "max_payout",
-//       },
-//     ];
-//     return (
-//       <div>
-//         <ReactTable
-//           data={data}
-//           columns={columns}
-//           defaultPageSize={5}
-//           pageSizeOptions={[5, 10]}
-//           className="bg-secondary text-white font-bold text-center m-6 rounded-lg"
-//         />
-//       </div>
-//     );
-//   }
-// }
+const Marketposition = ({ long, short, balances }) => {
+  const [loading, setLoading] = useState(false);
+  const [data, setData] = useState([]);
 
-const Marketposition = ({ positions }) => {
-  // const { account } = useWeb3React();
-  // const { questionId } = useParams();
-  const [
-    loading,
-    // setLoading
-  ] = useState(false);
-  // const [positions, setPositions] = useState([]);
-  // const { MarketContract, DerivedTokenContract } = useMarket();
   const columns = [
     {
-      Header: "Outcome",
-      accessor: "outcome",
+      Header: "Type",
+      accessor: "type",
+    },
+    {
+      Header: "Shares Amount",
+      accessor: "amount",
     },
     {
       Header: "Price: Avg | Cur.",
       accessor: "price",
     },
     {
-      Header: "P/L: $ | %",
-      accessor: "pl",
-    },
-    {
-      Header: "Value: Init. | Cur.",
-      accessor: "value",
-    },
-    {
-      Header: "Max. Payout",
-      accessor: "max_payout",
+      Header: "USDx Revenue",
+      accessor: "revenue",
     },
   ];
 
-  /*
   useEffect(() => {
-    if (!questionId || !account || !MarketContract || !DerivedTokenContract) return;
-
-    const initialize = async () => {
+    const initialize = () => {
       setLoading(true);
 
-      const longId = await MarketContract.generateAnswerId(questionId, 0);
-      const shortId = await MarketContract.generateAnswerId(questionId, 1);
+      const value = [];
 
-      const longBalance = await MarketContract.balanceOf(account, longId);
-      const shortBalancee = await MarketContract.balanceOf(account, shortId);
+      if (!balances['0'].isEqualTo(new BigNumber(0))) {
+        const amount = balances['0'].toFixed(2);
+        value.push({
+          amount,
+          type: "YES",
+          price: long,
+          revenue: new BigNumber(long).multipliedBy(new BigNumber(amount)).toFixed(2),
+        });
+      }
+
+      if (!balances['1'].isEqualTo(new BigNumber(0))) {
+        const amount = balances['1'].toFixed(2);
+        value.push({
+          amount,
+          type: "NO",
+          price: short,
+          revenue: new BigNumber(long).multipliedBy(new BigNumber(amount)).toFixed(2),
+        });
+      }
+
+      setData(value);
 
       setLoading(false);
     };
 
     initialize();
-  }, [questionId, account, MarketContract, DerivedTokenContract]);
-  */
+  }, [long, short, balances]);
 
   return (
     <div>
       <ReactTable
         loading={loading}
-        data={[]}
+        data={data}
         columns={columns}
         defaultPageSize={5}
         pageSizeOptions={[5, 10]}
