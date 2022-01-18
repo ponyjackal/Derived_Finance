@@ -37,8 +37,8 @@ const Marketposition = ({ long, short, balances }) => {
 
       const value = [];
 
-      if (!balances['0'].isEqualTo(new BigNumber(0))) {
-        const amount = balances['0'].toFixed(2);
+      if (!balances[0].isEqualTo(new BigNumber(0))) {
+        const amount = balances[0].toFixed(2);
         value.push({
           amount,
           type: "YES",
@@ -47,8 +47,8 @@ const Marketposition = ({ long, short, balances }) => {
         });
       }
 
-      if (!balances['1'].isEqualTo(new BigNumber(0))) {
-        const amount = balances['1'].toFixed(2);
+      if (!balances[1].isEqualTo(new BigNumber(0))) {
+        const amount = balances[1].toFixed(2);
         value.push({
           amount,
           type: "NO",

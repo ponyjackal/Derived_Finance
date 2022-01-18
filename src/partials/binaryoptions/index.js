@@ -109,7 +109,7 @@ const BinaryInside = () => {
       setLoading(false);
     };
 
-    questionId && chainId && initialize();
+    questionId && initialize();
   }, [questionId, chainId]);
 
   useEffect(() => {
