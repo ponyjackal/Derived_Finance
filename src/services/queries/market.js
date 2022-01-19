@@ -40,6 +40,7 @@ export const FETCH_ONGOING_QUESTIOINS = (limit = 10, page = 0) => {
     )
     {
       id
+      title
       questionId
       createTime
       resolveTime
@@ -66,6 +67,7 @@ export const FETCH_EXPIRED_QUESTIONS = (limit = 10, page = 0) => {
     )
     {
       id
+      title
       questionId
       createTime
       resolveTime
@@ -93,6 +95,7 @@ export const FETCH_QUESTION_DETAIL = (questionId) => {
       questionId
       maker
       resolver
+      title
       meta
       createTime
       resolveTime
