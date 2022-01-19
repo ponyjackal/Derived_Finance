@@ -1,17 +1,23 @@
 import { useMemo } from "react";
 import ReactTable from "react-table-6";
-import "react-table-6/react-table.css"
+import "react-table-6/react-table.css";
 
 import { toFriendlyTimeFormat } from "../../utils/Utils";
 import { toShort18 } from "../../utils/Contract";
-import "../../css/table.css"
+import "../../css/table.css";
 
-const Transactiontable = ({ trades }) => {
-  const data = useMemo(() => (trades && trades.map(trade => ({
-    ...trade,
-    amount: toShort18(trade.amount).toFixed(2),
-    timestamp: toFriendlyTimeFormat(trade.timestamp),
-  }))) || [], [trades]);
+const TradeTable = ({ trades }) => {
+  const data = useMemo(
+    () =>
+      (trades &&
+        trades.map((trade) => ({
+          ...trade,
+          amount: toShort18(trade.amount).toFixed(2),
+          timestamp: toFriendlyTimeFormat(trade.timestamp),
+        }))) ||
+      [],
+    [trades]
+  );
 
   const columns = [
     {
@@ -53,4 +59,4 @@ const Transactiontable = ({ trades }) => {
   );
 };
 
-export default Transactiontable;
+export default TradeTable;
