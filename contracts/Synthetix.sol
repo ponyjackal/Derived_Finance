@@ -149,8 +149,8 @@ contract Synthetix is ExternStateToken {
     SynthetixState public synthetixState;
     SupplySchedule public supplySchedule;
 
-    string constant TOKEN_NAME = "Synthetix Network Token";
-    string constant TOKEN_SYMBOL = "SNX";
+    string constant TOKEN_NAME = "Derived Finance Token";
+    string constant TOKEN_SYMBOL = "DVDX";
     uint8 constant DECIMALS = 18;
     // ========== CONSTRUCTOR ==========
 
@@ -774,7 +774,7 @@ contract Synthetix is ExternStateToken {
         returns (uint)
     {
         // What is the value of their SNX balance in the destination currency?
-        uint destinationValue = effectiveValue("SNX", collateral(issuer), currencyKey);
+        uint destinationValue = effectiveValue("DVDX", collateral(issuer), currencyKey);
 
         // They're allowed to issue up to issuanceRatio of that value
         return destinationValue.multiplyDecimal(synthetixState.issuanceRatio());
@@ -796,7 +796,7 @@ contract Synthetix is ExternStateToken {
         uint totalOwnedSynthetix = collateral(issuer);
         if (totalOwnedSynthetix == 0) return 0;
 
-        uint debtBalance = debtBalanceOf(issuer, "SNX");
+        uint debtBalance = debtBalanceOf(issuer, "DVDX");
         return debtBalance.divideDecimalRound(totalOwnedSynthetix);
     }
 
@@ -890,7 +890,7 @@ contract Synthetix is ExternStateToken {
     function transferableSynthetix(address account)
         public
         view
-        rateNotStale("SNX")
+        rateNotStale("DVDX")
         returns (uint)
     {
         // How many SNX do they have, excluding escrow?
@@ -902,7 +902,7 @@ contract Synthetix is ExternStateToken {
         // Assuming issuance ratio is 20%, then issuing 20 SNX of value would require
         // 100 SNX to be locked in their wallet to maintain their collateralisation ratio
         // The locked synthetix value can exceed their balance.
-        uint lockedSynthetixValue = debtBalanceOf(account, "SNX").divideDecimalRound(synthetixState.issuanceRatio());
+        uint lockedSynthetixValue = debtBalanceOf(account, "DVDX").divideDecimalRound(synthetixState.issuanceRatio());
 
         // If we exceed the balance, no SNX are transferable, otherwise the difference is.
         if (lockedSynthetixValue >= balance) {

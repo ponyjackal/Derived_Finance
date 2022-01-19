@@ -265,7 +265,8 @@ async function main() {
   // ----------------
   // Synths
   // ----------------
-  const currencyKeys = ["XDR", "sUSD", "sAUD", "sEUR", "sBTC", "iBTC"];
+  // const currencyKeys = ["XDR", "sUSD", "sAUD", "sEUR", "sBTC", "iBTC"];
+  const currencyKeys = ["USDx"];
   const synths = [];
 
   const PurgeableSynth = await hre.ethers.getContractFactory("PurgeableSynth", {
@@ -334,24 +335,25 @@ async function main() {
   // iBTC: 4000 USD
   await exchangeRates.updateRates(
     currencyKeys
-      .filter((currency) => currency !== "sUSD")
-      .concat(["SNX"])
+      .filter((currency) => currency !== "USDx")
+      .concat(["DVD"])
       .map((currency) =>
         ethers.utils.hexZeroPad(
           ethers.utils.hexlify(ethers.utils.toUtf8Bytes(currency)),
           4
         )
       ),
-    ["1", "0.5", "1.25", "0.1", "5000", "4000"].map((number) =>
-      ethers.utils.parseEther(number)
-    ),
+    // ["1", "0.5", "1.25", "0.1", "5000", "4000"].map((number) =>
+    //   ethers.utils.parseEther(number)
+    // ),
+    ["1"].map((number) => ethers.utils.parseEther(number)),
     timestamp
   );
 
   // --------------------
   // Depot
   // --------------------
-  const sUSDSynth = synths.find((synth) => synth.currencyKey === "sUSD");
+  const sUSDSynth = synths.find((synth) => synth.currencyKey === "USDx");
 
   const Depot = await hre.ethers.getContractFactory("Depot", {
     libraries: {

@@ -422,7 +422,7 @@ contract Depot is SelfDestructible, Pausable {
         // And send them the SNX.
         synthetix.transfer(msg.sender, synthetixToSend);
 
-        emit Exchange("ETH", msg.value, "SNX", synthetixToSend);
+        emit Exchange("ETH", msg.value, "DVDX", synthetixToSend);
 
         return synthetixToSend;
     }
@@ -468,7 +468,7 @@ contract Depot is SelfDestructible, Pausable {
         // And send them the SNX.
         synthetix.transfer(msg.sender, synthetixToSend);
 
-        emit Exchange("sUSD", synthAmount, "SNX", synthetixToSend);
+        emit Exchange("sUSD", synthAmount, "DVDX", synthetixToSend);
 
         return synthetixToSend;
     }

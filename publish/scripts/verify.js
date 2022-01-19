@@ -33,7 +33,7 @@ async function main() {
   //   address: contracts["SafeDecimalMath"],
   //   constructorArguments: [],
   // });
-  // // ----------------
+  // // // ----------------
   // // Exchange Rates
   // // ----------------
   // await hre.run("verify:verify", {
@@ -162,39 +162,39 @@ async function main() {
   //   },
   // });
 
-  // ----------------
-  // Synths
-  // ----------------
-  const currencyKeys = ["XDR", "sUSD", "sAUD", "sEUR", "sBTC", "iBTC"];
-  for (const currencyKey of currencyKeys) {
-    // // TokenState contract
-    // await hre.run("verify:verify", {
-    //   address: contracts[`TokenState ${currencyKey}`],
-    //   constructorArguments: [owner, ZERO_ADDRESS],
-    // });
-    // // Proxy contract
-    // await hre.run("verify:verify", {
-    //   address: contracts[`Proxy ${currencyKey}`],
-    //   constructorArguments: [owner],
-    // });
-    // // Synth contract
-    // await hre.run("verify:verify", {
-    //   address: contracts[`Synth ${currencyKey}`],
-    //   constructorArguments: [
-    //     contracts[`Proxy ${currencyKey}`],
-    //     contracts[`TokenState ${currencyKey}`],
-    //     contracts["Synthetix"],
-    //     contracts["FeePool"],
-    //     `DVD ${currencyKey}`,
-    //     currencyKey,
-    //     owner,
-    //     ethers.utils.hexZeroPad(
-    //       ethers.utils.hexlify(ethers.utils.toUtf8Bytes(currencyKey)),
-    //       4
-    //     ),
-    //   ],
-    // });
-  }
+  // // ----------------
+  // // Synths
+  // // ----------------
+  // const currencyKeys = ["USDx"];
+  // for (const currencyKey of currencyKeys) {
+  //   // TokenState contract
+  //   await hre.run("verify:verify", {
+  //     address: contracts[`TokenState ${currencyKey}`],
+  //     constructorArguments: [owner, ZERO_ADDRESS],
+  //   });
+  //   // Proxy contract
+  //   await hre.run("verify:verify", {
+  //     address: contracts[`Proxy ${currencyKey}`],
+  //     constructorArguments: [owner],
+  //   });
+  //   // Synth contract
+  //   await hre.run("verify:verify", {
+  //     address: contracts[`Synth ${currencyKey}`],
+  //     constructorArguments: [
+  //       contracts[`Proxy ${currencyKey}`],
+  //       contracts[`TokenState ${currencyKey}`],
+  //       contracts["Synthetix"],
+  //       contracts["FeePool"],
+  //       `DVD ${currencyKey}`,
+  //       currencyKey,
+  //       owner,
+  //       ethers.utils.hexZeroPad(
+  //         ethers.utils.hexlify(ethers.utils.toUtf8Bytes(currencyKey)),
+  //         4
+  //       ),
+  //     ],
+  //   });
+  // }
 
   // // --------------------
   // // Depot
@@ -205,7 +205,7 @@ async function main() {
   //     owner,
   //     fundsWallet,
   //     contracts["Synthetix"],
-  //     contracts["Synth sUSD"],
+  //     contracts["Synth USDx"],
   //     contracts["FeePool"],
   //     oracle,
   //     ethers.utils.parseEther("500"),

@@ -8,15 +8,11 @@ const w3utils = require("web3-utils");
 const ethers = require("ethers");
 require("dotenv").config();
 
-const owner = process.env.OWNER;
-const CHAINLINK = {
-  bscTest: {
-    linkToken: "0x84b9B910527Ad5C03A9Ca831909E21e236EA7b06",
-    oracle: "0x2f90A6D021db21e1B2A077c5a37B3C7E75D15b7e",
-    jobId: "0x2e37b8362f474fce9dd019fa195a8627", // CMC JobID for Binance Smart Chain Testnet
-  },
-};
-const network = process.env.NETWORK;
+const {
+  CHAINLINK,
+  ZERO_ADDRESS,
+  SYNTHETIX_TOTAL_SUPPLY,
+} = require("../../utils");
 
 async function main() {
   // Hardhat always runs the compile task when running scripts with its command
@@ -25,7 +21,7 @@ async function main() {
   // If this script is run directly using `node` you may want to call compile
   // manually to make sure everything is compiled
   // await hre.run('compile');
-  console.log(CHAINLINK[network]);
+  console.log(SYNTHETIX_TOTAL_SUPPLY);
 }
 
 // We recommend this pattern to be able to use async/await everywhere
