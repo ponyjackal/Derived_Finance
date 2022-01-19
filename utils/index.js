@@ -1,7 +1,7 @@
 const ethers = require("ethers");
 require("dotenv").config();
 
-export const CHAINLINK = {
+const CHAINLINK = {
   bscTest: {
     linkToken: "0x84b9B910527Ad5C03A9Ca831909E21e236EA7b06",
     oracle: "0x2f90A6D021db21e1B2A077c5a37B3C7E75D15b7e",
@@ -9,7 +9,13 @@ export const CHAINLINK = {
   },
 };
 
-export const ZERO_ADDRESS = "0x" + "0".repeat(40);
+const ZERO_ADDRESS = "0x" + "0".repeat(40);
 
 const totalSupply = process.env.SYNTHETIX_TOTAL_SUPPLY;
-export const SYNTHETIX_TOTAL_SUPPLY = ethers.utils.parseEther(totalSupply);
+const SYNTHETIX_TOTAL_SUPPLY = ethers.utils.parseEther(totalSupply);
+
+module.exports = {
+  CHAINLINK,
+  ZERO_ADDRESS,
+  SYNTHETIX_TOTAL_SUPPLY,
+};

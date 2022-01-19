@@ -1,6 +1,9 @@
 require("@nomiclabs/hardhat-waffle");
 require("@nomiclabs/hardhat-etherscan");
-const { bscScanAPIKey, privateKey } = require("./secret.json");
+require("dotenv").config();
+
+const bscScanAPIKey = process.env.BSC_SCAN_API_KEY;
+const privateKey = process.env.PRIVATE_KEY;
 // This is a sample Hardhat task. To learn how to create your own go to
 // https://hardhat.org/guides/create-task.html
 // task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {

@@ -7,7 +7,11 @@ const hre = require("hardhat");
 const ethers = require("ethers");
 require("dotenv").config();
 
-const { CHAINLINK, ZERO_ADDRESS, SYNTHETIX_TOTAL_SUPPLY } = require("../utils");
+const {
+  CHAINLINK,
+  ZERO_ADDRESS,
+  SYNTHETIX_TOTAL_SUPPLY,
+} = require("../../utils");
 
 const owner = process.env.OWNER;
 const deployerAccount = process.env.DEPLOYER_ACCOUNT;
