@@ -5,26 +5,16 @@
 // Runtime Environment's members available in the global scope.
 const hre = require("hardhat");
 const ethers = require("ethers");
+require("dotenv").config();
 
-const owner = "0x8bb3cB9f93FBa6Ce149ed32A02d8f2664F58CaFB";
-const deployerAccount = "0x8bb3cB9f93FBa6Ce149ed32A02d8f2664F58CaFB";
-const oracle = "0x8bb3cB9f93FBa6Ce149ed32A02d8f2664F58CaFB";
-const feeAuthority = "0x8bb3cB9f93FBa6Ce149ed32A02d8f2664F58CaFB";
-const fundsWallet = "0x8bb3cB9f93FBa6Ce149ed32A02d8f2664F58CaFB";
+const { CHAINLINK, ZERO_ADDRESS, SYNTHETIX_TOTAL_SUPPLY } = require("../utils");
 
-const associatedAccount = "0xE078c3BDEe620829135e1ab526bE860498B06339";
-const CHAINLINK = {
-  bscTest: {
-    linkToken: "0x84b9B910527Ad5C03A9Ca831909E21e236EA7b06",
-    oracle: "0x2f90A6D021db21e1B2A077c5a37B3C7E75D15b7e",
-    jobId: "0x2e37b8362f474fce9dd019fa195a8627", // CMC JobID for Binance Smart Chain Testnet
-  },
-};
-const network = "bscTest";
-
-const ZERO_ADDRESS = "0x" + "0".repeat(40);
-
-const SYNTHETIX_TOTAL_SUPPLY = ethers.utils.parseEther("100000000");
+const owner = process.env.OWNER;
+const deployerAccount = process.env.DEPLOYER_ACCOUNT;
+const oracle = process.env.ORACLE;
+const feeAuthority = process.env.FEE_AUTHORITY;
+const fundsWallet = process.env.FUNDS_WALLET;
+const network = process.env.NETWORK;
 
 async function main() {
   // Hardhat always runs the compile task when running scripts with its command
@@ -279,6 +269,7 @@ async function main() {
       SafeDecimalMath: safeDecimalMath.address,
     },
   });
+
   for (const currencyKey of currencyKeys) {
     const TokenState = await hre.ethers.getContractFactory("TokenState");
     const tokenState = await TokenState.deploy(
