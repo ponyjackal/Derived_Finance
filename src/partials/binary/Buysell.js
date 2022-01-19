@@ -73,24 +73,23 @@ const Buysell = ({ loading, questionId, fee, details, long, short, balances, res
 
       if (order.lt(balanceBN)) {
         console.error('Not enough USDx balance');
-        return;
-      }
+      } else {
+        const allowance = await DerivedTokenContract.allowance(account, MarketContract.address);
+        if (order.gt(allowance)) {
+          const totalSupply = await DerivedTokenContract.totalSupply();
 
-      const allowance = await DerivedTokenContract.allowance(account, MarketContract.address);
-      if (order.gt(allowance)) {
-        const totalSupply = await DerivedTokenContract.totalSupply();
+          const tx = await DerivedTokenContract.approve(
+            MarketContract.address,
+            totalSupply.toString()
+          );
+          await tx.wait();
+        }
 
-        const tx = await DerivedTokenContract.approve(
-          MarketContract.address,
-          totalSupply.toString()
-        );
+        const tx = await MarketContract.buy(questionId, order.toString(), slotIndex);
         await tx.wait();
+
+        await onRefreshPrice();
       }
-
-      const tx = await MarketContract.buy(questionId, order.toString(), slotIndex);
-      await tx.wait();
-
-      await onRefreshPrice();
 
       setBuyAmount(0);
     } catch (error) {
@@ -107,13 +106,12 @@ const Buysell = ({ loading, questionId, fee, details, long, short, balances, res
       const order = toLong18(sellAmount);
       if (order.lt(balances[slotIndex])) {
         console.error('Not enough Shares balance');
-        return;
+      } else {
+        const tx = await MarketContract.sell(questionId, order.toString(), slotIndex);
+        await tx.wait();
+
+        await onRefreshPrice();
       }
-
-      const tx = await MarketContract.sell(questionId, order.toString(), slotIndex);
-      await tx.wait();
-
-      await onRefreshPrice();
 
       setSellAmount(0);
     } catch (error) {
