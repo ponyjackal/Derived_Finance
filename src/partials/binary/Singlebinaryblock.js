@@ -43,7 +43,7 @@ const Singlebinaryblock = ({ title, questionId, resolveTime, createTime, long, s
   return (
     <div className="p-2 bg-secondary rounded-lg">
       <div className="flex items-center justify-between">
-        <Link to="/Binaryoptionsinside" className="flex items-center justify-between p-4">
+        <Link to={`/Binaryoptionsinside/${questionId}`} className="flex items-center justify-between p-4">
           {/* <img src={image} className="rounded-full w-12 p-1" alt="" /> */}
           <p className="text-white text-md">
             {title}
