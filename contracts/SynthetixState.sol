@@ -211,7 +211,7 @@ contract SynthetixState is State, LimitedSetup {
         Synthetix synthetix = Synthetix(associatedContract);
 
         // What is the value of the requested debt in XDRs?
-        uint xdrValue = synthetix.effectiveValue("sUSD", amount, "XDR");
+        uint xdrValue = synthetix.effectiveValue("USDx", amount, "XDR");
 
         // What is the value that we've previously imported?
         uint totalDebtIssued = importedXDRAmount;

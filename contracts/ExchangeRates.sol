@@ -116,8 +116,8 @@ contract ExchangeRates is ChainlinkClient, SelfDestructible {
         snxOracle = _snxOracle;
 
         // The sUSD rate is always 1 and is never stale.
-        rates["sUSD"] = SafeDecimalMath.unit();
-        lastRateUpdateTimes["sUSD"] = block.timestamp;
+        rates["USDx"] = SafeDecimalMath.unit();
+        lastRateUpdateTimes["USDx"] = block.timestamp;
 
         // These are the currencies that make up the XDR basket.
         // These are hard coded because:
@@ -127,7 +127,7 @@ contract ExchangeRates is ChainlinkClient, SelfDestructible {
         //  - The expectation is if this logic needs to be updated, we'll simply deploy a new version of this contract
         //    then point the system at the new version.
         xdrParticipants = [
-            bytes4("sUSD"),
+            bytes4("USDx"),
             bytes4("sAUD"),
             bytes4("sCHF"),
             bytes4("sEUR"),
@@ -181,7 +181,7 @@ contract ExchangeRates is ChainlinkClient, SelfDestructible {
             // truely worthless and still valid. In this scenario, we should
             // delete the rate and remove it from the system.
             require(newRates[i] != 0, "Zero is not a valid rate, please call deleteRate instead.");
-            require(currencyKeys[i] != "sUSD", "Rate of sUSD cannot be updated, it's always UNIT.");
+            require(currencyKeys[i] != "USDx", "Rate of sUSD cannot be updated, it's always UNIT.");
 
             // We should only update the rate if it's at least the same age as the last rate we've got.
             if (timeSent < lastRateUpdateTimes[currencyKeys[i]]) {
@@ -461,7 +461,7 @@ contract ExchangeRates is ChainlinkClient, SelfDestructible {
         returns (bool)
     {
         // sUSD is a special case and is never stale.
-        if (currencyKey == "sUSD") return false;
+        if (currencyKey == "USDx") return false;
 
         return lastRateUpdateTimes[currencyKey].add(rateStalePeriod) < block.timestamp;
     }
@@ -491,7 +491,7 @@ contract ExchangeRates is ChainlinkClient, SelfDestructible {
 
         while (i < currencyKeys.length) {
             // sUSD is a special case and is never false
-            if (currencyKeys[i] != "sUSD" && lastRateUpdateTimes[currencyKeys[i]].add(rateStalePeriod) < block.timestamp) {
+            if (currencyKeys[i] != "USDx" && lastRateUpdateTimes[currencyKeys[i]].add(rateStalePeriod) < block.timestamp) {
                 return true;
             }
             i += 1;

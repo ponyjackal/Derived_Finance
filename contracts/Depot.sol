@@ -379,7 +379,7 @@ contract Depot is SelfDestructible, Pausable {
 
         if (fulfilled > 0) {
             // Now tell everyone that we gave them that many (only if the amount is greater than 0).
-            emit Exchange("ETH", msg.value, "sUSD", fulfilled);
+            emit Exchange("ETH", msg.value, "USDx", fulfilled);
         }
 
         return fulfilled;
@@ -468,7 +468,7 @@ contract Depot is SelfDestructible, Pausable {
         // And send them the SNX.
         synthetix.transfer(msg.sender, synthetixToSend);
 
-        emit Exchange("sUSD", synthAmount, "DVDX", synthetixToSend);
+        emit Exchange("USDx", synthAmount, "DVDX", synthetixToSend);
 
         return synthetixToSend;
     }

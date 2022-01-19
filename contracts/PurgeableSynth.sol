@@ -62,7 +62,7 @@ contract PurgeableSynth is Synth {
         external
         optionalProxy_onlyOwner
     {
-        uint maxSupplyToPurge = exchangeRates.effectiveValue("sUSD", maxSupplyToPurgeInUSD, currencyKey);
+        uint maxSupplyToPurge = exchangeRates.effectiveValue("USDx", maxSupplyToPurgeInUSD, currencyKey);
 
         // Only allow purge when total supply is lte the max or the rate is frozen in ExchangeRates
         require(
@@ -76,7 +76,7 @@ contract PurgeableSynth is Synth {
             uint amountHeld = balanceOf(holder);
 
             if (amountHeld > 0) {
-                synthetix.synthInitiatedExchange(holder, currencyKey, amountHeld, "sUSD", holder);
+                synthetix.synthInitiatedExchange(holder, currencyKey, amountHeld, "USDx", holder);
                 emitPurged(holder, amountHeld);
             }
 
