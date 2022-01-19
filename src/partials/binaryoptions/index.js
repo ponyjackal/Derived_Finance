@@ -1,21 +1,22 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from "react";
 import { useParams } from "react-router-dom";
 import { useWeb3React } from "@web3-react/core";
-import { BigNumber } from 'bignumber.js';
+import { BigNumber } from "bignumber.js";
 
-import Skeleton from '@mui/material/Skeleton';
+import Skeleton from "@mui/material/Skeleton";
 import AttachMoneyOutlinedIcon from "@mui/icons-material/AttachMoneyOutlined";
 
 import Chart from "../../partials/dashboard/Chart";
 import Buysell from "../../partials/binary/Buysell";
 import ExpiredTab from "../../partials/binary/ExpiredTab";
 import Marketposition from "../../partials/binary/Marketposition";
-import Transactiontable from "../../partials/trade/Transactiontable";
-import { fetchQuestionDetail, fetchTradesByQuestion } from "../../services/market";
-
+import TradeTable from "../../partials/trade/TradeTable";
 import {
-  toShort18,
-} from "../../utils/Contract";
+  fetchQuestionDetail,
+  fetchTradesByQuestion,
+} from "../../services/market";
+
+import { toShort18 } from "../../utils/Contract";
 import { toFriendlyTime, toShortAddress } from "../../utils/Utils";
 import { getJsonIpfs } from "../../utils/Ipfs";
 import { useMarket } from "../../context/market";
@@ -30,10 +31,13 @@ const BinaryInside = () => {
   const [question, setQuestion] = useState({});
   const [trades, setTrades] = useState([]);
   const [prices, setPrices] = useState([]);
-  const [balances, setBalances] = useState({ 0: new BigNumber(0), 1: new BigNumber(0) });
+  const [balances, setBalances] = useState({
+    0: new BigNumber(0),
+    1: new BigNumber(0),
+  });
 
   const scanlink = useMemo(() => {
-    if (chainId === '56') return `https://bscscan.com`;
+    if (chainId === "56") return `https://bscscan.com`;
 
     return `https://testnet.bscscan.com`;
   }, [chainId]);
@@ -43,12 +47,12 @@ const BinaryInside = () => {
 
     const data = await fetchQuestionDetail(chainId, questionId);
     if (!data) {
-      console.error('Fetching question error: ', questionId);
+      console.error("Fetching question error: ", questionId);
     } else {
       const long = toShort18(data.long);
       const short = toShort18(data.short);
 
-      setQuestion(val => ({
+      setQuestion((val) => ({
         ...val,
         long: long.toFixed(2),
         short: short.toFixed(2),
@@ -64,29 +68,36 @@ const BinaryInside = () => {
 
       const data = await fetchQuestionDetail(chainId, questionId);
       if (!data) {
-        console.error('Fetching question error: ', questionId);
+        console.error("Fetching question error: ", questionId);
       } else {
         const tradeData = await fetchTradesByQuestion(chainId, data.id);
-        setTrades((tradeData || []).map((trade, index) => ({
-          ...trade,
-          prevLong: index === 0 ? "500000000000000000" : tradeData[index - 1].long,
-          prevShort: index === 0 ? "500000000000000000" : tradeData[index - 1].short,
-        })));
+        setTrades(
+          (tradeData || []).map((trade, index) => ({
+            ...trade,
+            prevLong:
+              index === 0 ? "500000000000000000" : tradeData[index - 1].long,
+            prevShort:
+              index === 0 ? "500000000000000000" : tradeData[index - 1].short,
+          }))
+        );
 
-        setPrices(
-          [
-            {
-              index: (+data.createTime) * 1000,
-              long: 0.5,
-              short: 0.5,
-            },
-            ...tradeData.sort((tradeA, tradeB) => parseInt(tradeA.timestamp, 10) - parseInt(tradeB.timestamp, 10)).map(trade => ({
-              index: (+trade.timestamp) * 1000,
+        setPrices([
+          {
+            index: +data.createTime * 1000,
+            long: 0.5,
+            short: 0.5,
+          },
+          ...tradeData
+            .sort(
+              (tradeA, tradeB) =>
+                parseInt(tradeA.timestamp, 10) - parseInt(tradeB.timestamp, 10)
+            )
+            .map((trade) => ({
+              index: +trade.timestamp * 1000,
               long: parseFloat(toShort18(trade.long).toFixed(2)),
               short: parseFloat(toShort18(trade.short).toFixed(2)),
-            }))
-          ]
-        );
+            })),
+        ]);
 
         const details = await getJsonIpfs(data.meta);
 
@@ -98,7 +109,7 @@ const BinaryInside = () => {
         setQuestion({
           ...data,
           details,
-          resolveTime: toFriendlyTime((+data.resolveTime) || 0),
+          resolveTime: toFriendlyTime(+data.resolveTime || 0),
           long: long.toFixed(2),
           short: short.toFixed(2),
           liquidity: lpVolume.toFixed(2),
@@ -142,7 +153,10 @@ const BinaryInside = () => {
               {loading ? (
                 <Skeleton variant="text" width={450} height={80} />
               ) : (
-                <p className="text-white text-2xl font-bold" style={{ width: 450 }}>
+                <p
+                  className="text-white text-2xl font-bold"
+                  style={{ width: 450 }}
+                >
                   {question.details && question.details.title}
                 </p>
               )}
@@ -180,7 +194,8 @@ const BinaryInside = () => {
                           <Skeleton width={100} height={30} />
                         ) : (
                           <p className="text-black text-base font-body font-black">
-                            <AttachMoneyOutlinedIcon />{question.trade}
+                            <AttachMoneyOutlinedIcon />
+                            {question.trade}
                           </p>
                         )}
                       </div>
@@ -198,7 +213,8 @@ const BinaryInside = () => {
                           <Skeleton width={100} height={30} />
                         ) : (
                           <p className="text-black text-base font-body font-black">
-                            <AttachMoneyOutlinedIcon />{question.liquidity}
+                            <AttachMoneyOutlinedIcon />
+                            {question.liquidity}
                           </p>
                         )}
                       </div>
@@ -211,26 +227,30 @@ const BinaryInside = () => {
           <div className="flex items-center md:flex-row flex-col p-8 pt-0">
             <div className="flex md:flex-row flex-col py-2 text-center">
               <div className="flex">
-                <p className="text-white text-sm mx-2">
-                  Developed By:{"  "}
-                </p>
+                <p className="text-white text-sm mx-2">Developed By:{"  "}</p>
                 {loading ? (
                   <Skeleton width={100} height={30} />
                 ) : (
-                  <a href={`${scanlink}/address/${question.resolver}`} target="blank" className="text-white text-sm mx-2 text-headings">
+                  <a
+                    href={`${scanlink}/address/${question.resolver}`}
+                    target="blank"
+                    className="text-white text-sm mx-2 text-headings"
+                  >
                     {toShortAddress(question.maker, 6)}
                   </a>
                 )}
               </div>
               &nbsp;&nbsp;&nbsp;
               <div className="flex">
-                <p className="text-white text-sm mx-2">
-                  Resolver:{"  "}
-                </p>
+                <p className="text-white text-sm mx-2">Resolver:{"  "}</p>
                 {loading ? (
                   <Skeleton width={100} height={30} />
                 ) : (
-                  <a href={`${scanlink}/address/${question.resolver}`} target="blank" className="text-white text-sm mx-2 text-headings">
+                  <a
+                    href={`${scanlink}/address/${question.resolver}`}
+                    target="blank"
+                    className="text-white text-sm mx-2 text-headings"
+                  >
                     {toShortAddress(question.resolver, 6)}
                   </a>
                 )}
@@ -242,7 +262,7 @@ const BinaryInside = () => {
       <div className="px-4 sm:px-6 lg:px-8 py-8 w-full mx-auto bg-primary">
         <div className="grid grid-cols-1 gap-4 md:grid-cols-12 transition-all">
           <Chart prices={prices} />
-          {question.status === 'END' ? (
+          {question.status === "END" ? (
             <ExpiredTab {...question} balances={balances} />
           ) : (
             <Buysell
@@ -268,7 +288,11 @@ const BinaryInside = () => {
         <p className="text-white p-5">
           Resolution Source{" "}
           <span className="text-blue-500 mr-10 block">
-            <a href={question.details && question.details.link} target="blank" className="truncate block">
+            <a
+              href={question.details && question.details.link}
+              target="blank"
+              className="truncate block"
+            >
               {question.details && question.details.link}
             </a>
           </span>
@@ -276,14 +300,16 @@ const BinaryInside = () => {
         <p className="text-white p-5">
           Resolver{" "}
           <span className="text-blue-500 mr-10">
-            <a href={`${scanlink}/address/${question.resolver}`} target="blank">{question.resolver}</a>
+            <a href={`${scanlink}/address/${question.resolver}`} target="blank">
+              {question.resolver}
+            </a>
           </span>
         </p>
       </div>
 
       <div className="flex bg-secondary p-3 flex-col m-7 rounded-lg">
         <h1 className=" text-white text-2xl font-bold">Recent Trading</h1>
-        <Transactiontable trades={trades} />
+        <TradeTable trades={trades} />
       </div>
     </main>
   );

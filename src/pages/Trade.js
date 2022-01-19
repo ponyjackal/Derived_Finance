@@ -5,7 +5,7 @@ import Header from "../partials/Header";
 import DashboardCard05 from "../partials/dashboard/DashboardCard05";
 import Footer from "../partials/Footer";
 import Cryptoslider from "../partials/trade/Cryptoslider";
-import Transactiontable from "../partials/trade/Transactiontable";
+import TransactionTable from "../partials/trade/TransactionTable";
 
 function Trade() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -39,7 +39,7 @@ function Trade() {
                 <p className=" text-gray-600 text-md">
                   Lorem ipsum dolor sit amet, consectetur adipiscing elit.
                 </p>
-                <Transactiontable />
+                <TransactionTable />
               </div>
             </div>
           </div>
