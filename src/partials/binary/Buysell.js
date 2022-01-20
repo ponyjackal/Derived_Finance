@@ -153,6 +153,7 @@ const Buysell = ({ loading, questionId, fee, details, long, short, balances, res
                 fontSize: "11px",
                 textTransform: "uppercase",
               }}
+              disabled={loading}
               onClick={onRefreshPrice}
             >
               Refresh Price
@@ -252,6 +253,7 @@ const Buysell = ({ loading, questionId, fee, details, long, short, balances, res
                 fontSize: "11px",
                 textTransform: "uppercase",
               }}
+              disabled={loading}
               onClick={onRefreshPrice}
             >
               Refresh Price

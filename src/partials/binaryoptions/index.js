@@ -42,85 +42,74 @@ const BinaryInside = () => {
     return `https://testnet.bscscan.com`;
   }, [chainId]);
 
-  const handleRefreshPrice = async () => {
-    setLoadingPrice(true);
+  const handleFetchDetails = async () => {
+    setLoading(true);
 
     const data = await fetchQuestionDetail(chainId, questionId);
     if (!data) {
       console.error("Fetching question error: ", questionId);
     } else {
+      const tradeData = await fetchTradesByQuestion(chainId, data.id);
+      setTrades(
+        (tradeData || []).map((trade, index) => ({
+          ...trade,
+          prevLong:
+            index === 0 ? "500000000000000000" : tradeData[index - 1].long,
+          prevShort:
+            index === 0 ? "500000000000000000" : tradeData[index - 1].short,
+        }))
+      );
+
+      setPrices([
+        {
+          index: +data.createTime * 1000,
+          long: 0.5,
+          short: 0.5,
+        },
+        ...tradeData
+          .sort(
+            (tradeA, tradeB) =>
+              parseInt(tradeA.timestamp, 10) - parseInt(tradeB.timestamp, 10)
+          )
+          .map((trade) => ({
+            index: +trade.timestamp * 1000,
+            long: parseFloat(toShort18(trade.long).toFixed(2)),
+            short: parseFloat(toShort18(trade.short).toFixed(2)),
+          })),
+      ]);
+
+      const details = await getJsonIpfs(data.meta);
+
       const long = toShort18(data.long);
       const short = toShort18(data.short);
+      const lpVolume = toShort18(data.lpVolume);
+      const tradeVolume = toShort18(data.tradeVolume);
 
-      setQuestion((val) => ({
-        ...val,
+      setQuestion({
+        ...data,
+        details,
+        resolveTime: toFriendlyTime(+data.resolveTime || 0),
         long: long.toFixed(2),
         short: short.toFixed(2),
-      }));
+        liquidity: lpVolume.toFixed(2),
+        trade: tradeVolume.toFixed(2),
+      });
     }
+
+    setLoading(false);
+  };
+
+  const handleRefreshPrice = async () => {
+    setLoadingPrice(true);
+
+    await handleFetchDetails();
 
     setLoadingPrice(false);
   };
 
   useEffect(() => {
-    const initialize = async () => {
-      setLoading(true);
-
-      const data = await fetchQuestionDetail(chainId, questionId);
-      if (!data) {
-        console.error("Fetching question error: ", questionId);
-      } else {
-        const tradeData = await fetchTradesByQuestion(chainId, data.id);
-        setTrades(
-          (tradeData || []).map((trade, index) => ({
-            ...trade,
-            prevLong:
-              index === 0 ? "500000000000000000" : tradeData[index - 1].long,
-            prevShort:
-              index === 0 ? "500000000000000000" : tradeData[index - 1].short,
-          }))
-        );
-
-        setPrices([
-          {
-            index: +data.createTime * 1000,
-            long: 0.5,
-            short: 0.5,
-          },
-          ...tradeData
-            .sort(
-              (tradeA, tradeB) =>
-                parseInt(tradeA.timestamp, 10) - parseInt(tradeB.timestamp, 10)
-            )
-            .map((trade) => ({
-              index: +trade.timestamp * 1000,
-              long: parseFloat(toShort18(trade.long).toFixed(2)),
-              short: parseFloat(toShort18(trade.short).toFixed(2)),
-            })),
-        ]);
-
-        const details = await getJsonIpfs(data.meta);
-
-        const long = toShort18(data.long);
-        const short = toShort18(data.short);
-        const lpVolume = toShort18(data.lpVolume);
-        const tradeVolume = toShort18(data.tradeVolume);
-
-        setQuestion({
-          ...data,
-          details,
-          resolveTime: toFriendlyTime(+data.resolveTime || 0),
-          long: long.toFixed(2),
-          short: short.toFixed(2),
-          liquidity: lpVolume.toFixed(2),
-          trade: tradeVolume.toFixed(2),
-        });
-      }
-
-      setLoading(false);
-    };
-
-    questionId && initialize();
+    questionId && handleFetchDetails();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [questionId, chainId]);
 
   useEffect(() => {
