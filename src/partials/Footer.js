@@ -11,7 +11,7 @@ export class Footer extends Component {
         <p className="text-headings font-body font-extrabold">
           Copyright &copy; {this.getYear()}{" "}
           <a href="https://webixun.com" target="_blank" rel="noreferrer">
-            Webixun Infoways Pvt. Ltd.
+            Derived Finance
           </a>
           . All Rights Reserved
         </p>

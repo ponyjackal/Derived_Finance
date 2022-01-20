@@ -110,7 +110,7 @@ const Buysell = ({ loading, questionId, fee, details, long, short, balances, res
 
     try {
       const order = toLong18(sellAmount);
-      if (balances[slotIndex].lt(order)) {
+      if (order.lt(balances[slotIndex])) {
         setSellError('Not enough Shares balance');
       } else {
         setSellError('');
