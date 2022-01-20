@@ -23,6 +23,8 @@ const Buysell = ({ loading, questionId, fee, details, long, short, balances, res
   const [sellAmount, setSellAmount] = useState('');
   const [slotIndex, setSlotIndex] = useState(0);
   const [pendingTransaction, setPendingTransaction] = useState(false);
+  const [buyError, setBuyError] = useState(null);
+  const [sellError, setSellError] = useState(null);
 
   const { MarketContract, DerivedTokenContract } = useMarket();
   const { account } = useWeb3React();
@@ -71,11 +73,15 @@ const Buysell = ({ loading, questionId, fee, details, long, short, balances, res
       const balance = await DerivedTokenContract.balanceOf(account);
       const balanceBN = new BigNumber(balance.toString());
 
-      if (order.lt(balanceBN)) {
-        console.error('Not enough USDx balance');
+      if (balanceBN.lt(order)) {
+        setBuyError('Not enough USDx balance');
       } else {
+        setBuyError('');
+
         const allowance = await DerivedTokenContract.allowance(account, MarketContract.address);
-        if (order.gt(allowance)) {
+        const allowanceBN = new BigNumber(allowance.toString());
+
+        if (allowanceBN.lt(order)) {
           const totalSupply = await DerivedTokenContract.totalSupply();
 
           const tx = await DerivedTokenContract.approve(
@@ -104,9 +110,11 @@ const Buysell = ({ loading, questionId, fee, details, long, short, balances, res
 
     try {
       const order = toLong18(sellAmount);
-      if (order.lt(balances[slotIndex])) {
-        console.error('Not enough Shares balance');
+      if (balances[slotIndex].lt(order)) {
+        setSellError('Not enough Shares balance');
       } else {
+        setSellError('');
+
         const tx = await MarketContract.sell(questionId, order.toString(), slotIndex);
         await tx.wait();
 
@@ -185,6 +193,7 @@ const Buysell = ({ loading, questionId, fee, details, long, short, balances, res
                     borderRadius: "5px",
                   }}
                 />
+                {buyError && (<p className="text-xs text-red-400 my-2">{buyError}</p>)}
               </Box>
             </div>
           </div>
@@ -283,6 +292,7 @@ const Buysell = ({ loading, questionId, fee, details, long, short, balances, res
                     borderRadius: "5px",
                   }}
                 />
+                {sellError && (<p className="text-xs text-red-400 my-2">{sellError}</p>)}
               </Box>
             </div>
           </div>
