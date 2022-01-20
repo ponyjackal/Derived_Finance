@@ -62,7 +62,8 @@ const BinaryInside = () => {
 
       setPrices([
         {
-          index: +data.createTime * 1000,
+          // index: +data.createTime * 1000,
+          index: 0,
           long: 0.5,
           short: 0.5,
         },
@@ -71,8 +72,9 @@ const BinaryInside = () => {
             (tradeA, tradeB) =>
               parseInt(tradeA.timestamp, 10) - parseInt(tradeB.timestamp, 10)
           )
-          .map((trade) => ({
-            index: +trade.timestamp * 1000,
+          .map((trade, index) => ({
+            // index: +trade.timestamp * 1000,
+            index: index + 1,
             long: parseFloat(toShort18(trade.long).toFixed(2)),
             short: parseFloat(toShort18(trade.short).toFixed(2)),
           })),
