@@ -3,6 +3,7 @@ import { Contract } from "@ethersproject/contracts";
 import MarketABI from "../abis/DerivedPredictionMarket.json";
 import DerivedTokenABI from "../abis/DerivedToken.json";
 import SynthTokenABI from "../abis/Synth.json";
+import DVDXTokenABI from "../abis/DVDX.json";
 
 import { contractAddresses } from "./address";
 
@@ -19,4 +20,9 @@ export const getDerivedTokenContract = (chainId, library) => {
 export const getSynthTokenContract = (chainId, library) => {
   const address = contractAddresses.synth[chainId];
   return new Contract(address, SynthTokenABI, library.getSigner());
+};
+
+export const getDVDXTokenContract = (chainId, library) => {
+  const address = contractAddresses.dvdx[chainId];
+  return new Contract(address, DVDXTokenABI, library.getSigner());
 };
