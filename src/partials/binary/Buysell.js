@@ -7,32 +7,45 @@ import { useWeb3React } from "@web3-react/core";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
-import Skeleton from '@mui/material/Skeleton';
-import CircularProgress from '@mui/material/CircularProgress';
+import Skeleton from "@mui/material/Skeleton";
+import CircularProgress from "@mui/material/CircularProgress";
 
 import BigNumber from "bignumber.js";
 
 import { getPrice } from "../../services/coingecko";
-import { useMarket } from "../../context/market";
+import { useChain } from "../../context/chain";
 import { toLong18 } from "../../utils/Contract";
 
-const Buysell = ({ loading, questionId, fee, details, long, short, balances, resolveTime, onRefreshPrice }) => {
+const Buysell = ({
+  loading,
+  questionId,
+  fee,
+  details,
+  long,
+  short,
+  balances,
+  resolveTime,
+  onRefreshPrice,
+}) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [currentPrice, setCurrentPrice] = useState(0);
-  const [buyAmount, setBuyAmount] = useState('');
-  const [sellAmount, setSellAmount] = useState('');
+  const [buyAmount, setBuyAmount] = useState("");
+  const [sellAmount, setSellAmount] = useState("");
   const [slotIndex, setSlotIndex] = useState(0);
   const [pendingTransaction, setPendingTransaction] = useState(false);
   const [buyError, setBuyError] = useState(null);
   const [sellError, setSellError] = useState(null);
 
-  const { MarketContract, DerivedTokenContract } = useMarket();
+  const { MarketContract, DerivedTokenContract } = useChain();
   const { account } = useWeb3React();
 
-  const isDisabled = useMemo(() => !MarketContract || !DerivedTokenContract, [MarketContract, DerivedTokenContract]);
+  const isDisabled = useMemo(
+    () => !MarketContract || !DerivedTokenContract,
+    [MarketContract, DerivedTokenContract]
+  );
 
   useEffect(() => {
-    if (!details || details.type !== 'crypto') return;
+    if (!details || details.type !== "crypto") return;
 
     const timer = setInterval(async () => {
       const data = await getPrice(details.coinId);
@@ -58,10 +71,8 @@ const Buysell = ({ loading, questionId, fee, details, long, short, balances, res
       floatRegExp.test(event.target.value.toString()) ||
       event.target.value === ""
     ) {
-      if (type === 'buy')
-        setBuyAmount(event.target.value);
-      else
-        setSellAmount(event.target.value);
+      if (type === "buy") setBuyAmount(event.target.value);
+      else setSellAmount(event.target.value);
     }
   };
 
@@ -74,11 +85,14 @@ const Buysell = ({ loading, questionId, fee, details, long, short, balances, res
       const balanceBN = new BigNumber(balance.toString());
 
       if (balanceBN.lt(order)) {
-        setBuyError('Not enough USDx balance');
+        setBuyError("Not enough USDx balance");
       } else {
-        setBuyError('');
+        setBuyError("");
 
-        const allowance = await DerivedTokenContract.allowance(account, MarketContract.address);
+        const allowance = await DerivedTokenContract.allowance(
+          account,
+          MarketContract.address
+        );
         const allowanceBN = new BigNumber(allowance.toString());
 
         if (allowanceBN.lt(order)) {
@@ -91,7 +105,11 @@ const Buysell = ({ loading, questionId, fee, details, long, short, balances, res
           await tx.wait();
         }
 
-        const tx = await MarketContract.buy(questionId, order.toString(), slotIndex);
+        const tx = await MarketContract.buy(
+          questionId,
+          order.toString(),
+          slotIndex
+        );
         await tx.wait();
 
         await onRefreshPrice();
@@ -99,7 +117,7 @@ const Buysell = ({ loading, questionId, fee, details, long, short, balances, res
 
       setBuyAmount(0);
     } catch (error) {
-      console.error('Buying Shares error: ', error.message);
+      console.error("Buying Shares error: ", error.message);
     }
 
     setPendingTransaction(false);
@@ -111,11 +129,15 @@ const Buysell = ({ loading, questionId, fee, details, long, short, balances, res
     try {
       const order = toLong18(sellAmount);
       if (order.lt(balances[slotIndex])) {
-        setSellError('Not enough Shares balance');
+        setSellError("Not enough Shares balance");
       } else {
-        setSellError('');
+        setSellError("");
 
-        const tx = await MarketContract.sell(questionId, order.toString(), slotIndex);
+        const tx = await MarketContract.sell(
+          questionId,
+          order.toString(),
+          slotIndex
+        );
         await tx.wait();
 
         await onRefreshPrice();
@@ -123,7 +145,7 @@ const Buysell = ({ loading, questionId, fee, details, long, short, balances, res
 
       setSellAmount(0);
     } catch (error) {
-      console.error('Selling Shares error: ', error.message);
+      console.error("Selling Shares error: ", error.message);
     }
 
     setPendingTransaction(false);
@@ -131,19 +153,14 @@ const Buysell = ({ loading, questionId, fee, details, long, short, balances, res
 
   return (
     <div className="flex flex-col col-span-full sm:col-span-6 bg-secondary shadow-lg rounded-sm border border-gray-200">
-      <Tabs
-        selectedIndex={selectedIndex}
-        onSelect={handleSelect}
-      >
+      <Tabs selectedIndex={selectedIndex} onSelect={handleSelect}>
         <TabList>
           <Tab>Buy</Tab>
           <Tab>Sell</Tab>
         </TabList>
         <TabPanel>
           <div className="flex items-center justify-between">
-            <h1 className="text-white text-sm font-bold p-3">
-              Pickup Outcome
-            </h1>
+            <h1 className="text-white text-sm font-bold p-3">Pickup Outcome</h1>
             <Button
               variant="contained"
               style={{
@@ -161,17 +178,37 @@ const Buysell = ({ loading, questionId, fee, details, long, short, balances, res
           </div>
           <div className="px-4">
             <div className="flex items-center justify-between">
-              <div className={`${slotIndex === 0 ? "bg-green-500" : "bg-gray-500"} px-4 py-2 text-white rounded-lg cursor-pointer`} onClick={() => setSlotIndex(0)}>
+              <div
+                className={`${
+                  slotIndex === 0 ? "bg-green-500" : "bg-gray-500"
+                } px-4 py-2 text-white rounded-lg cursor-pointer`}
+                onClick={() => setSlotIndex(0)}
+              >
                 <p className="flex">
-                  YES &nbsp;&nbsp;&nbsp;<span className="text-black">
-                    {loading ? (<Skeleton variant="rectangular" width={40} height={25} />) : `$ ${long || ''}`}
+                  YES &nbsp;&nbsp;&nbsp;
+                  <span className="text-black">
+                    {loading ? (
+                      <Skeleton variant="rectangular" width={40} height={25} />
+                    ) : (
+                      `$ ${long || ""}`
+                    )}
                   </span>
                 </p>
               </div>
-              <div className={`${slotIndex === 1 ? "bg-red-500" : "bg-gray-500"} px-4 py-2 text-white rounded-lg cursor-pointer`} onClick={() => setSlotIndex(1)}>
+              <div
+                className={`${
+                  slotIndex === 1 ? "bg-red-500" : "bg-gray-500"
+                } px-4 py-2 text-white rounded-lg cursor-pointer`}
+                onClick={() => setSlotIndex(1)}
+              >
                 <p className="flex">
-                  NO &nbsp;&nbsp;&nbsp;<span className="text-black">
-                    {loading ? (<Skeleton variant="rectangular" width={40} height={25} />) : `$ ${short || ''}`}
+                  NO &nbsp;&nbsp;&nbsp;
+                  <span className="text-black">
+                    {loading ? (
+                      <Skeleton variant="rectangular" width={40} height={25} />
+                    ) : (
+                      `$ ${short || ""}`
+                    )}
                   </span>
                 </p>
               </div>
@@ -187,14 +224,16 @@ const Buysell = ({ loading, questionId, fee, details, long, short, balances, res
                   variant="outlined"
                   focused
                   value={buyAmount}
-                  onChange={e => handleChangeAmount(e, 'buy')}
+                  onChange={(e) => handleChangeAmount(e, "buy")}
                   style={{
                     color: "white",
                     width: "100%",
                     borderRadius: "5px",
                   }}
                 />
-                {buyError && (<p className="text-xs text-red-400 my-2">{buyError}</p>)}
+                {buyError && (
+                  <p className="text-xs text-red-400 my-2">{buyError}</p>
+                )}
               </Box>
             </div>
           </div>
@@ -211,11 +250,13 @@ const Buysell = ({ loading, questionId, fee, details, long, short, balances, res
               <p className="text-gray-400 text-xs">Expiry Date</p>
               <p className="text-white text-xs">{resolveTime}</p>
             </div>
-            {details && details.type === 'crypto' && (
+            {details && details.type === "crypto" && (
               <>
                 <div className="flex items-center justify-between px-5 py-1">
                   <p className="text-gray-400 text-xs">Strike Price</p>
-                  <p className="text-white text-xs">{details.coinStrikePrice}$</p>
+                  <p className="text-white text-xs">
+                    {details.coinStrikePrice}$
+                  </p>
                 </div>
                 <div className="flex items-center justify-between px-5 py-1">
                   <p className="text-gray-400 text-xs">Current Asset Price</p>
@@ -225,25 +266,36 @@ const Buysell = ({ loading, questionId, fee, details, long, short, balances, res
             )}
           </div>
           <div className="p-4">
-            <Button variant="contained" fullWidth style={{
-              backgroundColor: "#4A6D83",
-              textAlign: "center",
-              fontSize: "15px",
-              fontWeignt: "bold",
-            }}
-              disabled={!buyAmount || buyAmount === '0' || isDisabled || pendingTransaction}
+            <Button
+              variant="contained"
+              fullWidth
+              style={{
+                backgroundColor: "#4A6D83",
+                textAlign: "center",
+                fontSize: "15px",
+                fontWeignt: "bold",
+              }}
+              disabled={
+                !buyAmount ||
+                buyAmount === "0" ||
+                isDisabled ||
+                pendingTransaction
+              }
               onClick={handleBuy}
             >
-              {pendingTransaction && (<><CircularProgress size={20} />&nbsp;&nbsp;&nbsp;</>)}
+              {pendingTransaction && (
+                <>
+                  <CircularProgress size={20} />
+                  &nbsp;&nbsp;&nbsp;
+                </>
+              )}
               BUY
             </Button>
           </div>
         </TabPanel>
         <TabPanel>
           <div className="flex items-center justify-between">
-            <h1 className="text-white text-sm font-bold p-3">
-              Pickup Outcome
-            </h1>
+            <h1 className="text-white text-sm font-bold p-3">Pickup Outcome</h1>
             <Button
               variant="contained"
               style={{
@@ -261,17 +313,37 @@ const Buysell = ({ loading, questionId, fee, details, long, short, balances, res
           </div>
           <div className="px-4">
             <div className="flex items-center justify-between">
-              <div className={`${slotIndex === 0 ? "bg-green-500" : "bg-gray-500"} px-4 py-2 text-white rounded-lg cursor-pointer`} onClick={() => setSlotIndex(0)}>
+              <div
+                className={`${
+                  slotIndex === 0 ? "bg-green-500" : "bg-gray-500"
+                } px-4 py-2 text-white rounded-lg cursor-pointer`}
+                onClick={() => setSlotIndex(0)}
+              >
                 <p className="flex">
-                  YES &nbsp;&nbsp;&nbsp;<span className="text-black">
-                    {loading ? (<Skeleton variant="rectangular" width={40} height={25} />) : `$ ${long || ''}`}
+                  YES &nbsp;&nbsp;&nbsp;
+                  <span className="text-black">
+                    {loading ? (
+                      <Skeleton variant="rectangular" width={40} height={25} />
+                    ) : (
+                      `$ ${long || ""}`
+                    )}
                   </span>
                 </p>
               </div>
-              <div className={`${slotIndex === 1 ? "bg-red-500" : "bg-gray-500"} px-4 py-2 text-white rounded-lg cursor-pointer`} onClick={() => setSlotIndex(1)}>
+              <div
+                className={`${
+                  slotIndex === 1 ? "bg-red-500" : "bg-gray-500"
+                } px-4 py-2 text-white rounded-lg cursor-pointer`}
+                onClick={() => setSlotIndex(1)}
+              >
                 <p className="flex">
-                  NO &nbsp;&nbsp;&nbsp;<span className="text-black">
-                    {loading ? (<Skeleton variant="rectangular" width={40} height={25} />) : `$ ${short || ''}`}
+                  NO &nbsp;&nbsp;&nbsp;
+                  <span className="text-black">
+                    {loading ? (
+                      <Skeleton variant="rectangular" width={40} height={25} />
+                    ) : (
+                      `$ ${short || ""}`
+                    )}
                   </span>
                 </p>
               </div>
@@ -287,14 +359,16 @@ const Buysell = ({ loading, questionId, fee, details, long, short, balances, res
                   variant="outlined"
                   focused
                   value={sellAmount}
-                  onChange={e => handleChangeAmount(e, 'sell')}
+                  onChange={(e) => handleChangeAmount(e, "sell")}
                   style={{
                     width: "100%",
                     color: "white",
                     borderRadius: "5px",
                   }}
                 />
-                {sellError && (<p className="text-xs text-red-400 my-2">{sellError}</p>)}
+                {sellError && (
+                  <p className="text-xs text-red-400 my-2">{sellError}</p>
+                )}
               </Box>
             </div>
           </div>
@@ -319,23 +393,36 @@ const Buysell = ({ loading, questionId, fee, details, long, short, balances, res
             </div>
           </div>
           <div className="p-4">
-            <Button variant="contained" fullWidth style={{
-              backgroundColor: "#4A6D83",
-              textAlign: "center",
-              fontSize: "15px",
-              fontWeignt: "bold",
-            }}
-              disabled={!sellAmount || sellAmount === '0' || isDisabled || pendingTransaction}
+            <Button
+              variant="contained"
+              fullWidth
+              style={{
+                backgroundColor: "#4A6D83",
+                textAlign: "center",
+                fontSize: "15px",
+                fontWeignt: "bold",
+              }}
+              disabled={
+                !sellAmount ||
+                sellAmount === "0" ||
+                isDisabled ||
+                pendingTransaction
+              }
               onClick={handleSell}
             >
-              {pendingTransaction && (<><CircularProgress size={20} />&nbsp;&nbsp;&nbsp;</>)}
+              {pendingTransaction && (
+                <>
+                  <CircularProgress size={20} />
+                  &nbsp;&nbsp;&nbsp;
+                </>
+              )}
               SELL
             </Button>
           </div>
         </TabPanel>
       </Tabs>
-    </div >
+    </div>
   );
-}
+};
 
 export default Buysell;

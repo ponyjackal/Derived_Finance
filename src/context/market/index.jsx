@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useContext, createContext } from "react";
 import { useWeb3React } from "@web3-react/core";
 
-import { getDerivedTokenContract, getMarketContract } from "../contracts";
 import {
   fetchAllOngoingQuestions,
   fetchAllExpiredQuestions,
@@ -13,27 +12,10 @@ export const useMarket = () => useContext(MarketContext);
 
 export const MarketProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
-  const [MarketContract, setMarketContract] = useState(null);
-  const [DerivedTokenContract, setDerivedTokenContract] = useState(null);
   const [liveQuestions, setLiveQuestions] = useState([]);
   const [expiredQuestions, setExpiredQuestions] = useState([]);
 
-  const { library, active, chainId } = useWeb3React();
-
-  useEffect(() => {
-    const initialize = () => {
-      const market = getMarketContract(chainId, library);
-      setMarketContract(market);
-
-      const derivedToken = getDerivedTokenContract(chainId, library);
-      setDerivedTokenContract(derivedToken);
-    };
-
-    if (library && active && chainId) {
-      initialize();
-    } else {
-    }
-  }, [library, active, chainId]);
+  const { chainId } = useWeb3React();
 
   useEffect(() => {
     const initialize = async () => {
@@ -57,8 +39,6 @@ export const MarketProvider = ({ children }) => {
         loading,
         liveQuestions,
         expiredQuestions,
-        MarketContract,
-        DerivedTokenContract,
       }}
     >
       {children}
