@@ -1,18 +1,17 @@
 import { useState, useMemo } from "react";
 import Button from "@mui/material/Button";
-import CircularProgress from '@mui/material/CircularProgress';
-import { BigNumber } from 'bignumber.js';
+import CircularProgress from "@mui/material/CircularProgress";
+import { BigNumber } from "bignumber.js";
 
-import { useMarket } from "../../context/market";
+import { useChain } from "../../context/chain";
 
 const ExpiredTab = ({ questionId, answer, balances }) => {
   const [pendingTransaction, setPendingTransaction] = useState(false);
-  const { MarketContract } = useMarket();
-
+  const { MarketContract } = useChain();
 
   const answers = {
     LONG: "YES",
-    SHORT: "NO"
+    SHORT: "NO",
   };
 
   const isDisabled = useMemo(() => {
@@ -31,7 +30,7 @@ const ExpiredTab = ({ questionId, answer, balances }) => {
       const tx = await MarketContract.redeemRewards(questionId);
       await tx.wait();
     } catch (error) {
-      console.error('Claiming reward error: ', error.message);
+      console.error("Claiming reward error: ", error.message);
     }
 
     setPendingTransaction(false);
@@ -40,7 +39,9 @@ const ExpiredTab = ({ questionId, answer, balances }) => {
   return (
     <div className="flex flex-col col-span-full sm:col-span-6 bg-secondary shadow-lg rounded-sm border border-gray-200">
       <div className="px-5 py-4 border-b border-gray-100">
-        <h2 className="font-semibold text-white text-center">Question is resolved - {answers[answer]}</h2>
+        <h2 className="font-semibold text-white text-center">
+          Question is resolved - {answers[answer]}
+        </h2>
       </div>
       <div className="px-5 py-4">
         <h5 className="font-semibold text-white text-center">Balances</h5>
@@ -53,16 +54,24 @@ const ExpiredTab = ({ questionId, answer, balances }) => {
           <p className="text-white text-xs">{balances[1].toFixed(2)}</p>
         </div>
         <div className="pt-4">
-          <Button variant="contained" fullWidth style={{
-            backgroundColor: "#4A6D83",
-            textAlign: "center",
-            fontSize: "15px",
-            fontWeignt: "bold",
-          }}
+          <Button
+            variant="contained"
+            fullWidth
+            style={{
+              backgroundColor: "#4A6D83",
+              textAlign: "center",
+              fontSize: "15px",
+              fontWeignt: "bold",
+            }}
             disabled={pendingTransaction || isDisabled}
             onClick={handleClaim}
           >
-            {pendingTransaction && (<><CircularProgress size={20} />&nbsp;&nbsp;&nbsp;</>)}
+            {pendingTransaction && (
+              <>
+                <CircularProgress size={20} />
+                &nbsp;&nbsp;&nbsp;
+              </>
+            )}
             {isDisabled ? "Nothing to claim" : "Claim Winnings"}
           </Button>
         </div>

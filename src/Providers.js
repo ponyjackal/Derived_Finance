@@ -9,9 +9,9 @@ const Providers = ({ children }) => {
   return (
     <Web3ReactProvider getLibrary={getLibrary}>
       <ConnectorProvider>
-        <MarketProvider>
-          <ChainProvider>{children}</ChainProvider>
-        </MarketProvider>
+        <ChainProvider>
+          <MarketProvider>{children}</MarketProvider>
+        </ChainProvider>
       </ConnectorProvider>
     </Web3ReactProvider>
   );

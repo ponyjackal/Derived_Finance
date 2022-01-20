@@ -19,11 +19,11 @@ import {
 import { toShort18 } from "../../utils/Contract";
 import { toFriendlyTime, toShortAddress } from "../../utils/Utils";
 import { getJsonIpfs } from "../../utils/Ipfs";
-import { useMarket } from "../../context/market";
+import { useChain } from "../../context/chain";
 
 const BinaryInside = () => {
   const { questionId } = useParams();
-  const { MarketContract } = useMarket();
+  const { MarketContract } = useChain();
   const { chainId, account } = useWeb3React();
 
   const [loading, setLoading] = useState(false);

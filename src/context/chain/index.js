@@ -1,7 +1,12 @@
 import React, { useState, useEffect, useContext, createContext } from "react";
 import { useWeb3React } from "@web3-react/core";
 
-import { getSynthTokenContract, getDVDXTokenContract } from "../contracts";
+import {
+  getSynthTokenContract,
+  getDVDXTokenContract,
+  getDerivedTokenContract,
+  getMarketContract,
+} from "../contracts";
 
 export const ChainContext = createContext({});
 
@@ -11,6 +16,8 @@ export const ChainProvider = ({ children }) => {
   const { library, active, chainId } = useWeb3React();
   const [SynthContract, setSynthContract] = useState(null);
   const [DVDXContract, setDVDXContract] = useState(null);
+  const [MarketContract, setMarketContract] = useState(null);
+  const [DerivedTokenContract, setDerivedTokenContract] = useState(null);
 
   useEffect(() => {
     if (library && active && chainId) {
@@ -19,6 +26,12 @@ export const ChainProvider = ({ children }) => {
 
       const dvdx = getDVDXTokenContract(chainId, library);
       setDVDXContract(dvdx);
+
+      const market = getMarketContract(chainId, library);
+      setMarketContract(market);
+
+      const derivedToken = getDerivedTokenContract(chainId, library);
+      setDerivedTokenContract(derivedToken);
     } else {
       setSynthContract(null);
     }
@@ -29,6 +42,8 @@ export const ChainProvider = ({ children }) => {
       value={{
         SynthContract,
         DVDXContract,
+        MarketContract,
+        DerivedTokenContract,
       }}
     >
       {children}
