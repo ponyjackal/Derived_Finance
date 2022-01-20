@@ -21,7 +21,12 @@ async function main() {
   // If this script is run directly using `node` you may want to call compile
   // manually to make sure everything is compiled
   // await hre.run('compile');
-  console.log(SYNTHETIX_TOTAL_SUPPLY);
+  console.log(
+    ethers.utils.hexZeroPad(
+      ethers.utils.hexlify(ethers.utils.toUtf8Bytes("USDx")),
+      4
+    )
+  );
 }
 
 // We recommend this pattern to be able to use async/await everywhere

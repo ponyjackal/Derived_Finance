@@ -296,7 +296,7 @@ async function main() {
       tokenState.address,
       synthetix.address,
       feePool.address,
-      `DVD ${currencyKey}`,
+      `Synth ${currencyKey}`,
       currencyKey,
       owner,
       ethers.utils.hexZeroPad(
@@ -336,7 +336,7 @@ async function main() {
   await exchangeRates.updateRates(
     currencyKeys
       .filter((currency) => currency !== "USDx")
-      .concat(["DVD"])
+      .concat(["DVDX"])
       .map((currency) =>
         ethers.utils.hexZeroPad(
           ethers.utils.hexlify(ethers.utils.toUtf8Bytes(currency)),
@@ -346,7 +346,7 @@ async function main() {
     // ["1", "0.5", "1.25", "0.1", "5000", "4000"].map((number) =>
     //   ethers.utils.parseEther(number)
     // ),
-    ["1"].map((number) => ethers.utils.parseEther(number)),
+    ["0.1"].map((number) => ethers.utils.parseEther(number)),
     timestamp
   );
 

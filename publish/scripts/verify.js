@@ -19,210 +19,291 @@ const deployerAccount = process.env.DEPLOYER_ACCOUNT;
 const fundsWallet = process.env.FUNDS_WALLET;
 // verify contracts
 async function main() {
+  // ----------------
+  // Owned
+  // ----------------
+  try {
+    await hre.run("verify:verify", {
+      address: contracts["Owned"],
+      constructorArguments: [owner],
+    });
+  } catch (err) {
+    console.log(err);
+  }
+  // ----------------
+  // Safe Decimal Math library
+  // ----------------
+  try {
+    await hre.run("verify:verify", {
+      address: contracts["SafeDecimalMath"],
+      constructorArguments: [],
+    });
+  } catch (err) {
+    console.log(err);
+  }
   // // ----------------
-  // // Owned
-  // // ----------------
-  // await hre.run("verify:verify", {
-  //   address: contracts["Owned"],
-  //   constructorArguments: [owner],
-  // });
-  // // ----------------
-  // // Safe Decimal Math library
-  // // ----------------
-  // await hre.run("verify:verify", {
-  //   address: contracts["SafeDecimalMath"],
-  //   constructorArguments: [],
-  // });
-  // // // ----------------
-  // // Exchange Rates
-  // // ----------------
-  // await hre.run("verify:verify", {
-  //   address: contracts["ExchangeRates"],
-  //   constructorArguments: [
-  //     owner,
-  //     oracle,
-  //     [
-  //       ethers.utils.hexZeroPad(
-  //         ethers.utils.hexlify(ethers.utils.toUtf8Bytes("DVD")),
-  //         4
-  //       ),
-  //     ],
-  //     [ethers.utils.parseEther("0.2")],
-  //     CHAINLINK[network].linkToken,
-  //     CHAINLINK[network].oracle,
-  //     ethers.utils.hexZeroPad(CHAINLINK[network].jobId, 32),
-  //   ],
-  //   libraries: {
-  //     SafeDecimalMath: contracts["SafeDecimalMath"],
-  //   },
-  // });
-  // // ----------------
-  // // Escrow
-  // // ----------------
-  // await hre.run("verify:verify", {
-  //   address: contracts["SynthetixEscrow"],
-  //   constructorArguments: [owner, ZERO_ADDRESS],
-  // });
-  // await hre.run("verify:verify", {
-  //   address: contracts["RewardEscrow"],
-  //   constructorArguments: [owner, ZERO_ADDRESS, ZERO_ADDRESS],
-  // });
-  // // ----------------
-  // // Synthetix State
-  // // ----------------
-  // await hre.run("verify:verify", {
-  //   address: contracts["SynthetixState"],
-  //   constructorArguments: [owner, ZERO_ADDRESS],
-  //   libraries: {
-  //     SafeDecimalMath: contracts["SafeDecimalMath"],
-  //   },
-  // });
-  // // ----------------
-  // // Fee Pool - Delegate Approval
-  // // ----------------
-  // await hre.run("verify:verify", {
-  //   address: contracts["DelegateApprovals"],
-  //   constructorArguments: [owner, ZERO_ADDRESS],
-  // });
-  // // ----------------
-  // // Fee Pool
-  // // ----------------
-  // // FeePoolProxy Contract
-  // await hre.run("verify:verify", {
-  //   address: contracts["FeePoolProxy"],
-  //   constructorArguments: [owner],
-  // });
-  // // FeePoolState contract
-  // await hre.run("verify:verify", {
-  //   address: contracts["FeePoolState"],
-  //   constructorArguments: [owner, ZERO_ADDRESS],
-  // });
-  // // FeePoolEternalStorage contract
-  // await hre.run("verify:verify", {
-  //   address: contracts["FeePoolEternalStorage"],
-  //   constructorArguments: [owner, ZERO_ADDRESS],
-  // });
-  // // FeePool Contract
-  // await hre.run("verify:verify", {
-  //   address: contracts["FeePool"],
-  //   constructorArguments: [
-  //     contracts["FeePoolProxy"],
-  //     owner,
-  //     ZERO_ADDRESS,
-  //     contracts["FeePoolState"],
-  //     contracts["FeePoolEternalStorage"],
-  //     contracts["SynthetixState"],
-  //     contracts["RewardEscrow"],
-  //     feeAuthority,
-  //     ethers.utils.parseUnits("0.0015"),
-  //     ethers.utils.parseUnits("0.0030"),
-  //   ],
-  //   libraries: {
-  //     SafeDecimalMath: contracts["SafeDecimalMath"],
-  //   },
-  // });
-  // // ----------------
-  // // Synthetix
-  // // ----------------
-  // // SupplySchedule Contract
-  // await hre.run("verify:verify", {
-  //   address: contracts["SupplySchedule"],
-  //   constructorArguments: [owner],
-  //   libraries: {
-  //     SafeDecimalMath: contracts["SafeDecimalMath"],
-  //   },
-  // });
-  // // Synthetix Proxy contract
-  // await hre.run("verify:verify", {
-  //   address: contracts["SynthetixProxy"],
-  //   constructorArguments: [owner],
-  // });
-  // // SynthetixTokenState
-  // await hre.run("verify:verify", {
-  //   address: contracts["SynthetixTokenState"],
-  //   constructorArguments: [owner, deployerAccount],
-  // });
-  // // Synthetix Contract
-  // await hre.run("verify:verify", {
-  //   address: contracts["Synthetix"],
-  //   constructorArguments: [
-  //     contracts["SynthetixProxy"],
-  //     contracts["SynthetixTokenState"],
-  //     contracts["SynthetixState"],
-  //     owner,
-  //     contracts["ExchangeRates"],
-  //     contracts["FeePool"],
-  //     contracts["SupplySchedule"],
-  //     contracts["RewardEscrow"],
-  //     contracts["SynthetixEscrow"],
-  //     SYNTHETIX_TOTAL_SUPPLY,
-  //   ],
-  //   libraries: {
-  //     SafeDecimalMath: contracts["SafeDecimalMath"],
-  //   },
-  // });
+  // Exchange Rates
+  // ----------------
+  try {
+    await hre.run("verify:verify", {
+      address: contracts["ExchangeRates"],
+      constructorArguments: [
+        owner,
+        oracle,
+        [
+          ethers.utils.hexZeroPad(
+            ethers.utils.hexlify(ethers.utils.toUtf8Bytes("DVD")),
+            4
+          ),
+        ],
+        [ethers.utils.parseEther("0.2")],
+        CHAINLINK[network].linkToken,
+        CHAINLINK[network].oracle,
+        ethers.utils.hexZeroPad(CHAINLINK[network].jobId, 32),
+      ],
+      libraries: {
+        SafeDecimalMath: contracts["SafeDecimalMath"],
+      },
+    });
+  } catch (err) {
+    console.log(err);
+  }
+  // ----------------
+  // Escrow
+  // ----------------
+  try {
+    await hre.run("verify:verify", {
+      address: contracts["SynthetixEscrow"],
+      constructorArguments: [owner, ZERO_ADDRESS],
+    });
+  } catch (err) {
+    console.log(err);
+  }
 
-  // // ----------------
-  // // Synths
-  // // ----------------
-  // const currencyKeys = ["USDx"];
-  // for (const currencyKey of currencyKeys) {
-  //   // TokenState contract
-  //   await hre.run("verify:verify", {
-  //     address: contracts[`TokenState ${currencyKey}`],
-  //     constructorArguments: [owner, ZERO_ADDRESS],
-  //   });
-  //   // Proxy contract
-  //   await hre.run("verify:verify", {
-  //     address: contracts[`Proxy ${currencyKey}`],
-  //     constructorArguments: [owner],
-  //   });
-  //   // Synth contract
-  //   await hre.run("verify:verify", {
-  //     address: contracts[`Synth ${currencyKey}`],
-  //     constructorArguments: [
-  //       contracts[`Proxy ${currencyKey}`],
-  //       contracts[`TokenState ${currencyKey}`],
-  //       contracts["Synthetix"],
-  //       contracts["FeePool"],
-  //       `DVD ${currencyKey}`,
-  //       currencyKey,
-  //       owner,
-  //       ethers.utils.hexZeroPad(
-  //         ethers.utils.hexlify(ethers.utils.toUtf8Bytes(currencyKey)),
-  //         4
-  //       ),
-  //     ],
-  //   });
-  // }
+  try {
+    await hre.run("verify:verify", {
+      address: contracts["RewardEscrow"],
+      constructorArguments: [owner, ZERO_ADDRESS, ZERO_ADDRESS],
+    });
+  } catch (err) {
+    console.log(err);
+  }
+  // ----------------
+  // Synthetix State
+  // ----------------
+  try {
+    await hre.run("verify:verify", {
+      address: contracts["SynthetixState"],
+      constructorArguments: [owner, ZERO_ADDRESS],
+      libraries: {
+        SafeDecimalMath: contracts["SafeDecimalMath"],
+      },
+    });
+  } catch (err) {
+    console.log(err);
+  }
+  // ----------------
+  // Fee Pool - Delegate Approval
+  // ----------------
+  try {
+    await hre.run("verify:verify", {
+      address: contracts["DelegateApprovals"],
+      constructorArguments: [owner, ZERO_ADDRESS],
+    });
+  } catch (err) {
+    console.log(err);
+  }
+  // ----------------
+  // Fee Pool
+  // ----------------
+  // FeePoolProxy Contract
+  try {
+    await hre.run("verify:verify", {
+      address: contracts["FeePoolProxy"],
+      constructorArguments: [owner],
+    });
+  } catch (err) {
+    console.log(err);
+  }
+  // FeePoolState contract
+  try {
+    await hre.run("verify:verify", {
+      address: contracts["FeePoolState"],
+      constructorArguments: [owner, ZERO_ADDRESS],
+    });
+  } catch (err) {
+    console.log(err);
+  }
+  // FeePoolEternalStorage contract
+  try {
+    await hre.run("verify:verify", {
+      address: contracts["FeePoolEternalStorage"],
+      constructorArguments: [owner, ZERO_ADDRESS],
+    });
+  } catch (err) {
+    console.log(err);
+  }
+  // FeePool Contract
+  try {
+    await hre.run("verify:verify", {
+      address: contracts["FeePool"],
+      constructorArguments: [
+        contracts["FeePoolProxy"],
+        owner,
+        ZERO_ADDRESS,
+        contracts["FeePoolState"],
+        contracts["FeePoolEternalStorage"],
+        contracts["SynthetixState"],
+        contracts["RewardEscrow"],
+        feeAuthority,
+        ethers.utils.parseUnits("0.0015"),
+        ethers.utils.parseUnits("0.0030"),
+      ],
+      libraries: {
+        SafeDecimalMath: contracts["SafeDecimalMath"],
+      },
+    });
+  } catch (err) {
+    console.log(err);
+  }
+  // ----------------
+  // Synthetix
+  // ----------------
+  // SupplySchedule Contract
+  try {
+    await hre.run("verify:verify", {
+      address: contracts["SupplySchedule"],
+      constructorArguments: [owner],
+      libraries: {
+        SafeDecimalMath: contracts["SafeDecimalMath"],
+      },
+    });
+  } catch (err) {
+    console.log(err);
+  }
+  // Synthetix Proxy contract
+  try {
+    await hre.run("verify:verify", {
+      address: contracts["SynthetixProxy"],
+      constructorArguments: [owner],
+    });
+  } catch (err) {
+    console.log(err);
+  }
+  // SynthetixTokenState
+  try {
+    await hre.run("verify:verify", {
+      address: contracts["SynthetixTokenState"],
+      constructorArguments: [owner, deployerAccount],
+    });
+  } catch (err) {
+    console.log(err);
+  }
+  // Synthetix Contract
+  try {
+    await hre.run("verify:verify", {
+      address: contracts["Synthetix"],
+      constructorArguments: [
+        contracts["SynthetixProxy"],
+        contracts["SynthetixTokenState"],
+        contracts["SynthetixState"],
+        owner,
+        contracts["ExchangeRates"],
+        contracts["FeePool"],
+        contracts["SupplySchedule"],
+        contracts["RewardEscrow"],
+        contracts["SynthetixEscrow"],
+        SYNTHETIX_TOTAL_SUPPLY,
+      ],
+      libraries: {
+        SafeDecimalMath: contracts["SafeDecimalMath"],
+      },
+    });
+  } catch (err) {
+    console.log(err);
+  }
 
-  // // --------------------
-  // // Depot
-  // // --------------------
-  // await hre.run("verify:verify", {
-  //   address: contracts["Depot"],
-  //   constructorArguments: [
-  //     owner,
-  //     fundsWallet,
-  //     contracts["Synthetix"],
-  //     contracts["Synth USDx"],
-  //     contracts["FeePool"],
-  //     oracle,
-  //     ethers.utils.parseEther("500"),
-  //     ethers.utils.parseEther(".10"),
-  //   ],
-  //   libraries: {
-  //     SafeDecimalMath: contracts["SafeDecimalMath"],
-  //   },
-  // });
+  // ----------------
+  // Synths
+  // ----------------
+  const currencyKeys = ["USDx"];
+  for (const currencyKey of currencyKeys) {
+    // TokenState contract
+    try {
+      await hre.run("verify:verify", {
+        address: contracts[`TokenState ${currencyKey}`],
+        constructorArguments: [owner, ZERO_ADDRESS],
+      });
+    } catch (err) {
+      console.log(err);
+    }
+    // Proxy contract
+    try {
+      await hre.run("verify:verify", {
+        address: contracts[`Proxy ${currencyKey}`],
+        constructorArguments: [owner],
+      });
+    } catch (err) {
+      console.log(err);
+    }
+    // Synth contract
+    try {
+      await hre.run("verify:verify", {
+        address: contracts[`Synth ${currencyKey}`],
+        constructorArguments: [
+          contracts[`Proxy ${currencyKey}`],
+          contracts[`TokenState ${currencyKey}`],
+          contracts["Synthetix"],
+          contracts["FeePool"],
+          `DVD ${currencyKey}`,
+          currencyKey,
+          owner,
+          ethers.utils.hexZeroPad(
+            ethers.utils.hexlify(ethers.utils.toUtf8Bytes(currencyKey)),
+            4
+          ),
+        ],
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  // --------------------
+  // Depot
+  // --------------------
+  try {
+    await hre.run("verify:verify", {
+      address: contracts["Depot"],
+      constructorArguments: [
+        owner,
+        fundsWallet,
+        contracts["Synthetix"],
+        contracts["Synth USDx"],
+        contracts["FeePool"],
+        oracle,
+        ethers.utils.parseEther("500"),
+        ethers.utils.parseEther(".10"),
+      ],
+      libraries: {
+        SafeDecimalMath: contracts["SafeDecimalMath"],
+      },
+    });
+  } catch (err) {
+    console.log(err);
+  }
 
   // ----------------
   // Self Destructible
   // ----------------
-  await hre.run("verify:verify", {
-    address: contracts["SelfDestructible"],
-    constructorArguments: [owner],
-  });
+  try {
+    await hre.run("verify:verify", {
+      address: contracts["SelfDestructible"],
+      constructorArguments: [owner],
+    });
+  } catch (err) {
+    console.log(err);
+  }
 }
 
 // We recommend this pattern to be able to use async/await everywhere
