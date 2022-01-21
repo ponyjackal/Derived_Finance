@@ -17,7 +17,7 @@ Synthetix-backed stablecoin contract.
 This contract issues synths, which are tokens that mirror various
 flavours of fiat currency.
 
-Synths are issuable by Synthetix Network Token (SNX) holders who
+Synths are issuable by Synthetix Network Token (DVDX) holders who
 have to lock up some value of their DVDXto issue S * Cmax synths.
 Where Cmax issome value less than 1.
 

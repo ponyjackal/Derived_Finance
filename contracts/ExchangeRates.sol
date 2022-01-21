@@ -503,7 +503,7 @@ contract ExchangeRates is ChainlinkClient, SelfDestructible {
     // CHAINLINK ///
     /**
      * @notice Initiatiate a price request via chainlink. Provide both the
-     * bytes4 currencyKey (for SNX) and the string representation (for Chainlink)
+     * bytes4 currencyKey (for DVDX) and the string representation (for Chainlink)
      */
     function requestCryptoPrice(bytes4 currencyKey, string memory asset)
     public

@@ -156,7 +156,7 @@ contract FeePool is Proxyable, SelfDestructible, LimitedSetup {
      * @param account Message.Senders account address
      * @param debtRatio Debt percentage this account has locked after minting or burning their synth
      * @param debtEntryIndex The index in the global debt ledger. synthetix.synthetixState().issuanceData(account)
-     * @dev onlySynthetix to call me on synthetix.issue() & synthetix.burn() calls to store the locked SNX
+     * @dev onlySynthetix to call me on synthetix.issue() & synthetix.burn() calls to store the locked DVDX
      * per fee period so we know to allocate the correct proportions of fees and rewards per period
      */
     function appendAccountIssuanceRecord(address account, uint debtRatio, uint debtEntryIndex)
@@ -479,14 +479,14 @@ contract FeePool is Proxyable, SelfDestructible, LimitedSetup {
 
     /**
      * @notice Record the reward payment in our recentFeePeriods.
-     * @param snxAmount The amount of DVDXtokens.
+     * @param dvdxAmount The amount of DVDXtokens.
      */
-    function _recordRewardPayment(uint snxAmount)
+    function _recordRewardPayment(uint dvdxAmount)
         internal
         returns (uint)
     {
         // Don't assign to the parameter
-        uint remainingToAllocate = snxAmount;
+        uint remainingToAllocate = dvdxAmount;
 
         uint rewardPaid;
 
@@ -559,9 +559,9 @@ contract FeePool is Proxyable, SelfDestructible, LimitedSetup {
     /**
     * @notice Send the rewards to claiming address - will be locked in rewardEscrow.
     * @param account The address to send the fees to.
-    * @param snxAmount The amount of SNX.
+    * @param dvdxAmount The amount of DVDX.
     */
-    function _payRewards(address account, uint snxAmount)
+    function _payRewards(address account, uint dvdxAmount)
         internal
         notFeeAddress(account)
     {
@@ -572,7 +572,7 @@ contract FeePool is Proxyable, SelfDestructible, LimitedSetup {
 
         // Record vesting entry for claiming address and amount
         // DVDXalready minted to rewardEscrow balance
-        rewardEscrow.appendVestingEntry(account, snxAmount);
+        rewardEscrow.appendVestingEntry(account, dvdxAmount);
     }
 
     /**
@@ -993,9 +993,9 @@ contract FeePool is Proxyable, SelfDestructible, LimitedSetup {
         proxy._emit(abi.encode(feePeriodId), 1, FEEPERIODCLOSED_SIG, 0, 0, 0);
     }
 
-    event FeesClaimed(address account, uint xdrAmount, uint snxRewards);
+    event FeesClaimed(address account, uint xdrAmount, uint dvdxRewards);
     bytes32 constant FEESCLAIMED_SIG = keccak256("FeesClaimed(address,uint256,uint256)");
-    function emitFeesClaimed(address account, uint xdrAmount, uint snxRewards) internal {
-        proxy._emit(abi.encode(account, xdrAmount, snxRewards), 1, FEESCLAIMED_SIG, 0, 0, 0);
+    function emitFeesClaimed(address account, uint xdrAmount, uint dvdxRewards) internal {
+        proxy._emit(abi.encode(account, xdrAmount, dvdxRewards), 1, FEESCLAIMED_SIG, 0, 0, 0);
     }
 }

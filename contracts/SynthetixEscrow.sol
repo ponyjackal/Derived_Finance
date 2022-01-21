@@ -270,7 +270,7 @@ contract SynthetixEscrow is Owned, LimitedSetup(8 weeks) {
     }
 
     /**
-     * @notice Construct a vesting schedule to release a quantities of SNX
+     * @notice Construct a vesting schedule to release a quantities of DVDX
      * over a series of intervals.
      * @dev Assumes that the quantities are nonzero
      * and that the sequence of timestamps is strictly increasing.

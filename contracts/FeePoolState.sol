@@ -121,7 +121,7 @@ contract FeePoolState is SelfDestructible, LimitedSetup {
      * @param debtRatio Debt percentage this account has locked after minting or burning their synth
      * @param debtEntryIndex The index in the global debt ledger. synthetix.synthetixState().issuanceData(account)
      * @param currentPeriodStartDebtIndex The startingDebtIndex of the current fee period
-     * @dev onlyFeePool to call me on synthetix.issue() & synthetix.burn() calls to store the locked SNX
+     * @dev onlyFeePool to call me on synthetix.issue() & synthetix.burn() calls to store the locked DVDX
      * per fee period so we know to allocate the correct proportions of fees and rewards per period
       accountIssuanceLedger[account][0] has the latest locked amount for the current period. This can be update as many time
       accountIssuanceLedger[account][1-3] has the last locked amount for a previous period they minted or burned

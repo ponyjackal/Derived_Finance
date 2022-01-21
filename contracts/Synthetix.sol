@@ -34,7 +34,7 @@ duration of the fee period.
 We need only update values when the balances of an account is modified.
 This occurs when issuing or burning for issued synth balances,
 and when transferring for synthetix balances. This is for efficiency,
-and adds an implicit friction to interacting with SNX.
+and adds an implicit friction to interacting with DVDX.
 A synthetix holder pays for his own recomputation whenever he wants to change
 his position, which saves the foundation having to maintain a pot dedicated
 to resourcing this.
@@ -103,12 +103,12 @@ where the proportion is governed by the current issuance ratio. This
 means for every $1 of DVDXlocked up, $(issuanceRatio) synths can be issued.
 i.e. to issue 100 synths, 100/issuanceRatio dollars of DVDXneed to be locked up.
 
-To determine the value of some amount of SNX(S), an oracle is used to push
+To determine the value of some amount of DVDX(S), an oracle is used to push
 the price of DVDX(P_S) in dollars to the contract. The value of S
 would then be: S * P_S.
 
 Any DVDXthat are locked up by this issuance process cannot be transferred.
-The amount that is locked floats based on the price of SNX. If the price
+The amount that is locked floats based on the price of DVDX. If the price
 of DVDXmoves up, less DVDXare locked, so they can be issued against,
 or transferred freely. If the price of DVDXmoves down, more DVDXare locked,
 even going above the initial wallet balance.
@@ -616,7 +616,7 @@ contract Synthetix is ExternStateToken {
     }
 
     /**
-     * @notice Issue synths against the sender's SNX.
+     * @notice Issue synths against the sender's DVDX.
      * @dev Issuance is only allowed if the synthetix price isn't stale. Amount should be larger than 0.
      * @param currencyKey The currency you wish to issue synths in, for example USDx or sAUD
      * @param amount The amount of synths you wish to issue with a base of UNIT
@@ -639,7 +639,7 @@ contract Synthetix is ExternStateToken {
     }
 
     /**
-     * @notice Issue the maximum amount of Synths possible against the sender's SNX.
+     * @notice Issue the maximum amount of Synths possible against the sender's DVDX.
      * @dev Issuance is only allowed if the synthetix price isn't stale.
      * @param currencyKey The currency you wish to issue synths in, for example USDx or sAUD
      */
@@ -655,7 +655,7 @@ contract Synthetix is ExternStateToken {
     }
 
     /**
-     * @notice Burn synths to clear issued synths/free SNX.
+     * @notice Burn synths to clear issued synths/free DVDX.
      * @param currencyKey The currency you're specifying to burn
      * @param amount The amount (in UNIT base) you wish to burn
      * @dev The amount to burn is debased to XDR's

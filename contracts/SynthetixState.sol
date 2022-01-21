@@ -76,7 +76,7 @@ contract SynthetixState is State, LimitedSetup {
     uint public importedXDRAmount;
 
     // A quantity of synths greater than this ratio
-    // may not be issued against a given value of SNX.
+    // may not be issued against a given value of DVDX.
     uint public issuanceRatio = SafeDecimalMath.unit() / 5;
     // No more synths may be issued than the value of DVDXbacking them.
     uint public MAX_ISSUANCE_RATIO = SafeDecimalMath.unit();
