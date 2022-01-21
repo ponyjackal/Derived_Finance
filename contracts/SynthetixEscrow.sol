@@ -22,7 +22,7 @@ vested funds, their quantities and vesting dates, and to withdraw
 the fees that accrue on those funds.
 
 The fees are handled by withdrawing the entire fee allocation
-for all SNX inside the escrow contract, and then allowing
+for all DVDXinside the escrow contract, and then allowing
 the contract itself to subdivide that pool up proportionally within
 itself. Every time the fee period rolls over in the main Synthetix
 contract, the SynthetixEscrow fee pool is remitted back into the
@@ -41,7 +41,7 @@ import "./ISynthetix.sol";
 import "./LimitedSetup.sol";
 
 /**
- * @title A contract to hold escrowed SNX and free them at given schedules.
+ * @title A contract to hold escrowed DVDXand free them at given schedules.
  */
 contract SynthetixEscrow is Owned, LimitedSetup(8 weeks) {
 
@@ -51,7 +51,7 @@ contract SynthetixEscrow is Owned, LimitedSetup(8 weeks) {
     ISynthetix public synthetix;
 
     /* Lists of (timestamp, quantity) pairs per account, sorted in ascending time order.
-     * These are the times at which each given quantity of SNX vests. */
+     * These are the times at which each given quantity of DVDXvests. */
     mapping(address => uint[2][]) public vestingSchedules;
 
     /* An account's total vested synthetix balance to save recomputing this for fee extraction purposes. */
@@ -135,7 +135,7 @@ contract SynthetixEscrow is Owned, LimitedSetup(8 weeks) {
     }
 
     /**
-     * @notice Get the quantity of SNX associated with a given schedule entry.
+     * @notice Get the quantity of DVDXassociated with a given schedule entry.
      */
     function getVestingQuantity(address account, uint index)
         public
@@ -203,7 +203,7 @@ contract SynthetixEscrow is Owned, LimitedSetup(8 weeks) {
     /* ========== MUTATIVE FUNCTIONS ========== */
 
     /**
-     * @notice Withdraws a quantity of SNX back to the synthetix contract.
+     * @notice Withdraws a quantity of DVDXback to the synthetix contract.
      * @dev This may only be called by the owner during the contract's setup period.
      */
     function withdrawSynthetix(uint quantity)
@@ -238,7 +238,7 @@ contract SynthetixEscrow is Owned, LimitedSetup(8 weeks) {
      * arrays, it's only in the foundation's command to add to these lists.
      * @param account The account to append a new vesting entry to.
      * @param time The absolute unix timestamp after which the vested quantity may be withdrawn.
-     * @param quantity The quantity of SNX that will vest.
+     * @param quantity The quantity of DVDXthat will vest.
      */
     function appendVestingEntry(address account, uint time, uint quantity)
         public
@@ -260,7 +260,7 @@ contract SynthetixEscrow is Owned, LimitedSetup(8 weeks) {
         if (scheduleLength == 0) {
             totalVestedAccountBalance[account] = quantity;
         } else {
-            /* Disallow adding new vested SNX earlier than the last one.
+            /* Disallow adding new vested DVDXearlier than the last one.
              * Since entries are only appended, this means that no vesting date can be repeated. */
             require(getVestingTime(account, numVestingEntries(account) - 1) < time, "Cannot add new vested entries earlier than the last one");
             totalVestedAccountBalance[account] = totalVestedAccountBalance[account].add(quantity);
@@ -288,7 +288,7 @@ contract SynthetixEscrow is Owned, LimitedSetup(8 weeks) {
     }
 
     /**
-     * @notice Allow a user to withdraw any SNX in their schedule that have vested.
+     * @notice Allow a user to withdraw any DVDXin their schedule that have vested.
      */
     function vest()
         external

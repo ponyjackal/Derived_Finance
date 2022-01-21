@@ -48,7 +48,7 @@ contract ExchangeRates is ChainlinkClient, SelfDestructible {
     // Update times stored by currency code, e.g. 'SNX', or 'USDx'
     mapping(bytes4 => uint) public lastRateUpdateTimes;
 
-    // The address of the SNX oracle which pushes rate updates to this contract
+    // The address of the DVDXoracle which pushes rate updates to this contract
     address public snxOracle;
 
     // Do not allow the oracle to submit times any further forward into the future than this constant.

@@ -50,12 +50,12 @@ contract Depot is SelfDestructible, Pausable {
     ISynth public synth;
     IFeePool public feePool;
 
-    // Address where the ether and Synths raised for selling SNX is transfered to
+    // Address where the ether and Synths raised for selling DVDXis transfered to
     // Any ether raised for selling Synths gets sent back to whoever deposited the Synths,
     // and doesn't have anything to do with this address.
     address public fundsWallet;
 
-    /* The address of the oracle which pushes the USD price SNX and ether to this contract */
+    /* The address of the oracle which pushes the USD price DVDXand ether to this contract */
     address public oracle;
     /* Do not allow the oracle to submit times any further forward into the future than
        this constant. */
@@ -66,7 +66,7 @@ contract Depot is SelfDestructible, Pausable {
 
     /* The time the prices were last updated */
     uint public lastPriceUpdateTime;
-    /* The USD price of SNX denominated in UNIT */
+    /* The USD price of DVDXdenominated in UNIT */
     uint public usdToSnxPrice;
     /* The USD price of ETH denominated in UNIT */
     uint public usdToEthPrice;
@@ -231,9 +231,9 @@ contract Depot is SelfDestructible, Pausable {
 
     /* ========== MUTATIVE FUNCTIONS ========== */
     /**
-     * @notice Access point for the oracle to update the prices of SNX / eth.
+     * @notice Access point for the oracle to update the prices of DVDX/ eth.
      * @param newEthPrice The current price of ether in USD, specified to 18 decimal places.
-     * @param newSynthetixPrice The current price of SNX in USD, specified to 18 decimal places.
+     * @param newSynthetixPrice The current price of DVDXin USD, specified to 18 decimal places.
      * @param timeSent The timestamp from the oracle when the transaction was created. This ensures we don't consider stale prices as current in times of heavy network congestion.
      */
     function updatePrices(uint newEthPrice, uint newSynthetixPrice, uint timeSent)
@@ -411,9 +411,9 @@ contract Depot is SelfDestructible, Pausable {
         payable
         pricesNotStale
         notPaused
-        returns (uint) // Returns the number of SNX received
+        returns (uint) // Returns the number of DVDXreceived
     {
-        // How many SNX are they going to be receiving?
+        // How many DVDXare they going to be receiving?
         uint synthetixToSend = synthetixReceivedForEther(msg.value);
 
         // Store the ETH in our funds wallet
@@ -428,7 +428,7 @@ contract Depot is SelfDestructible, Pausable {
     }
 
     /**
-     * @notice Exchange ETH to SNX while insisting on a particular set of rates. This allows a user to
+     * @notice Exchange ETH to DVDXwhile insisting on a particular set of rates. This allows a user to
      *         exchange while protecting against frontrunning by the contract owner on the exchange rates.
      * @param guaranteedEtherRate The ether exchange rate which must be honored or the call will revert.
      * @param guaranteedSynthetixRate The synthetix exchange rate which must be honored or the call will revert.
@@ -438,7 +438,7 @@ contract Depot is SelfDestructible, Pausable {
         payable
         pricesNotStale
         notPaused
-        returns (uint) // Returns the number of SNX received
+        returns (uint) // Returns the number of DVDXreceived
     {
         require(guaranteedEtherRate == usdToEthPrice, "Guaranteed ether rate would not be received");
         require(guaranteedSynthetixRate == usdToSnxPrice, "Guaranteed synthetix rate would not be received");
@@ -455,9 +455,9 @@ contract Depot is SelfDestructible, Pausable {
         public
         pricesNotStale
         notPaused
-        returns (uint) // Returns the number of SNX received
+        returns (uint) // Returns the number of DVDXreceived
     {
-        // How many SNX are they going to be receiving?
+        // How many DVDXare they going to be receiving?
         uint synthetixToSend = synthetixReceivedForSynths(synthAmount);
 
         // Ok, transfer the Synths to our funds wallet.
@@ -474,7 +474,7 @@ contract Depot is SelfDestructible, Pausable {
     }
 
     /**
-     * @notice Exchange USDx for SNX while insisting on a particular rate. This allows a user to
+     * @notice Exchange USDx for DVDXwhile insisting on a particular rate. This allows a user to
      *         exchange while protecting against frontrunning by the contract owner on the exchange rate.
      * @param synthAmount The amount of synths the user wishes to exchange.
      * @param guaranteedRate A rate (synthetix price) the caller wishes to insist upon.
@@ -483,7 +483,7 @@ contract Depot is SelfDestructible, Pausable {
         public
         pricesNotStale
         notPaused
-        returns (uint) // Returns the number of SNX received
+        returns (uint) // Returns the number of DVDXreceived
     {
         require(guaranteedRate == usdToSnxPrice, "Guaranteed rate would not be received");
 
@@ -491,8 +491,8 @@ contract Depot is SelfDestructible, Pausable {
     }
 
     /**
-     * @notice Allows the owner to withdraw SNX from this contract if needed.
-     * @param amount The amount of SNX to attempt to withdraw (in 18 decimal places).
+     * @notice Allows the owner to withdraw DVDXfrom this contract if needed.
+     * @param amount The amount of DVDXto attempt to withdraw (in 18 decimal places).
      */
     function withdrawSynthetix(uint amount)
         external
@@ -565,7 +565,7 @@ contract Depot is SelfDestructible, Pausable {
     }
 
     /**
-     * @notice Triggers when users send us SNX or USDx, but the modifier only allows USDx calls to proceed.
+     * @notice Triggers when users send us DVDXor USDx, but the modifier only allows USDx calls to proceed.
      * @param from The address sending the USDx
      * @param amount The amount of USDx
      */
@@ -608,7 +608,7 @@ contract Depot is SelfDestructible, Pausable {
     }
 
     /**
-     * @notice Calculate how many SNX you will receive if you transfer
+     * @notice Calculate how many DVDXyou will receive if you transfer
      *         an amount of synths.
      * @param amount The amount of synths (in 18 decimal places) you want to ask about
      */
@@ -620,12 +620,12 @@ contract Depot is SelfDestructible, Pausable {
         // How many synths would we receive after the transfer fee?
         uint synthsReceived = feePool.amountReceivedFromTransfer(amount);
 
-        // And what would that be worth in SNX based on the current price?
+        // And what would that be worth in DVDXbased on the current price?
         return synthsReceived.divideDecimal(usdToSnxPrice);
     }
 
     /**
-     * @notice Calculate how many SNX you will receive if you transfer
+     * @notice Calculate how many DVDXyou will receive if you transfer
      *         an amount of ether.
      * @param amount The amount of ether (in wei) you want to ask about
      */
@@ -637,7 +637,7 @@ contract Depot is SelfDestructible, Pausable {
         // How much is the ETH they sent us worth in USDx (ignoring the transfer fee)?
         uint valueSentInSynths = amount.multiplyDecimal(usdToEthPrice);
 
-        // Now, how many SNX will that USD amount buy?
+        // Now, how many DVDXwill that USD amount buy?
         return synthetixReceivedForSynths(valueSentInSynths);
     }
 

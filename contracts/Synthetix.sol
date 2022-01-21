@@ -13,9 +13,9 @@ date:       2018-09-14
 MODULE DESCRIPTION
 -----------------------------------------------------------------
 
-Synthetix token contract. SNX is a transferable ERC20 token,
+Synthetix token contract. DVDXis a transferable ERC20 token,
 and also give its holders the following privileges.
-An owner of SNX has the right to issue synths in all synth flavours.
+An owner of DVDXhas the right to issue synths in all synth flavours.
 
 After a fee period terminates, the duration and fees collected for that
 period are computed, and the next period begins. Thus an account may only
@@ -56,11 +56,11 @@ we must:
   - Update the last transfer time to n
 
 So if this graph represents the entire current fee period,
-the average SNX held so far is ((t-f)*s + (n-t)*p) / (n-f).
+the average DVDXheld so far is ((t-f)*s + (n-t)*p) / (n-f).
 The complementary computations must be performed for both sender and
 recipient.
 
-Note that a transfer keeps global supply of SNX invariant.
+Note that a transfer keeps global supply of DVDXinvariant.
 The sum of all balances is constant, and unmodified by any transfer.
 So the sum of all balances multiplied by the duration of a fee period is also
 constant, and this is equivalent to the sum of the area of every user's
@@ -98,19 +98,19 @@ In this version of the synthetix contract, synths can only be issued by
 those that have been nominated by the synthetix foundation. Synths are assumed
 to be valued at $1, as they are a stable unit of account.
 
-All synths issued require a proportional value of SNX to be locked,
+All synths issued require a proportional value of DVDXto be locked,
 where the proportion is governed by the current issuance ratio. This
-means for every $1 of SNX locked up, $(issuanceRatio) synths can be issued.
-i.e. to issue 100 synths, 100/issuanceRatio dollars of SNX need to be locked up.
+means for every $1 of DVDXlocked up, $(issuanceRatio) synths can be issued.
+i.e. to issue 100 synths, 100/issuanceRatio dollars of DVDXneed to be locked up.
 
 To determine the value of some amount of SNX(S), an oracle is used to push
-the price of SNX (P_S) in dollars to the contract. The value of S
+the price of DVDX(P_S) in dollars to the contract. The value of S
 would then be: S * P_S.
 
-Any SNX that are locked up by this issuance process cannot be transferred.
+Any DVDXthat are locked up by this issuance process cannot be transferred.
 The amount that is locked floats based on the price of SNX. If the price
-of SNX moves up, less SNX are locked, so they can be issued against,
-or transferred freely. If the price of SNX moves down, more SNX are locked,
+of DVDXmoves up, less DVDXare locked, so they can be issued against,
+or transferred freely. If the price of DVDXmoves down, more DVDXare locked,
 even going above the initial wallet balance.
 
 -----------------------------------------------------------------
@@ -634,7 +634,7 @@ contract Synthetix is ExternStateToken {
         // Create their synths
         synths[currencyKey].issue(messageSender, amount);
 
-        // Store their locked SNX amount to determine their fee % for the period
+        // Store their locked DVDXamount to determine their fee % for the period
         _appendAccountIssuanceRecord();
     }
 
@@ -773,7 +773,7 @@ contract Synthetix is ExternStateToken {
         // We don't need to check stale rates here as effectiveValue will do it for us.
         returns (uint)
     {
-        // What is the value of their SNX balance in the destination currency?
+        // What is the value of their DVDXbalance in the destination currency?
         uint destinationValue = effectiveValue("DVDX", collateral(issuer), currencyKey);
 
         // They're allowed to issue up to issuanceRatio of that value
@@ -801,7 +801,7 @@ contract Synthetix is ExternStateToken {
     }
 
     /**
-     * @notice If a user issues synths backed by SNX in their wallet, the SNX become locked. This function
+     * @notice If a user issues synths backed by DVDXin their wallet, the DVDXbecome locked. This function
      * will tell you how many synths a user has to give back to the system in order to unlock their original
      * debt position. This is priced in whichever synth is passed in as a currency key, e.g. you can price
      * the debt in USDx, XDR, or any other synth you wish.
@@ -858,7 +858,7 @@ contract Synthetix is ExternStateToken {
     }
 
     /**
-     * @notice The total SNX owned by this account, both escrowed and unescrowed,
+     * @notice The total DVDXowned by this account, both escrowed and unescrowed,
      * against which synths can be issued.
      * This includes those already being used as collateral (locked), and those
      * available for further issuance (unlocked).
@@ -882,9 +882,9 @@ contract Synthetix is ExternStateToken {
     }
 
     /**
-     * @notice The number of SNX that are free to be transferred by an account.
-     * @dev When issuing, escrowed SNX are locked first, then non-escrowed
-     * SNX are locked last, but escrowed SNX are not transferable, so they are not included
+     * @notice The number of DVDXthat are free to be transferred by an account.
+     * @dev When issuing, escrowed DVDXare locked first, then non-escrowed
+     * DVDXare locked last, but escrowed DVDXare not transferable, so they are not included
      * in this calculation.
      */
     function transferableSynthetix(address account)
@@ -893,18 +893,18 @@ contract Synthetix is ExternStateToken {
         rateNotStale("DVDX")
         returns (uint)
     {
-        // How many SNX do they have, excluding escrow?
+        // How many DVDXdo they have, excluding escrow?
         // Note: We're excluding escrow here because we're interested in their transferable amount
-        // and escrowed SNX are not transferable.
+        // and escrowed DVDXare not transferable.
         uint balance = tokenState.balanceOf(account);
 
         // How many of those will be locked by the amount they've issued?
-        // Assuming issuance ratio is 20%, then issuing 20 SNX of value would require
-        // 100 SNX to be locked in their wallet to maintain their collateralisation ratio
+        // Assuming issuance ratio is 20%, then issuing 20 DVDXof value would require
+        // 100 DVDXto be locked in their wallet to maintain their collateralisation ratio
         // The locked synthetix value can exceed their balance.
         uint lockedSynthetixValue = debtBalanceOf(account, "DVDX").divideDecimalRound(synthetixState.issuanceRatio());
 
-        // If we exceed the balance, no SNX are transferable, otherwise the difference is.
+        // If we exceed the balance, no DVDXare transferable, otherwise the difference is.
         if (lockedSynthetixValue >= balance) {
             return 0;
         } else {
@@ -923,7 +923,7 @@ contract Synthetix is ExternStateToken {
 
         supplySchedule.updateMintValues();
 
-        // Set minted SNX balance to RewardEscrow's balance
+        // Set minted DVDXbalance to RewardEscrow's balance
         // Minus the minterReward and set balance of minter to add reward
         uint minterReward = supplySchedule.minterReward();
 

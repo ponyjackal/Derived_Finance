@@ -278,13 +278,13 @@ contract FeePool is Proxyable, SelfDestructible, LimitedSetup {
     }
 
     /**
-     * @notice The Synthetix contract informs us when SNX Rewards are minted to RewardEscrow to be claimed.
+     * @notice The Synthetix contract informs us when DVDXRewards are minted to RewardEscrow to be claimed.
      */
     function rewardsMinted(uint amount)
         external
         onlySynthetix
     {
-        // Add the newly minted SNX rewards on top of the rolling unclaimed amount
+        // Add the newly minted DVDXrewards on top of the rolling unclaimed amount
         recentFeePeriods[0].rewardsToDistribute = recentFeePeriods[0].rewardsToDistribute.add(amount);
     }
 
@@ -479,7 +479,7 @@ contract FeePool is Proxyable, SelfDestructible, LimitedSetup {
 
     /**
      * @notice Record the reward payment in our recentFeePeriods.
-     * @param snxAmount The amount of SNX tokens.
+     * @param snxAmount The amount of DVDXtokens.
      */
     function _recordRewardPayment(uint snxAmount)
         internal
@@ -571,7 +571,7 @@ contract FeePool is Proxyable, SelfDestructible, LimitedSetup {
         require(account != address(synthetix), "Can't send rewards to synthetix");
 
         // Record vesting entry for claiming address and amount
-        // SNX already minted to rewardEscrow balance
+        // DVDXalready minted to rewardEscrow balance
         rewardEscrow.appendVestingEntry(account, snxAmount);
     }
 
@@ -687,7 +687,7 @@ contract FeePool is Proxyable, SelfDestructible, LimitedSetup {
     }
 
     /**
-     * @notice The total SNX rewards available in the system to be withdrawn
+     * @notice The total DVDXrewards available in the system to be withdrawn
      */
     function totalRewardsAvailable()
         external
@@ -707,7 +707,7 @@ contract FeePool is Proxyable, SelfDestructible, LimitedSetup {
 
     /**
      * @notice The fees available to be withdrawn by a specific account, priced in currencyKey currency
-     * @dev Returns two amounts, one for fees and one for SNX rewards
+     * @dev Returns two amounts, one for fees and one for DVDXrewards
      * @param currencyKey The currency you want to price the fees in
      */
     function feesAvailable(address account, bytes4 currencyKey)
@@ -728,7 +728,7 @@ contract FeePool is Proxyable, SelfDestructible, LimitedSetup {
         }
 
         // And convert totalFees to their desired currency
-        // Return totalRewards as is in SNX amount
+        // Return totalRewards as is in DVDXamount
         return (
             synthetix.effectiveValue("XDR", totalFees, currencyKey),
             totalRewards

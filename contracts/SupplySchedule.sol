@@ -13,7 +13,7 @@ date:       2019-03-01
 MODULE DESCRIPTION
 -----------------------------------------------------------------
 
-Supply Schedule contract. SNX is a transferable ERC20 token.
+Supply Schedule contract. DVDXis a transferable ERC20 token.
 
 User's get staking rewards as part of the incentives of
 +------+-------------+--------------+----------+

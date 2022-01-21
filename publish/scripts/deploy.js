@@ -58,7 +58,7 @@ async function main() {
   });
   const exchangeRates = await ExchangeRates.deploy(
     owner,
-    oracle, // SNX Oracle; TODO
+    oracle, // DVDXOracle; TODO
     [
       ethers.utils.hexZeroPad(
         ethers.utils.hexlify(ethers.utils.toUtf8Bytes("DVD")),

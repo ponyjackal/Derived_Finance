@@ -13,8 +13,8 @@ date:       2019-03-01
 -----------------------------------------------------------------
 MODULE DESCRIPTION
 -----------------------------------------------------------------
-Escrows the SNX rewards from the inflationary supply awarded to
-users for staking their SNX and maintaining the c-rationn target.
+Escrows the DVDXrewards from the inflationary supply awarded to
+users for staking their DVDXand maintaining the c-rationn target.
 
 SNW rewards are escrowed for 1 year from the claim date and users
 can call vest in 12 months time.
@@ -31,7 +31,7 @@ import "./IFeePool.sol";
 import "./ISynthetix.sol";
 
 /**
- * @title A contract to hold escrowed SNX and free them at given schedules.
+ * @title A contract to hold escrowed DVDXand free them at given schedules.
  */
 contract RewardEscrow is Owned {
 
@@ -43,7 +43,7 @@ contract RewardEscrow is Owned {
     IFeePool public feePool;
 
     /* Lists of (timestamp, quantity) pairs per account, sorted in ascending time order.
-     * These are the times at which each given quantity of SNX vests. */
+     * These are the times at which each given quantity of DVDXvests. */
     mapping(address => uint[2][]) public vestingSchedules;
 
     /* An account's total escrowed synthetix balance to save recomputing this for fee extraction purposes. */
@@ -76,7 +76,7 @@ contract RewardEscrow is Owned {
     /* ========== SETTERS ========== */
 
     /**
-     * @notice set the synthetix contract address as we need to transfer SNX when the user vests
+     * @notice set the synthetix contract address as we need to transfer DVDXwhen the user vests
      */
     function setSynthetix(ISynthetix _synthetix)
     external
@@ -147,7 +147,7 @@ contract RewardEscrow is Owned {
     }
 
     /**
-     * @notice Get the quantity of SNX associated with a given schedule entry.
+     * @notice Get the quantity of DVDXassociated with a given schedule entry.
      */
     function getVestingQuantity(address account, uint index)
     public
@@ -239,7 +239,7 @@ contract RewardEscrow is Owned {
      * Note; although this function could technically be used to produce unbounded
      * arrays, it's only withinn the 4 year period of the weekly inflation schedule.
      * @param account The account to append a new vesting entry to.
-     * @param quantity The quantity of SNX that will be escrowed.
+     * @param quantity The quantity of DVDXthat will be escrowed.
      */
     function appendVestingEntry(address account, uint quantity)
     public
@@ -262,7 +262,7 @@ contract RewardEscrow is Owned {
         if (scheduleLength == 0) {
             totalEscrowedAccountBalance[account] = quantity;
         } else {
-            /* Disallow adding new vested SNX earlier than the last one.
+            /* Disallow adding new vested DVDXearlier than the last one.
              * Since entries are only appended, this means that no vesting date can be repeated. */
             require(getVestingTime(account, numVestingEntries(account) - 1) < time, "Cannot add new vested entries earlier than the last one");
             totalEscrowedAccountBalance[account] = totalEscrowedAccountBalance[account].add(quantity);
@@ -274,7 +274,7 @@ contract RewardEscrow is Owned {
     }
 
     /**
-     * @notice Allow a user to withdraw any SNX in their schedule that have vested.
+     * @notice Allow a user to withdraw any DVDXin their schedule that have vested.
      */
     function vest()
     external

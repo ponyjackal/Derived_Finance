@@ -18,7 +18,7 @@ This contract issues synths, which are tokens that mirror various
 flavours of fiat currency.
 
 Synths are issuable by Synthetix Network Token (SNX) holders who
-have to lock up some value of their SNX to issue S * Cmax synths.
+have to lock up some value of their DVDXto issue S * Cmax synths.
 Where Cmax issome value less than 1.
 
 A configurable fee is charged on synth transfers and deposited
@@ -88,7 +88,7 @@ contract Synth is ExternStateToken {
     /**
      * @notice Override ERC20 transfer function in order to
      * subtract the transaction fee and send it to the fee pool
-     * for SNX holders to claim. */
+     * for DVDXholders to claim. */
     function transfer(address to, uint value)
         public
         optionalProxy
@@ -109,7 +109,7 @@ contract Synth is ExternStateToken {
     /**
      * @notice Override ERC223 transfer function in order to
      * subtract the transaction fee and send it to the fee pool
-     * for SNX holders to claim. */
+     * for DVDXholders to claim. */
     function transfer(address to, uint value, bytes memory data)
         public
         optionalProxy
@@ -129,7 +129,7 @@ contract Synth is ExternStateToken {
     /**
      * @notice Override ERC20 transferFrom function in order to
      * subtract the transaction fee and send it to the fee pool
-     * for SNX holders to claim. */
+     * for DVDXholders to claim. */
     function transferFrom(address from, address to, uint value)
         public
         optionalProxy
@@ -154,7 +154,7 @@ contract Synth is ExternStateToken {
     /**
      * @notice Override ERC223 transferFrom function in order to
      * subtract the transaction fee and send it to the fee pool
-     * for SNX holders to claim. */
+     * for DVDXholders to claim. */
     function transferFrom(address from, address to, uint value, bytes memory data)
         public
         optionalProxy
