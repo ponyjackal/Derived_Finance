@@ -42,10 +42,10 @@ contract ExchangeRates is ChainlinkClient, SelfDestructible {
     using SafeMath for uint;
     using SafeDecimalMath for uint;
 
-    // Exchange rates stored by currency code, e.g. 'SNX', or 'sUSD'
+    // Exchange rates stored by currency code, e.g. 'SNX', or 'USDx'
     mapping(bytes4 => uint) public rates;
 
-    // Update times stored by currency code, e.g. 'SNX', or 'sUSD'
+    // Update times stored by currency code, e.g. 'SNX', or 'USDx'
     mapping(bytes4 => uint) public lastRateUpdateTimes;
 
     // The address of the SNX oracle which pushes rate updates to this contract
@@ -115,7 +115,7 @@ contract ExchangeRates is ChainlinkClient, SelfDestructible {
 
         snxOracle = _snxOracle;
 
-        // The sUSD rate is always 1 and is never stale.
+        // The USDx rate is always 1 and is never stale.
         rates["USDx"] = SafeDecimalMath.unit();
         lastRateUpdateTimes["USDx"] = block.timestamp;
 
@@ -181,7 +181,7 @@ contract ExchangeRates is ChainlinkClient, SelfDestructible {
             // truely worthless and still valid. In this scenario, we should
             // delete the rate and remove it from the system.
             require(newRates[i] != 0, "Zero is not a valid rate, please call deleteRate instead.");
-            require(currencyKeys[i] != "USDx", "Rate of sUSD cannot be updated, it's always UNIT.");
+            require(currencyKeys[i] != "USDx", "Rate of USDx cannot be updated, it's always UNIT.");
 
             // We should only update the rate if it's at least the same age as the last rate we've got.
             if (timeSent < lastRateUpdateTimes[currencyKeys[i]]) {
@@ -460,7 +460,7 @@ contract ExchangeRates is ChainlinkClient, SelfDestructible {
         view
         returns (bool)
     {
-        // sUSD is a special case and is never stale.
+        // USDx is a special case and is never stale.
         if (currencyKey == "USDx") return false;
 
         return lastRateUpdateTimes[currencyKey].add(rateStalePeriod) < block.timestamp;
@@ -490,7 +490,7 @@ contract ExchangeRates is ChainlinkClient, SelfDestructible {
         uint256 i = 0;
 
         while (i < currencyKeys.length) {
-            // sUSD is a special case and is never false
+            // USDx is a special case and is never false
             if (currencyKeys[i] != "USDx" && lastRateUpdateTimes[currencyKeys[i]].add(rateStalePeriod) < block.timestamp) {
                 return true;
             }

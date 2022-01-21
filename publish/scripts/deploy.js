@@ -353,7 +353,7 @@ async function main() {
   // --------------------
   // Depot
   // --------------------
-  const sUSDSynth = synths.find((synth) => synth.currencyKey === "USDx");
+  const USDxSynth = synths.find((synth) => synth.currencyKey === "USDx");
 
   const Depot = await hre.ethers.getContractFactory("Depot", {
     libraries: {
@@ -364,7 +364,7 @@ async function main() {
     owner,
     fundsWallet, // funds wallet; TODO
     synthetix.address,
-    sUSDSynth.synth.address,
+    USDxSynth.synth.address,
     feePool.address,
     oracle, // oracle; TODO
     ethers.utils.parseEther("500"),

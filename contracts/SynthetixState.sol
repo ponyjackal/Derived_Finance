@@ -187,15 +187,15 @@ contract SynthetixState is State, LimitedSetup {
      * @notice Import issuer data from the old Synthetix contract before multicurrency
      * @dev Only callable by the contract owner, and only for 1 week after deployment.
      */
-    function importIssuerData(address[] memory accounts, uint[] memory sUSDAmounts)
+    function importIssuerData(address[] memory accounts, uint[] memory USDxAmounts)
         external
         onlyOwner
         onlyDuringSetup
     {
-        require(accounts.length == sUSDAmounts.length, "Length mismatch");
+        require(accounts.length == USDxAmounts.length, "Length mismatch");
 
         for (uint8 i = 0; i < accounts.length; i++) {
-            _addToDebtRegister(accounts[i], sUSDAmounts[i]);
+            _addToDebtRegister(accounts[i], USDxAmounts[i]);
         }
     }
 

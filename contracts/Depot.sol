@@ -96,12 +96,12 @@ contract Depot is SelfDestructible, Pausable {
     // The ending index of our queue exclusive
     uint public depositEndIndex;
 
-    /* This is a convenience variable so users and dApps can just query how much sUSD
+    /* This is a convenience variable so users and dApps can just query how much USDx
        we have available for purchase without having to iterate the mapping with a
        O(n) amount of calls for something we'll probably want to display quite regularly. */
     uint public totalSellableDeposits;
 
-    // The minimum amount of sUSD required to enter the FiFo queue
+    // The minimum amount of USDx required to enter the FiFo queue
     uint public minimumDepositAmount = 50 * SafeDecimalMath.unit();
 
     // If a user deposits a synth amount < the minimumDepositAmount the contract will keep
@@ -216,8 +216,8 @@ contract Depot is SelfDestructible, Pausable {
     }
 
     /**
-     * @notice Set the minimum deposit amount required to depoist sUSD into the FIFO queue
-     * @param _amount The new new minimum number of sUSD required to deposit
+     * @notice Set the minimum deposit amount required to depoist USDx into the FIFO queue
+     * @param _amount The new new minimum number of USDx required to deposit
      */
     function setMinimumDepositAmount(uint _amount)
         external
@@ -253,7 +253,7 @@ contract Depot is SelfDestructible, Pausable {
     }
 
     /**
-     * @notice Fallback function (exchanges ETH to sUSD)
+     * @notice Fallback function (exchanges ETH to USDx)
      */
     fallback()
         external
@@ -263,14 +263,14 @@ contract Depot is SelfDestructible, Pausable {
     }
 
     /**
-     * @notice Exchange ETH to sUSD.
+     * @notice Exchange ETH to USDx.
      */
     function exchangeEtherForSynths()
         public
         payable
         pricesNotStale
         notPaused
-        returns (uint) // Returns the number of Synths (sUSD) received
+        returns (uint) // Returns the number of Synths (USDx) received
     {
         uint ethToSend;
 
@@ -386,7 +386,7 @@ contract Depot is SelfDestructible, Pausable {
     }
 
     /**
-     * @notice Exchange ETH to sUSD while insisting on a particular rate. This allows a user to
+     * @notice Exchange ETH to USDx while insisting on a particular rate. This allows a user to
      *         exchange while protecting against frontrunning by the contract owner on the exchange rate.
      * @param guaranteedRate The exchange rate (ether price) which must be honored or the call will revert.
      */
@@ -395,7 +395,7 @@ contract Depot is SelfDestructible, Pausable {
         payable
         pricesNotStale
         notPaused
-        returns (uint) // Returns the number of Synths (sUSD) received
+        returns (uint) // Returns the number of Synths (USDx) received
     {
         require(guaranteedRate == usdToEthPrice, "Guaranteed rate would not be received");
 
@@ -448,7 +448,7 @@ contract Depot is SelfDestructible, Pausable {
 
 
     /**
-     * @notice Exchange sUSD for SNX
+     * @notice Exchange USDx for SNX
      * @param synthAmount The amount of synths the user wishes to exchange.
      */
     function exchangeSynthsForSynthetix(uint synthAmount)
@@ -474,7 +474,7 @@ contract Depot is SelfDestructible, Pausable {
     }
 
     /**
-     * @notice Exchange sUSD for SNX while insisting on a particular rate. This allows a user to
+     * @notice Exchange USDx for SNX while insisting on a particular rate. This allows a user to
      *         exchange while protecting against frontrunning by the contract owner on the exchange rate.
      * @param synthAmount The amount of synths the user wishes to exchange.
      * @param guaranteedRate A rate (synthetix price) the caller wishes to insist upon.
@@ -552,7 +552,7 @@ contract Depot is SelfDestructible, Pausable {
      * @notice depositSynths: Allows users to deposit synths via the approve / transferFrom workflow
      *         if they'd like. You can equally just transfer synths to this contract and it will work
      *         exactly the same way but with one less call (and therefore cheaper transaction fees)
-     * @param amount The amount of sUSD you wish to deposit (must have been approved first)
+     * @param amount The amount of USDx you wish to deposit (must have been approved first)
      */
     function depositSynths(uint amount)
         external
@@ -565,9 +565,9 @@ contract Depot is SelfDestructible, Pausable {
     }
 
     /**
-     * @notice Triggers when users send us SNX or sUSD, but the modifier only allows sUSD calls to proceed.
-     * @param from The address sending the sUSD
-     * @param amount The amount of sUSD
+     * @notice Triggers when users send us SNX or USDx, but the modifier only allows USDx calls to proceed.
+     * @param from The address sending the USDx
+     * @param amount The amount of USDx
      */
     function tokenFallback(address from, uint amount, bytes memory data)
         external
@@ -634,7 +634,7 @@ contract Depot is SelfDestructible, Pausable {
         view
         returns (uint)
     {
-        // How much is the ETH they sent us worth in sUSD (ignoring the transfer fee)?
+        // How much is the ETH they sent us worth in USDx (ignoring the transfer fee)?
         uint valueSentInSynths = amount.multiplyDecimal(usdToEthPrice);
 
         // Now, how many SNX will that USD amount buy?
@@ -668,7 +668,7 @@ contract Depot is SelfDestructible, Pausable {
 
     modifier onlySynth
     {
-        // We're only interested in doing anything on receiving sUSD.
+        // We're only interested in doing anything on receiving USDx.
         require(msg.sender == address(synth), "Only the synth contract can perform this action");
         _;
     }

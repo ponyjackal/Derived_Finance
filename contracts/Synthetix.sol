@@ -563,7 +563,7 @@ contract Synthetix is ExternStateToken {
     /**
      * @notice Function that registers new synth as they are isseud. Calculate delta to append to synthetixState.
      * @dev Only internal calls from synthetix address.
-     * @param currencyKey The currency to register synths in, for example sUSD or sAUD
+     * @param currencyKey The currency to register synths in, for example USDx or sAUD
      * @param amount The amount of synths to register with a base of UNIT
      */
     function _addToDebtRegister(bytes4 currencyKey, uint amount)
@@ -618,7 +618,7 @@ contract Synthetix is ExternStateToken {
     /**
      * @notice Issue synths against the sender's SNX.
      * @dev Issuance is only allowed if the synthetix price isn't stale. Amount should be larger than 0.
-     * @param currencyKey The currency you wish to issue synths in, for example sUSD or sAUD
+     * @param currencyKey The currency you wish to issue synths in, for example USDx or sAUD
      * @param amount The amount of synths you wish to issue with a base of UNIT
      */
     function issueSynths(bytes4 currencyKey, uint amount)
@@ -641,7 +641,7 @@ contract Synthetix is ExternStateToken {
     /**
      * @notice Issue the maximum amount of Synths possible against the sender's SNX.
      * @dev Issuance is only allowed if the synthetix price isn't stale.
-     * @param currencyKey The currency you wish to issue synths in, for example sUSD or sAUD
+     * @param currencyKey The currency you wish to issue synths in, for example USDx or sAUD
      */
     function issueMaxSynths(bytes4 currencyKey)
         external
@@ -804,7 +804,7 @@ contract Synthetix is ExternStateToken {
      * @notice If a user issues synths backed by SNX in their wallet, the SNX become locked. This function
      * will tell you how many synths a user has to give back to the system in order to unlock their original
      * debt position. This is priced in whichever synth is passed in as a currency key, e.g. you can price
-     * the debt in sUSD, XDR, or any other synth you wish.
+     * the debt in USDx, XDR, or any other synth you wish.
      */
     function debtBalanceOf(address issuer, bytes4 currencyKey)
         public

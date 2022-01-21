@@ -23,7 +23,7 @@ async function main() {
   // await hre.run('compile');
   console.log(
     ethers.utils.hexZeroPad(
-      ethers.utils.hexlify(ethers.utils.toUtf8Bytes("USDx")),
+      ethers.utils.hexlify(ethers.utils.toUtf8Bytes("DVDX")),
       4
     )
   );

@@ -13,7 +13,7 @@ MODULE DESCRIPTION
 -----------------------------------------------------------------
 
 Purgeable synths are a subclass of Synth that allows the owner
-to exchange all holders of the Synth back into sUSD.
+to exchange all holders of the Synth back into USDx.
 
 In order to reduce gas load on the system, and to repurpose older synths
 no longer used, purge allows the owner to
@@ -36,7 +36,7 @@ contract PurgeableSynth is Synth {
 
     using SafeDecimalMath for uint;
 
-    // The maximum allowed amount of tokenSupply in equivalent sUSD value for this synth to permit purging
+    // The maximum allowed amount of tokenSupply in equivalent USDx value for this synth to permit purging
     uint public maxSupplyToPurgeInUSD = 10000 * SafeDecimalMath.unit(); // 10,000
 
     // Track exchange rates so we can determine if supply in USD is below threshpld at purge time
@@ -55,7 +55,7 @@ contract PurgeableSynth is Synth {
     /* ========== MUTATIVE FUNCTIONS ========== */
 
     /**
-     * @notice Function that allows owner to exchange any number of holders back to sUSD (for frozen or deprecated synths)
+     * @notice Function that allows owner to exchange any number of holders back to USDx (for frozen or deprecated synths)
      * @param addresses The list of holders to purge
      */
     function purge(address[] memory addresses)
