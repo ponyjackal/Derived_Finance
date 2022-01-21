@@ -49,7 +49,7 @@ contract ExchangeRates is ChainlinkClient, SelfDestructible {
     mapping(bytes4 => uint) public lastRateUpdateTimes;
 
     // The address of the DVDXoracle which pushes rate updates to this contract
-    address public snxOracle;
+    address public dvdxOracle;
 
     // Do not allow the oracle to submit times any further forward into the future than this constant.
     uint constant ORACLE_FUTURE_LIMIT = 10 minutes;
@@ -90,7 +90,7 @@ contract ExchangeRates is ChainlinkClient, SelfDestructible {
     /**
      * @dev Constructor
      * @param _owner The owner of this contract.
-     * @param _snxOracle The address which is able to update rate information.
+     * @param _dvdxOracle The address which is able to update rate information.
      * @param _currencyKeys The initial currency keys to store (in order).
      * @param _newRates The initial currency amounts for each currency (in order).
      */
@@ -99,7 +99,7 @@ contract ExchangeRates is ChainlinkClient, SelfDestructible {
         address _owner,
 
         // Oracle values - Allows for rate updates
-        address _snxOracle,
+        address _dvdxOracle,
         bytes4[] memory _currencyKeys,
         uint[] memory _newRates,
 
@@ -113,7 +113,7 @@ contract ExchangeRates is ChainlinkClient, SelfDestructible {
     {
         require(_currencyKeys.length == _newRates.length, "Currency key length and rate length must match.");
 
-        snxOracle = _snxOracle;
+        dvdxOracle = _dvdxOracle;
 
         // The USDx rate is always 1 and is never stale.
         rates["USDx"] = SafeDecimalMath.unit();
@@ -294,14 +294,14 @@ contract ExchangeRates is ChainlinkClient, SelfDestructible {
 
     /**
      * @notice Set the Oracle that pushes the rate information to this contract
-     * @param _snxOracle The new oracle address
+     * @param _dvdxOracle The new oracle address
      */
-    function setSNXOracle(address _snxOracle)
+    function setDVDXOracle(address _dvdxOracle)
         external
         onlyOwner
     {
-        snxOracle = _snxOracle;
-        emit OracleUpdated(snxOracle);
+        dvdxOracle = _dvdxOracle;
+        emit OracleUpdated(dvdxOracle);
     }
 
     /**
@@ -566,7 +566,7 @@ contract ExchangeRates is ChainlinkClient, SelfDestructible {
 
     modifier onlyDVDXOracle
     {
-        require(msg.sender == snxOracle, "Only the oracle can perform this action");
+        require(msg.sender == dvdxOracle, "Only the oracle can perform this action");
         _;
     }
 
