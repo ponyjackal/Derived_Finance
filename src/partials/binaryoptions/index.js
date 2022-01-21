@@ -184,7 +184,14 @@ const BinaryInside = () => {
       setLoading(false);
     };
 
-    questionId && account && MarketContract && initialize();
+    if (questionId && account && MarketContract) {
+      initialize();
+    } else {
+      setBalances({
+        0: new BigNumber(0),
+        1: new BigNumber(0),
+      });
+    }
   }, [questionId, account, MarketContract]);
 
   return (
