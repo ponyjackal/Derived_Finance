@@ -326,7 +326,7 @@ const BinaryInside = () => {
         </div>
       </div>
       <p className="text-white text-2xl font-bold mx-8">Market Positions</p>
-      <Marketposition {...question} balances={balances} />
+      <Marketposition {...question} balances={balances} loading={loading || loadingPrice} />
       <p className="text-white text-2xl font-bold underline decoration-secondary mx-8">
         About This Market
       </p>
@@ -360,7 +360,7 @@ const BinaryInside = () => {
 
       <div className="flex bg-secondary p-3 flex-col m-7 rounded-lg">
         <h1 className=" text-white text-2xl font-bold">Recent Trading</h1>
-        <TradeTable trades={trades} />
+        <TradeTable trades={trades} loading={loading || loadingPrice} />
       </div>
     </main>
   );

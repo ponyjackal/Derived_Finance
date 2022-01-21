@@ -6,7 +6,7 @@ import { toFriendlyTimeFormat } from "../../utils/Utils";
 import { toShort18 } from "../../utils/Contract";
 import "../../css/table.css";
 
-const TradeTable = ({ trades }) => {
+const TradeTable = ({ trades, loading }) => {
   const data = useMemo(
     () =>
       (trades &&
@@ -49,6 +49,7 @@ const TradeTable = ({ trades }) => {
   return (
     <div>
       <ReactTable
+        loading={loading}
         data={data}
         columns={columns}
         defaultPageSize={10}

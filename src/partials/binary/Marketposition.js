@@ -8,7 +8,7 @@ import "react-table-6/react-table.css"
 import { BigNumber } from 'bignumber.js';
 import "../../css/table.css"
 
-const Marketposition = ({ long, short, balances }) => {
+const Marketposition = ({ long, short, balances, loading: loadingPositions }) => {
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState([]);
 
@@ -68,7 +68,7 @@ const Marketposition = ({ long, short, balances }) => {
   return (
     <div>
       <ReactTable
-        loading={loading}
+        loading={loading || loadingPositions}
         data={data}
         columns={columns}
         defaultPageSize={5}
