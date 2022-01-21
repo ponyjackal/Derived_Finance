@@ -9,7 +9,7 @@ export const contractAddresses = {
     56: "",
     97: "0xe92C13C39c9c2F1589C1d9dedAad06057BF3C593",
   },
-  synth: {
+  usdx: {
     56: "",
     97: "0x099C9c39839E2518c4C675a013D199BF69Ba7F17",
   },

@@ -3,6 +3,7 @@ import { Web3ReactProvider } from "@web3-react/core";
 import { ConnectorProvider } from "./context/connector";
 import { MarketProvider } from "./context/market";
 import { ChainProvider } from "./context/chain";
+import { FinanceProvider } from "./context/finance";
 import { getLibrary } from "./utils/Connectors";
 
 const Providers = ({ children }) => {
@@ -10,7 +11,9 @@ const Providers = ({ children }) => {
     <Web3ReactProvider getLibrary={getLibrary}>
       <ConnectorProvider>
         <ChainProvider>
-          <MarketProvider>{children}</MarketProvider>
+          <FinanceProvider>
+            <MarketProvider>{children}</MarketProvider>
+          </FinanceProvider>
         </ChainProvider>
       </ConnectorProvider>
     </Web3ReactProvider>
