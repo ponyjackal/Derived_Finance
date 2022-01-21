@@ -14,7 +14,7 @@ import BigNumber from "bignumber.js";
 
 import { getPrice } from "../../services/coingecko";
 import { useChain } from "../../context/chain";
-import { toLong18, toShort18 } from "../../utils/Contract";
+import { toLong18 } from "../../utils/Contract";
 
 const Buysell = ({
   loading,
