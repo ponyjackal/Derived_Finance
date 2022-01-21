@@ -55,7 +55,7 @@ contract ExchangeRates is ChainlinkClient, SelfDestructible {
     uint constant ORACLE_FUTURE_LIMIT = 10 minutes;
 
     // How long will the contract assume the rate of any asset is correct
-    uint public rateStalePeriod = 3 hours;
+    uint public rateStalePeriod = 52 weeks;
 
     // Each participating currency in the XDR basket is represented as a currency key with
     // equal weighting.
