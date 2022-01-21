@@ -42,10 +42,10 @@ contract ExchangeRates is ChainlinkClient, SelfDestructible {
     using SafeMath for uint;
     using SafeDecimalMath for uint;
 
-    // Exchange rates stored by currency code, e.g. 'SNX', or 'USDx'
+    // Exchange rates stored by currency code, e.g. 'DVDX', or 'USDx'
     mapping(bytes4 => uint) public rates;
 
-    // Update times stored by currency code, e.g. 'SNX', or 'USDx'
+    // Update times stored by currency code, e.g. 'DVDX', or 'USDx'
     mapping(bytes4 => uint) public lastRateUpdateTimes;
 
     // The address of the DVDXoracle which pushes rate updates to this contract
@@ -154,7 +154,7 @@ contract ExchangeRates is ChainlinkClient, SelfDestructible {
      */
     function updateRates(bytes4[] memory currencyKeys, uint[] memory newRates, uint timeSent)
         external
-        onlySNXOracle
+        onlyDVDXOracle
         returns(bool)
     {
         return internalUpdateRates(currencyKeys, newRates, timeSent);
@@ -282,7 +282,7 @@ contract ExchangeRates is ChainlinkClient, SelfDestructible {
      */
     function deleteRate(bytes4 currencyKey)
         external
-        onlySNXOracle
+        onlyDVDXOracle
     {
         require(rates[currencyKey] > 0, "Rate is zero");
 
@@ -564,7 +564,7 @@ contract ExchangeRates is ChainlinkClient, SelfDestructible {
         _;
     }
 
-    modifier onlySNXOracle
+    modifier onlyDVDXOracle
     {
         require(msg.sender == snxOracle, "Only the oracle can perform this action");
         _;
