@@ -103,10 +103,60 @@ const BinaryInside = () => {
 
   const handleRefreshPrice = async () => {
     setLoadingPrice(true);
-
     await handleFetchDetails();
+    setLoadingPrice(false);
+  };
+
+  const handleUpdatePrice = async (tx, status, timestamp) => {
+    setLoading(true);
+    setLoadingPrice(true);
+
+    const data = await MarketContract.getAnswerPrices(questionId);
+    const market = await MarketContract.markets(questionId);
+
+    setQuestion(val => ({
+      ...val,
+      long: toShort18(data[0].toString()).toFixed(2),
+      short: toShort18(data[1].toString()).toFixed(2),
+      liquidity: toShort18(market.lpVolume.toString()).toFixed(2),
+      trade: toShort18(market.tradeVolume.toString()).toFixed(2),
+    }));
+
+    setTrades(val => [
+      ...val,
+      {
+        status,
+        timestamp,
+        transaction: tx.hash,
+        trader: tx.from,
+        long: new BigNumber(data[0].toString()).toFixed(),
+        short: new BigNumber(data[1].toString()).toFixed(),
+        prevLong: val.length === 0 ? "500000000000000000" : val[val.length - 1].long,
+        prevShort: val.length === 0 ? "500000000000000000" : val[val.length - 1].short,
+      },
+    ]);
+    setPrices(val => [
+      ...val,
+      {
+        index: val.length,
+        long: parseFloat(toShort18(data[0].toString()).toFixed(2)),
+        short: parseFloat(toShort18(data[1].toString()).toFixed(2)),
+      },
+    ]);
+
+    const longId = await MarketContract.generateAnswerId(questionId, 0);
+    const shortId = await MarketContract.generateAnswerId(questionId, 1);
+
+    const longBalance = await MarketContract.balanceOf(account, longId);
+    const shortBalance = await MarketContract.balanceOf(account, shortId);
+
+    setBalances({
+      0: toShort18(longBalance.toString()),
+      1: toShort18(shortBalance.toString()),
+    });
 
     setLoadingPrice(false);
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -261,6 +311,7 @@ const BinaryInside = () => {
               loading={loadingPrice}
               balances={balances}
               onRefreshPrice={handleRefreshPrice}
+              onUpdatePrice={handleUpdatePrice}
             />
           )}
         </div>

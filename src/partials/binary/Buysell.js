@@ -14,7 +14,7 @@ import BigNumber from "bignumber.js";
 
 import { getPrice } from "../../services/coingecko";
 import { useChain } from "../../context/chain";
-import { toLong18 } from "../../utils/Contract";
+import { toLong18, toShort18 } from "../../utils/Contract";
 
 const Buysell = ({
   loading,
@@ -26,6 +26,7 @@ const Buysell = ({
   balances,
   resolveTime,
   onRefreshPrice,
+  onUpdatePrice,
 }) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [currentPrice, setCurrentPrice] = useState(0);
@@ -112,7 +113,7 @@ const Buysell = ({
         );
         await tx.wait();
 
-        await onRefreshPrice();
+        await onUpdatePrice(tx, "BUY", new Date().getTime());
       }
 
       setBuyAmount(0);
@@ -140,7 +141,7 @@ const Buysell = ({
         );
         await tx.wait();
 
-        await onRefreshPrice();
+        await onUpdatePrice(tx, "SELL", new Date().getTime());
       }
 
       setSellAmount(0);
@@ -179,9 +180,8 @@ const Buysell = ({
           <div className="px-4">
             <div className="flex items-center justify-between">
               <div
-                className={`${
-                  slotIndex === 0 ? "bg-green-500" : "bg-gray-500"
-                } px-4 py-2 text-white rounded-lg cursor-pointer`}
+                className={`${slotIndex === 0 ? "bg-green-500" : "bg-gray-500"
+                  } px-4 py-2 text-white rounded-lg cursor-pointer`}
                 onClick={() => setSlotIndex(0)}
               >
                 <p className="flex">
@@ -196,9 +196,8 @@ const Buysell = ({
                 </p>
               </div>
               <div
-                className={`${
-                  slotIndex === 1 ? "bg-red-500" : "bg-gray-500"
-                } px-4 py-2 text-white rounded-lg cursor-pointer`}
+                className={`${slotIndex === 1 ? "bg-red-500" : "bg-gray-500"
+                  } px-4 py-2 text-white rounded-lg cursor-pointer`}
                 onClick={() => setSlotIndex(1)}
               >
                 <p className="flex">
@@ -314,9 +313,8 @@ const Buysell = ({
           <div className="px-4">
             <div className="flex items-center justify-between">
               <div
-                className={`${
-                  slotIndex === 0 ? "bg-green-500" : "bg-gray-500"
-                } px-4 py-2 text-white rounded-lg cursor-pointer`}
+                className={`${slotIndex === 0 ? "bg-green-500" : "bg-gray-500"
+                  } px-4 py-2 text-white rounded-lg cursor-pointer`}
                 onClick={() => setSlotIndex(0)}
               >
                 <p className="flex">
@@ -331,9 +329,8 @@ const Buysell = ({
                 </p>
               </div>
               <div
-                className={`${
-                  slotIndex === 1 ? "bg-red-500" : "bg-gray-500"
-                } px-4 py-2 text-white rounded-lg cursor-pointer`}
+                className={`${slotIndex === 1 ? "bg-red-500" : "bg-gray-500"
+                  } px-4 py-2 text-white rounded-lg cursor-pointer`}
                 onClick={() => setSlotIndex(1)}
               >
                 <p className="flex">
