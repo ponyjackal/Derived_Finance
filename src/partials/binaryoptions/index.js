@@ -167,6 +167,7 @@ const BinaryInside = () => {
   useEffect(() => {
     const initialize = async () => {
       setLoading(true);
+      setLoadingPrice(true);
 
       const longId = await MarketContract.generateAnswerId(questionId, 0);
       const shortId = await MarketContract.generateAnswerId(questionId, 1);
@@ -179,6 +180,7 @@ const BinaryInside = () => {
         1: toShort18(shortBalance.toString()),
       });
 
+      setLoadingPrice(false);
       setLoading(false);
     };
 
