@@ -12,16 +12,19 @@ import MonetizationOnOutlinedIcon from "@mui/icons-material/MonetizationOnOutlin
 import Skeleton from "@mui/material/Skeleton";
 import BigNumber from "bignumber.js";
 
+import { useChain } from "../../context/chain";
 import { useFinance } from "../../context/finance";
-import { toShort18 } from "../../utils/Contract";
+import { toShort18, toLong18 } from "../../utils/Contract";
 
 const Withdrawtabs = () => {
-  const [age, setAge] = useState("");
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [mintAmount, setMintAmount] = useState("");
   const [burnAmount, setBurnAmount] = useState("");
   const [depositAmount, setDepositAmount] = useState("");
+  const [withdrawAmount, setWithdrawAmount] = useState("");
+  const [loading, setLoading] = useState(false);
 
+  const { DVDXContract, USDXContract, DepotContract } = useChain();
   const { balances, loadingBalances } = useFinance();
 
   const amount = useMemo(() => {
@@ -37,19 +40,24 @@ const Withdrawtabs = () => {
     };
   }, [balances]);
 
-  const isEmpty = (value, limit) => {
+  const isDisabled = (value, limit) => {
     return (
       new BigNumber(value).isZero() ||
-      new BigNumber(value).isGreaterThan(new BigNumber(limit))
+      new BigNumber(value).isGreaterThan(new BigNumber(limit)) ||
+      loading
     );
+  };
+
+  const checkValidation = (value) => {
+    const floatRegExp = new RegExp(
+      /(^(?=.+)(?:[1-9]\d*|0)?(?:\.\d+)?$)|(^\d\.$)/
+    );
+
+    return floatRegExp.test(value.toString()) || value === "";
   };
 
   const handleSelect = (index) => {
     setSelectedIndex(index);
-  };
-
-  const handleChange = (event) => {
-    setAge(event.target.value);
   };
 
   // Handle Max Button Actions
@@ -62,20 +70,18 @@ const Withdrawtabs = () => {
   };
 
   const handleDepositMax = () => {
-    setDepositAmount(amount.dvdx);
+    setDepositAmount(amount.usdx);
+  };
+
+  const handleWithdrawMax = () => {
+    setWithdrawAmount(amount.dvdx);
   };
 
   // Text Input change handlers
   const handleChangeMintAmount = (event) => {
     event.preventDefault();
 
-    const floatRegExp = new RegExp(
-      /(^(?=.+)(?:[1-9]\d*|0)?(?:\.\d+)?$)|(^\d\.$)/
-    );
-    if (
-      floatRegExp.test(event.target.value.toString()) ||
-      event.target.value === ""
-    ) {
+    if (checkValidation(event.target.value)) {
       setMintAmount(event.target.value);
     }
   };
@@ -83,13 +89,7 @@ const Withdrawtabs = () => {
   const handleChangeBurnAmount = (event) => {
     event.preventDefault();
 
-    const floatRegExp = new RegExp(
-      /(^(?=.+)(?:[1-9]\d*|0)?(?:\.\d+)?$)|(^\d\.$)/
-    );
-    if (
-      floatRegExp.test(event.target.value.toString()) ||
-      event.target.value === ""
-    ) {
+    if (checkValidation(event.target.value)) {
       setBurnAmount(event.target.value);
     }
   };
@@ -97,31 +97,70 @@ const Withdrawtabs = () => {
   const handleChangeDepositAmount = (event) => {
     event.preventDefault();
 
-    const floatRegExp = new RegExp(
-      /(^(?=.+)(?:[1-9]\d*|0)?(?:\.\d+)?$)|(^\d\.$)/
-    );
-    if (
-      floatRegExp.test(event.target.value.toString()) ||
-      event.target.value === ""
-    ) {
+    if (checkValidation(event.target.value)) {
       setDepositAmount(event.target.value);
     }
   };
 
+  const handleChangeWithdrawAmount = (event) => {
+    event.preventDefault();
+
+    if (checkValidation(event.target.value)) {
+      setWithdrawAmount(event.target.value);
+    }
+  };
+
   // Handle Operation Button Actions
-  const handleMint = () => {
-    console.log("DEBUG-handleMint: ", isEmpty(mintAmount || "0", amount.dvdx));
+  const handleMint = async () => {
+    setLoading(true);
+
+    try {
+      const mAmount = toLong18(mintAmount);
+      await DVDXContract.issueSynths(USDXContract.address, mAmount.toString());
+    } catch (error) {
+      console.error("DVDX Mint Error: ", error.message);
+    }
+
+    setLoading(false);
   };
 
-  const handleBurn = () => {
-    console.log("DEBUG-handleBurn: ", isEmpty(burnAmount || "0", amount.usdx));
+  const handleBurn = async () => {
+    setLoading(true);
+
+    try {
+      const mAmount = toLong18(mintAmount);
+      await DVDXContract.burnSynths(USDXContract.address, mAmount.toString());
+    } catch (error) {
+      console.error("DVDX Mint Error: ", error.message);
+    }
+
+    setLoading(false);
   };
 
-  const handleDeposit = () => {
-    console.log(
-      "DEBUG-handleDeposit: ",
-      isEmpty(depositAmount || "0", amount.dvdx)
-    );
+  const handleDeposit = async () => {
+    setLoading(true);
+
+    try {
+      const mAmount = toLong18(depositAmount);
+      await DepotContract.depositSynths(mAmount.toString());
+    } catch (error) {
+      console.error("DVDX Mint Error: ", error.message);
+    }
+
+    setLoading(false);
+  };
+
+  const handleWithdraw = async () => {
+    setLoading(true);
+
+    try {
+      const mAmount = toLong18(depositAmount);
+      await DepotContract.withdrawSynthetix(mAmount.toString());
+    } catch (error) {
+      console.error("DVDX Mint Error: ", error.message);
+    }
+
+    setLoading(false);
   };
 
   return (
@@ -170,12 +209,10 @@ const Withdrawtabs = () => {
           </Box>
           <Box className="w-full m-2 bg-primary rounded-sm">
             <FormControl fullWidth style={{ width: "96%", margin: "8px" }}>
-              <InputLabel id="demo-simple-select-label">DVDX</InputLabel>
+              <InputLabel id="demo-simple-select-label">USDx</InputLabel>
               <Select
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
-                value={age}
-                onChange={(e) => handleChange(e)}
               >
                 <MenuItem value={1}>
                   <MonetizationOnOutlinedIcon />
@@ -195,7 +232,7 @@ const Withdrawtabs = () => {
               {loadingBalances ? (
                 <Skeleton width={100} height={50} />
               ) : (
-                `${amount.dvdx} DVDX`
+                `${amount.usdx} USDx`
               )}
             </h1>
           </div>
@@ -209,7 +246,7 @@ const Withdrawtabs = () => {
               margin: "20px 9px",
               fontSize: "20px",
             }}
-            disabled={isEmpty(depositAmount || "0", amount.dvdx)}
+            disabled={isDisabled(depositAmount || "0", amount.usdx)}
             onClick={handleDeposit}
           >
             Deposit
@@ -258,8 +295,6 @@ const Withdrawtabs = () => {
               <Select
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
-                value={age}
-                onChange={(e) => handleChange(e)}
               >
                 <MenuItem value={1}>
                   <MonetizationOnOutlinedIcon />
@@ -293,7 +328,7 @@ const Withdrawtabs = () => {
               margin: "20px 9px",
               fontSize: "20px",
             }}
-            disabled={isEmpty(mintAmount || "0", amount.dvdx)}
+            disabled={isDisabled(mintAmount || "0", amount.dvdx)}
             onClick={handleMint}
           >
             Mint
@@ -312,6 +347,7 @@ const Withdrawtabs = () => {
               fontSize: "10px",
               marginRight: "25%",
             }}
+            onClick={handleWithdrawMax}
           >
             Max Amount
           </Button>
@@ -331,16 +367,16 @@ const Withdrawtabs = () => {
               variant="outlined"
               placeholder="0.0"
               className="bg-primary rounded-sm text-white w-full"
+              value={withdrawAmount}
+              onChange={handleChangeWithdrawAmount}
             />
           </Box>
           <Box className="w-full m-2 bg-primary rounded-sm">
             <FormControl fullWidth style={{ width: "96%", margin: "8px" }}>
-              <InputLabel id="demo-simple-select-label">ETH</InputLabel>
+              <InputLabel id="demo-simple-select-label">DVDX</InputLabel>
               <Select
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
-                value={age}
-                onChange={(e) => handleChange(e)}
               >
                 <MenuItem value={1}>
                   <MonetizationOnOutlinedIcon />
@@ -357,7 +393,11 @@ const Withdrawtabs = () => {
               Available To Withdraw
             </h1>
             <h1 className="text-white text-md font-bold w-full flex justify-center">
-              ETH 0.00000
+              {loadingBalances ? (
+                <Skeleton width={100} height={50} />
+              ) : (
+                `${amount.dvdx} DVDX`
+              )}
             </h1>
           </div>
         </div>
@@ -370,6 +410,8 @@ const Withdrawtabs = () => {
               margin: "20px 9px",
               fontSize: "20px",
             }}
+            disabled={isDisabled(withdrawAmount || "0", amount.dvdx)}
+            onClick={handleWithdraw}
           >
             Withdraw
           </Button>
@@ -417,8 +459,6 @@ const Withdrawtabs = () => {
               <Select
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
-                value={age}
-                onChange={(e) => handleChange(e)}
               >
                 <MenuItem value={1}>
                   <MonetizationOnOutlinedIcon />
@@ -452,7 +492,7 @@ const Withdrawtabs = () => {
               margin: "20px 9px",
               fontSize: "20px",
             }}
-            disabled={isEmpty(burnAmount || "0", amount.usdx)}
+            disabled={isDisabled(burnAmount || "0", amount.usdx)}
             onClick={handleBurn}
           >
             Burn

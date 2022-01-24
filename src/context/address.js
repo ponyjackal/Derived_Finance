@@ -21,4 +21,8 @@ export const contractAddresses = {
     56: "",
     97: "0x1A801a6F4a063ff5cc6A788E8416176a693ac82C",
   },
+  depot: {
+    56: "",
+    97: "0xD07E3Ea215610AFD5011688902342ca403AecAF2",
+  },
 };
