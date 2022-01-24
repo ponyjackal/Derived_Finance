@@ -5,7 +5,9 @@ import "react-tabs/style/react-tabs.css";
 import { useWeb3React } from "@web3-react/core";
 
 import Box from "@mui/material/Box";
-import TextField from "@mui/material/TextField";
+import OutlinedInput from '@mui/material/OutlinedInput';
+import InputAdornment from '@mui/material/InputAdornment';
+import IconButton from '@mui/material/IconButton';
 import Button from "@mui/material/Button";
 import Skeleton from "@mui/material/Skeleton";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -24,6 +26,7 @@ const Buysell = ({
   long,
   short,
   balances,
+  USDXBalance,
   resolveTime,
   onRefreshPrice,
   onUpdatePrice,
@@ -52,10 +55,9 @@ const Buysell = ({
     return new BigNumber(long).multipliedBy(balances[0]).plus(new BigNumber(short).multipliedBy(balances[1])).toFixed(4);
   }, [balances, long, short]);
 
-  const isDisabled = useMemo(
-    () => !MarketContract || !DerivedTokenContract,
-    [MarketContract, DerivedTokenContract]
-  );
+  const isDisabled = (value, limit) => {
+    return new BigNumber(value).isZero() || new BigNumber(value).isGreaterThan(limit) || !MarketContract || !DerivedTokenContract || pendingTransaction;
+  };
 
   const handleSelect = (index) => {
     setSelectedIndex(index);
@@ -149,6 +151,14 @@ const Buysell = ({
     setPendingTransaction(false);
   };
 
+  const handleBuyMax = () => {
+    setBuyAmount((USDXBalance || new BigNumber(0)).toFixed(5));
+  };
+
+  const handleSellMax = () => {
+    setSellAmount(balances[slotIndex].toFixed(5));
+  };
+
   useEffect(() => {
     if (!details || details.type !== "crypto") return;
 
@@ -227,7 +237,7 @@ const Buysell = ({
             </div>
             <div>
               <Box component="form" noValidate autoComplete="off">
-                <TextField
+                <OutlinedInput
                   id="outlined-basic"
                   type="number"
                   variant="outlined"
@@ -239,6 +249,11 @@ const Buysell = ({
                     width: "100%",
                     borderRadius: "5px",
                   }}
+                  endAdornment={
+                    <InputAdornment position="end">
+                      <IconButton style={{ fontSize: '14px' }} onClick={handleBuyMax}>MAX</IconButton>
+                    </InputAdornment>
+                  }
                 />
                 {buyError && (
                   <p className="text-xs text-red-400 my-2">{buyError}</p>
@@ -284,12 +299,7 @@ const Buysell = ({
                 fontSize: "15px",
                 fontWeignt: "bold",
               }}
-              disabled={
-                !buyAmount ||
-                buyAmount === "0" ||
-                isDisabled ||
-                pendingTransaction
-              }
+              disabled={isDisabled(buyAmount || "0", USDXBalance)}
               onClick={handleBuy}
             >
               {pendingTransaction && (
@@ -360,7 +370,7 @@ const Buysell = ({
             </div>
             <div>
               <Box component="form" noValidate autoComplete="off">
-                <TextField
+                <OutlinedInput
                   id="outlined-basic"
                   type="number"
                   variant="outlined"
@@ -372,6 +382,11 @@ const Buysell = ({
                     color: "white",
                     borderRadius: "5px",
                   }}
+                  endAdornment={
+                    <InputAdornment position="end">
+                      <IconButton style={{ fontSize: '14px' }} onClick={handleSellMax}>MAX</IconButton>
+                    </InputAdornment>
+                  }
                 />
                 {sellError && (
                   <p className="text-xs text-red-400 my-2">{sellError}</p>
@@ -409,12 +424,7 @@ const Buysell = ({
                 fontSize: "15px",
                 fontWeignt: "bold",
               }}
-              disabled={
-                !sellAmount ||
-                sellAmount === "0" ||
-                isDisabled ||
-                pendingTransaction
-              }
+              disabled={isDisabled(sellAmount || "0", balances[slotIndex])}
               onClick={handleSell}
             >
               {pendingTransaction && (

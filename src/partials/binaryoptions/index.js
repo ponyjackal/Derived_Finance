@@ -23,12 +23,13 @@ import { useChain } from "../../context/chain";
 
 const BinaryInside = () => {
   const { questionId } = useParams();
-  const { MarketContract } = useChain();
+  const { MarketContract, DerivedTokenContract } = useChain();
   const { chainId, account } = useWeb3React();
 
   const [loading, setLoading] = useState(false);
   const [loadingPrice, setLoadingPrice] = useState(false);
   const [question, setQuestion] = useState({});
+  const [USDXBalance, setUSDXBalance] = useState(new BigNumber(0));
   const [trades, setTrades] = useState([]);
   const [prices, setPrices] = useState([]);
   const [balances, setBalances] = useState({
@@ -175,24 +176,29 @@ const BinaryInside = () => {
       const longBalance = await MarketContract.balanceOf(account, longId);
       const shortBalance = await MarketContract.balanceOf(account, shortId);
 
+      const usdx = await DerivedTokenContract.balanceOf(account);
+
       setBalances({
         0: toShort18(longBalance.toString()),
         1: toShort18(shortBalance.toString()),
       });
 
+      setUSDXBalance(toShort18(usdx.toString()));
+
       setLoadingPrice(false);
       setLoading(false);
     };
 
-    if (questionId && account && MarketContract) {
+    if (questionId && account && MarketContract && DerivedTokenContract) {
       initialize();
     } else {
       setBalances({
         0: new BigNumber(0),
         1: new BigNumber(0),
       });
+      setUSDXBalance(new BigNumber(0));
     }
-  }, [questionId, account, MarketContract]);
+  }, [questionId, account, MarketContract, DerivedTokenContract]);
 
   return (
     <main>
@@ -319,6 +325,7 @@ const BinaryInside = () => {
               {...question}
               loading={loadingPrice}
               balances={balances}
+              USDXBalance={USDXBalance}
               onRefreshPrice={handleRefreshPrice}
               onUpdatePrice={handleUpdatePrice}
             />
