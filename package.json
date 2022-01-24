@@ -45,7 +45,8 @@
     "react-transition-group": "^4.4.2",
     "sass": "^1.43.4",
     "tailwindcss": "^2.2.19",
-    "web-vitals": "^1.1.2"
+    "web-vitals": "^1.1.2",
+    "web3": "^1.7.0"
   },
   "scripts": {
     "start": "cross-env TAILWIND_MODE=watch craco start",

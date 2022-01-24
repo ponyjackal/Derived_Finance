@@ -7,7 +7,7 @@ export class Footer extends Component {
 
   render() {
     return (
-      <div className="w-full bg-primary flex justify-center mb-4">
+      <div className="w-full bg-primary flex justify-center my-4">
         <p className="text-headings font-body font-extrabold">
           Copyright &copy; {this.getYear()}{" "}
           <a href="https://webixun.com" target="_blank" rel="noreferrer">

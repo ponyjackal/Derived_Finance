@@ -6,6 +6,8 @@ import {
   getDVDXTokenContract,
   getDerivedTokenContract,
   getMarketContract,
+  getPoolContract,
+  getDepotContract,
 } from "../contracts";
 
 export const ChainContext = createContext({});
@@ -18,6 +20,8 @@ export const ChainProvider = ({ children }) => {
   const [DVDXContract, setDVDXContract] = useState(null);
   const [MarketContract, setMarketContract] = useState(null);
   const [DerivedTokenContract, setDerivedTokenContract] = useState(null);
+  const [PoolContract, setPoolContract] = useState(null);
+  const [DepotContract, setDepotContract] = useState(null);
 
   useEffect(() => {
     if (library && active && chainId) {
@@ -32,6 +36,12 @@ export const ChainProvider = ({ children }) => {
 
       const derivedToken = getDerivedTokenContract(chainId, library);
       setDerivedTokenContract(derivedToken);
+
+      const pool = getPoolContract(chainId, library);
+      setPoolContract(pool);
+
+      const depot = getDepotContract(chainId, library);
+      setDepotContract(depot);
     } else {
       setUSDXContract(null);
     }
@@ -44,6 +54,8 @@ export const ChainProvider = ({ children }) => {
         DVDXContract,
         MarketContract,
         DerivedTokenContract,
+        PoolContract,
+        DepotContract,
       }}
     >
       {children}
