@@ -1,75 +1,110 @@
-import React, { Component } from "react";
+import React, { useMemo } from "react";
 import AttachMoneyOutlinedIcon from "@mui/icons-material/AttachMoneyOutlined";
 import HelpOutlineOutlinedIcon from "@mui/icons-material/HelpOutlineOutlined";
+import { BigNumber } from "bignumber.js";
+import Skeleton from "@mui/material/Skeleton";
 
-export class Valueblocks extends Component {
-  render() {
-    return (
-      <div className="w-full">
-        <div className="grid grid-cols-1 gap-5 md:grid-cols-3 transition-all">
-          <div className="w-full flex flex-row bg-secondary items-center justify-center mr-1 p-4 rounded-lg hover:bg-headings group ">
-            <div className="flex flex-col w-full">
-              <div className="flex justify-between mb-8">
-                <p className="text-gray-300 font-heading text-xl font-bold subpixel-antialiased group-hover:text-secondary">
-                  Staked Token
-                </p>
-                <p
-                  className="text-gray-300 text-body text-lg font-body font-bold subpixel-antialiased group-hover:text-secondary"
-                  title="Average APY(Based on your total debt value)"
-                >
-                  <HelpOutlineOutlinedIcon />
-                </p>
-              </div>
-              <p className="text-white text-3xl font-body font-black flex items-center">
-                0.00000 <AttachMoneyOutlinedIcon />
+import { useFinance } from "../../context/finance";
+import { toShort18 } from "../../utils/Contract";
+
+const Valueblocks = () => {
+  const { balances, loadingBalances } = useFinance();
+  const amount = useMemo(() => {
+    if (!balances)
+      return {
+        usdx: new BigNumber(0).toFixed(5),
+      };
+
+    return {
+      usdx: toShort18(balances.usdx).toFixed(5),
+    };
+  }, [balances]);
+
+  return (
+    <div className="w-full">
+      <div className="grid grid-cols-1 gap-5 md:grid-cols-3 transition-all">
+        <div className="w-full flex flex-row bg-secondary items-center justify-center mr-1 p-4 rounded-lg hover:bg-headings group ">
+          <div className="flex flex-col w-full">
+            <div className="flex justify-between mb-8">
+              <p className="text-gray-300 font-heading text-xl font-bold subpixel-antialiased group-hover:text-secondary">
+                Staked Token
+              </p>
+              <p
+                className="text-gray-300 text-body text-lg font-body font-bold subpixel-antialiased group-hover:text-secondary"
+                title="Average APY(Based on your total debt value)"
+              >
+                <HelpOutlineOutlinedIcon />
               </p>
             </div>
-          </div>
-          <div className="w-full flex flex-row bg-secondary items-center justify-center mr-1 p-5 rounded-lg hover:bg-headings group pb-px">
-            <div className="flex flex-col w-full">
-              <div className="flex justify-between mb-8">
-                <p className="text-gray-300 font-heading text-xl font-bold subpixel-antialiased group-hover:text-secondary">
-                  Debt Status
-                </p>
-                <p
-                  className="text-gray-300 text-body text-lg font-body font-bold subpixel-antialiased group-hover:text-secondary"
-                  title="Average APY(Based on your total debt value)"
-                >
-                  <HelpOutlineOutlinedIcon />
-                </p>
-              </div>
-              <div className="flex flex-col">
-                <p className="text-white text-3xl font-body font-black flex items-center">
+            <p className="text-white text-3xl font-body font-black flex items-center">
+              {/* 0.00000 <AttachMoneyOutlinedIcon /> */}
+              {loadingBalances ? (
+                <Skeleton width={100} height={50} />
+              ) : (
+                <>
                   0.00000 <AttachMoneyOutlinedIcon />
-                </p>
-                <p className="text-gray-200 text-xs font-body font-black flex items-center">
-                  (Liquidation Threshold)
-                </p>
-              </div>
-            </div>
+                </>
+              )}
+            </p>
           </div>
-          <div
-            className="w-full flex flex-row bg-secondary items-center justify-center mr-1 p-4 rounded-lg hover:bg-headings group "
-            title="Average APY(Based on your total debt value)"
-          >
-            <div className="flex flex-col w-full">
-              <div className="flex justify-between mb-8">
-                <p className="text-gray-300 font-heading text-xl font-bold subpixel-antialiased group-hover:text-secondary">
-                  Amount Of USDx
-                </p>
-                <p className="text-gray-300 text-body text-lg font-body font-bold subpixel-antialiased group-hover:text-secondary">
-                  <HelpOutlineOutlinedIcon />
-                </p>
-              </div>
-              <p className="text-white text-3xl font-body font-black flex items-center">
-                0.00000 <AttachMoneyOutlinedIcon />
+        </div>
+        <div className="w-full flex flex-row bg-secondary items-center justify-center mr-1 p-5 rounded-lg hover:bg-headings group pb-px">
+          <div className="flex flex-col w-full">
+            <div className="flex justify-between mb-8">
+              <p className="text-gray-300 font-heading text-xl font-bold subpixel-antialiased group-hover:text-secondary">
+                Debt Status
               </p>
+              <p
+                className="text-gray-300 text-body text-lg font-body font-bold subpixel-antialiased group-hover:text-secondary"
+                title="Average APY(Based on your total debt value)"
+              >
+                <HelpOutlineOutlinedIcon />
+              </p>
+            </div>
+            <div className="flex flex-col">
+              <p className="text-white text-3xl font-body font-black flex items-center">
+                {/* 0.00000 <AttachMoneyOutlinedIcon /> */}
+                {loadingBalances ? (
+                  <Skeleton width={100} height={50} />
+                ) : (
+                  <>
+                    0.00000 <AttachMoneyOutlinedIcon />
+                  </>
+                )}
+              </p>
+              {/* <p className="text-gray-200 text-xs font-body font-black flex items-center">
+                (Liquidation Threshold)
+              </p> */}
             </div>
           </div>
         </div>
+        <div
+          className="w-full flex flex-row bg-secondary items-center justify-center mr-1 p-4 rounded-lg hover:bg-headings group "
+          title="Average APY(Based on your total debt value)"
+        >
+          <div className="flex flex-col w-full">
+            <div className="flex justify-between mb-8">
+              <p className="text-gray-300 font-heading text-xl font-bold subpixel-antialiased group-hover:text-secondary">
+                Amount Of USDx
+              </p>
+              <p className="text-gray-300 text-body text-lg font-body font-bold subpixel-antialiased group-hover:text-secondary">
+                <HelpOutlineOutlinedIcon />
+              </p>
+            </div>
+            <p className="text-white text-3xl font-body font-black flex items-center">
+              {loadingBalances ? (
+                <Skeleton width={100} height={50} />
+              ) : (
+                <>
+                  {amount.usdx} <AttachMoneyOutlinedIcon />
+                </>
+              )}
+            </p>
+          </div>
+        </div>
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
 
 export default Valueblocks;

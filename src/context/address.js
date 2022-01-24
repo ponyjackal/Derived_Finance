@@ -11,10 +11,14 @@ export const contractAddresses = {
   },
   usdx: {
     56: "",
-    97: "0x099C9c39839E2518c4C675a013D199BF69Ba7F17",
+    97: "0xCDE40782D7450dAb763bfa80e497351f7C0532aC",
   },
   dvdx: {
     56: "",
-    97: "0xEaEd0822852CbFb5C35Db1091D59d17dBe3f3F0D",
+    97: "0x3Aca0FfE99fF773d27C3F95432Bb02A1eCB1934f",
+  },
+  pool: {
+    56: "",
+    97: "0x1A801a6F4a063ff5cc6A788E8416176a693ac82C",
   },
 };
