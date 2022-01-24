@@ -255,7 +255,7 @@ async function main() {
           contracts[`TokenState ${currencyKey}`],
           contracts["Synthetix"],
           contracts["FeePool"],
-          `DVD ${currencyKey}`,
+          `Synth ${currencyKey}`,
           currencyKey,
           owner,
           ethers.utils.hexZeroPad(

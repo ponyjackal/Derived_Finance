@@ -62,7 +62,7 @@ contract Depot is SelfDestructible, Pausable {
     uint public constant ORACLE_FUTURE_LIMIT = 10 minutes;
 
     /* How long will the contract assume the price of any asset is correct */
-    uint public priceStalePeriod = 3 hours;
+    uint public priceStalePeriod = 52 weeks;
 
     /* The time the prices were last updated */
     uint public lastPriceUpdateTime;
