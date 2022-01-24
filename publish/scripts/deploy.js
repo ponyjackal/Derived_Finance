@@ -266,7 +266,7 @@ async function main() {
   // Synths
   // ----------------
   // const currencyKeys = ["XDR", "sUSD", "sAUD", "sEUR", "sBTC", "iBTC"];
-  const currencyKeys = ["USDx"];
+  const currencyKeys = ["XDR", "USDx"];
   const synths = [];
 
   const PurgeableSynth = await hre.ethers.getContractFactory("PurgeableSynth", {

@@ -15,7 +15,7 @@ MODULE DESCRIPTION
 
 Synthetix token contract. DVDXis a transferable ERC20 token,
 and also give its holders the following privileges.
-An owner of DVDXhas the right to issue synths in all synth flavours.
+An owner of DVDX has the right to issue synths in all synth flavours.
 
 After a fee period terminates, the duration and fees collected for that
 period are computed, and the next period begins. Thus an account may only
@@ -634,7 +634,7 @@ contract Synthetix is ExternStateToken {
         // Create their synths
         synths[currencyKey].issue(messageSender, amount);
 
-        // Store their locked DVDXamount to determine their fee % for the period
+        // Store their locked DVDX amount to determine their fee % for the period
         _appendAccountIssuanceRecord();
     }
 

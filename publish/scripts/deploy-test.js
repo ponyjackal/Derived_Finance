@@ -25,6 +25,10 @@ async function main() {
     ethers.utils.hexZeroPad(
       ethers.utils.hexlify(ethers.utils.toUtf8Bytes("DVDX")),
       4
+    ),
+    ethers.utils.hexZeroPad(
+      ethers.utils.hexlify(ethers.utils.toUtf8Bytes("XDR")),
+      4
     )
   );
 }

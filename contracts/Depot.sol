@@ -457,7 +457,7 @@ contract Depot is SelfDestructible, Pausable {
         notPaused
         returns (uint) // Returns the number of DVDXreceived
     {
-        // How many DVDXare they going to be receiving?
+        // How many DVDX are they going to be receiving?
         uint synthetixToSend = synthetixReceivedForSynths(synthAmount);
 
         // Ok, transfer the Synths to our funds wallet.
@@ -491,7 +491,7 @@ contract Depot is SelfDestructible, Pausable {
     }
 
     /**
-     * @notice Allows the owner to withdraw DVDXfrom this contract if needed.
+     * @notice Allows the owner to withdraw DVDX from this contract if needed.
      * @param amount The amount of DVDXto attempt to withdraw (in 18 decimal places).
      */
     function withdrawSynthetix(uint amount)
