@@ -97,11 +97,9 @@ const Buysell = ({
         const allowanceBN = new BigNumber(allowance.toString());
 
         if (allowanceBN.lt(order)) {
-          const totalSupply = await DerivedTokenContract.totalSupply();
-
           const tx = await DerivedTokenContract.approve(
             MarketContract.address,
-            totalSupply.toString()
+            order.toString()
           );
           await tx.wait();
         }
