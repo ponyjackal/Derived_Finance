@@ -226,7 +226,7 @@ async function main() {
   // ----------------
   // Synths
   // ----------------
-  const currencyKeys = ["USDx"];
+  const currencyKeys = ["XDR", "USDx"];
   for (const currencyKey of currencyKeys) {
     // TokenState contract
     try {

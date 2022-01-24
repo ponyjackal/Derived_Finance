@@ -346,7 +346,7 @@ async function main() {
     // ["1", "0.5", "1.25", "0.1", "5000", "4000"].map((number) =>
     //   ethers.utils.parseEther(number)
     // ),
-    ["0.1"].map((number) => ethers.utils.parseEther(number)),
+    ["1", "0.1"].map((number) => ethers.utils.parseEther(number)),
     timestamp
   );
 
