@@ -40,23 +40,22 @@ const Buysell = ({
   const { MarketContract, DerivedTokenContract } = useChain();
   const { account } = useWeb3React();
 
+  const averagePrice = useMemo(() => {
+    if (!long || !short || !balances) return '0.00';
+
+    return (((new BigNumber(long).multipliedBy(balances[0])).plus((new BigNumber(short).multipliedBy(balances[1])))).dividedBy(balances[0].plus(balances[1]))).toFixed(4);
+  }, [balances, long, short]);
+
+  const receivePrice = useMemo(() => {
+    if (!long || !short || !balances) return '0.00';
+
+    return new BigNumber(long).multipliedBy(balances[0]).plus(new BigNumber(short).multipliedBy(balances[1])).toFixed(4);
+  }, [balances, long, short]);
+
   const isDisabled = useMemo(
     () => !MarketContract || !DerivedTokenContract,
     [MarketContract, DerivedTokenContract]
   );
-
-  useEffect(() => {
-    if (!details || details.type !== "crypto") return;
-
-    const timer = setInterval(async () => {
-      const data = await getPrice(details.coinId);
-      setCurrentPrice(data);
-    }, 1000);
-
-    return () => {
-      clearInterval(timer);
-    };
-  }, [details]);
 
   const handleSelect = (index) => {
     setSelectedIndex(index);
@@ -149,6 +148,19 @@ const Buysell = ({
 
     setPendingTransaction(false);
   };
+
+  useEffect(() => {
+    if (!details || details.type !== "crypto") return;
+
+    const timer = setInterval(async () => {
+      const data = await getPrice(details.coinId);
+      setCurrentPrice(data);
+    }, 1000);
+
+    return () => {
+      clearInterval(timer);
+    };
+  }, [details]);
 
   return (
     <div className="flex flex-col col-span-full sm:col-span-6 bg-secondary shadow-lg rounded-sm border border-gray-200">
@@ -374,7 +386,7 @@ const Buysell = ({
             </div>
             <div className="flex items-center justify-between px-5 py-1">
               <p className="text-gray-400 text-xs">Your Average Price</p>
-              <p className="text-white text-xs">$0.00</p>
+              <p className="text-white text-xs">${averagePrice}</p>
             </div>
             <div className="flex items-center justify-between px-5 py-1">
               <p className="text-gray-400 text-xs">Remaining Shares</p>
@@ -384,7 +396,7 @@ const Buysell = ({
             </div>
             <div className="flex items-center justify-between px-5 py-1">
               <p className="text-gray-400 text-xs">You'll Receive</p>
-              <p className="text-white text-xs">0.00</p>
+              <p className="text-white text-xs">${receivePrice}</p>
             </div>
           </div>
           <div className="p-4">
