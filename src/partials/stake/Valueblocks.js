@@ -48,7 +48,7 @@ const Valueblocks = () => {
             </p>
           </div>
         </div>
-        <div className="w-full flex flex-row bg-secondary items-center justify-center mr-1 p-5 rounded-lg hover:bg-headings group pb-px">
+        <div className="w-full flex flex-row bg-secondary items-center justify-center mr-1 p-5 rounded-lg hover:bg-headings group">
           <div className="flex flex-col w-full">
             <div className="flex justify-between mb-8">
               <p className="text-gray-300 font-heading text-xl font-bold subpixel-antialiased group-hover:text-secondary">

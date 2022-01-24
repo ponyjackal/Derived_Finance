@@ -27,6 +27,6 @@ export const toLong18 = (num) => {
   return new BigNumber(num).multipliedBy(new BigNumber(10).pow(18));
 };
 
-export const utf8ToHex = (str) => {
-  return web3.utils.utf8ToHex(str);
+export const toHex = (str) => {
+  return web3.utils.toHex(str);
 };
