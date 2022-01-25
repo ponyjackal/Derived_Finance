@@ -4,7 +4,7 @@ import { NavLink, useLocation, Link } from "react-router-dom";
 import DashboardOutlinedIcon from "@mui/icons-material/DashboardOutlined";
 import CompareArrowsOutlinedIcon from "@mui/icons-material/CompareArrowsOutlined";
 import PriceCheckOutlinedIcon from "@mui/icons-material/PriceCheckOutlined";
-import CorporateFareOutlinedIcon from "@mui/icons-material/CorporateFareOutlined";
+// import CorporateFareOutlinedIcon from "@mui/icons-material/CorporateFareOutlined";
 import ReceiptLongOutlinedIcon from "@mui/icons-material/ReceiptLongOutlined";
 import AdminPanelSettingsOutlinedIcon from "@mui/icons-material/AdminPanelSettingsOutlined";
 import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
@@ -137,8 +137,9 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
     <div>
       {/* Sidebar backdrop (mobile only) */}
       <div
-        className={`fixed inset-0 bg-opacity-30 z-40 lg:hidden lg:z-auto transition-opacity duration-200 ${sidebarOpen ? "opacity-100" : "opacity-0 pointer-events-none"
-          }`}
+        className={`fixed inset-0 bg-opacity-30 z-40 lg:hidden lg:z-auto transition-opacity duration-200 ${
+          sidebarOpen ? "opacity-100" : "opacity-0 pointer-events-none"
+        }`}
         aria-hidden="true"
       ></div>
 
@@ -146,8 +147,9 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
       <div
         id="sidebar"
         ref={sidebar}
-        className={`flex flex-col absolute z-40 left-0 top-0 lg:static lg:left-auto lg:top-auto lg:translate-x-0 transform h-screen overflow-y-scroll lg:overflow-y-auto no-scrollbar w-64 lg:w-20 lg:sidebar-expanded:!w-64 2xl:!w-64 flex-shrink-0 bg-secondary p-4 transition-all duration-200 ease-in-out ${sidebarOpen ? "translate-x-0" : "-translate-x-64"
-          }`}
+        className={`flex flex-col absolute z-40 left-0 top-0 lg:static lg:left-auto lg:top-auto lg:translate-x-0 transform h-screen overflow-y-scroll lg:overflow-y-auto no-scrollbar w-64 lg:w-20 lg:sidebar-expanded:!w-64 2xl:!w-64 flex-shrink-0 bg-secondary p-4 transition-all duration-200 ease-in-out ${
+          sidebarOpen ? "translate-x-0" : "-translate-x-64"
+        }`}
       >
         {/* Sidebar header */}
         {/* Close button */}
@@ -191,9 +193,22 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
         </div>
         <div className="flex mb-7 pr-3 sm:pr-2 my-4">
           {/* Logo */}
-          <NavLink id="derived-logo" exact to="/" className="flex items-center p-2">
-            <img alt="derived logo" src={LogoIcon} className={sidebarExpanded ? "block" : "hidden 2xl:block"} />
-            <img alt="drivedd logo" src={MobileLogoIcon} className={sidebarExpanded ? "hidden" : "block 2xl:hidden"} />
+          <NavLink
+            id="derived-logo"
+            exact
+            to="/"
+            className="flex items-center p-2"
+          >
+            <img
+              alt="derived logo"
+              src={LogoIcon}
+              className={sidebarExpanded ? "block" : "hidden 2xl:block"}
+            />
+            <img
+              alt="drivedd logo"
+              src={MobileLogoIcon}
+              className={sidebarExpanded ? "hidden" : "block 2xl:hidden"}
+            />
           </NavLink>
         </div>
 
@@ -204,8 +219,9 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
             <ul className="mt-3">
               {/* Dashboard */}
               <li
-                className={`px-3 py-2 rounded-lg mb-0.5 last:mb-0 ${pathname === "/" && "bg-headings"
-                  }`}
+                className={`px-3 py-2 rounded-lg mb-0.5 last:mb-0 ${
+                  pathname === "/" && "bg-headings"
+                }`}
               >
                 <Link to="/">
                   <div className="flex items-center text-white hover:text-gray-200 truncate transition duration-150">
@@ -218,8 +234,9 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
               </li>
               {/* Trade */}
               <li
-                className={`px-3 py-2 rounded-lg mb-0.5 last:mb-0 ${pathname === "/Trade" && "bg-headings"
-                  }`}
+                className={`px-3 py-2 rounded-lg mb-0.5 last:mb-0 ${
+                  pathname === "/Trade" && "bg-headings"
+                }`}
               >
                 <Link to="/Trade">
                   <div className="flex items-center text-white hover:text-gray-200 truncate transition duration-150">
@@ -232,8 +249,9 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
               </li>
               {/* Stake */}
               <li
-                className={`px-3 py-2 rounded-lg mb-0.5 last:mb-0 ${pathname === "/Stake" && "bg-headings"
-                  }`}
+                className={`px-3 py-2 rounded-lg mb-0.5 last:mb-0 ${
+                  pathname === "/Stake" && "bg-headings"
+                }`}
               >
                 <Link to="/Stake">
                   <div className="flex items-center text-white hover:text-gray-200 truncate transition duration-150">
@@ -245,7 +263,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
                 </Link>
               </li>
               {/* Farming/LP */}
-              <li
+              {/* <li
                 className={`px-3 py-2 rounded-lg mb-0.5 last:mb-0 ${pathname === "/Farming" && "bg-headings"
                   }`}
               >
@@ -257,11 +275,14 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
                     </span>
                   </div>
                 </Link>
-              </li>
+              </li> */}
               {/* Binary Options */}
               <li
-                className={`px-3 py-2 rounded-lg mb-0.5 last:mb-0 ${(pathname === "/Binary" || pathname.includes("Binaryoptionsinside")) && "bg-headings"
-                  }`}
+                className={`px-3 py-2 rounded-lg mb-0.5 last:mb-0 ${
+                  (pathname === "/Binary" ||
+                    pathname.includes("Binaryoptionsinside")) &&
+                  "bg-headings"
+                }`}
               >
                 <Link to="/Binary">
                   <div className="flex items-center text-white hover:text-gray-200 truncate transition duration-150">
