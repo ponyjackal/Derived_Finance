@@ -7,12 +7,12 @@ import Dashboard from "./pages/Dashboard";
 import Trade from "./pages/Trade";
 import Stake from "./pages/Stake";
 import Binary from "./pages/Binary";
-import Farming from "./pages/Farming";
+// import Farming from "./pages/Farming";
 import Binaryoptionsinside from "./pages/Binaryoptionsinside";
 
-import "./App.css"
+import "./App.css";
 import "./css/style.scss";
-import "./css/react-tabs.css"
+import "./css/react-tabs.css";
 import "./charts/ChartjsConfig";
 
 function App() {
@@ -39,9 +39,10 @@ function App() {
       <Route exact path="/Binary">
         <Binary />
       </Route>
-      <Route exact path="/Farming">
+      {/* Disable Farming/LP page */}
+      {/* <Route exact path="/Farming">
         <Farming />
-      </Route>
+      </Route> */}
       <Route exact path="/Binaryoptionsinside/:questionId">
         <Binaryoptionsinside />
       </Route>
