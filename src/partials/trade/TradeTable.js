@@ -6,12 +6,18 @@ import { toFriendlyTimeFormat } from "../../utils/Utils";
 import { toShort18 } from "../../utils/Contract";
 import "../../css/table.css";
 
+const mapAnswers = {
+  LONG: "YES",
+  SHORT: "NO",
+};
+
 const TradeTable = ({ trades, loading }) => {
   const data = useMemo(
     () =>
       (trades &&
         trades.map((trade) => ({
           ...trade,
+          answer: mapAnswers[trade.answer],
           amount: toShort18(trade.amount).toFixed(2),
           timestamp: toFriendlyTimeFormat(trade.timestamp),
         }))) ||
