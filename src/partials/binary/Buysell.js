@@ -5,9 +5,9 @@ import "react-tabs/style/react-tabs.css";
 import { useWeb3React } from "@web3-react/core";
 
 import Box from "@mui/material/Box";
-import OutlinedInput from '@mui/material/OutlinedInput';
-import InputAdornment from '@mui/material/InputAdornment';
-import IconButton from '@mui/material/IconButton';
+import OutlinedInput from "@mui/material/OutlinedInput";
+import InputAdornment from "@mui/material/InputAdornment";
+import IconButton from "@mui/material/IconButton";
 import Button from "@mui/material/Button";
 import Skeleton from "@mui/material/Skeleton";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -44,19 +44,32 @@ const Buysell = ({
   const { account } = useWeb3React();
 
   const averagePrice = useMemo(() => {
-    if (!long || !short || !balances) return '0.00';
+    if (!long || !short || !balances) return "0.00";
 
-    return (((new BigNumber(long).multipliedBy(balances[0])).plus((new BigNumber(short).multipliedBy(balances[1])))).dividedBy(balances[0].plus(balances[1]))).toFixed(4);
+    return new BigNumber(long)
+      .multipliedBy(balances[0])
+      .plus(new BigNumber(short).multipliedBy(balances[1]))
+      .dividedBy(balances[0].plus(balances[1]))
+      .toFixed(4);
   }, [balances, long, short]);
 
   const receivePrice = useMemo(() => {
-    if (!long || !short || !balances) return '0.00';
+    if (!long || !short || !balances) return "0.00";
 
-    return new BigNumber(long).multipliedBy(balances[0]).plus(new BigNumber(short).multipliedBy(balances[1])).toFixed(4);
+    return new BigNumber(long)
+      .multipliedBy(balances[0])
+      .plus(new BigNumber(short).multipliedBy(balances[1]))
+      .toFixed(4);
   }, [balances, long, short]);
 
   const isDisabled = (value, limit) => {
-    return new BigNumber(value).isZero() || new BigNumber(value).isGreaterThan(limit) || !MarketContract || !DerivedTokenContract || pendingTransaction;
+    return (
+      new BigNumber(value).isZero() ||
+      new BigNumber(value).isGreaterThan(limit) ||
+      !MarketContract ||
+      !DerivedTokenContract ||
+      pendingTransaction
+    );
   };
 
   const handleSelect = (index) => {
@@ -67,7 +80,7 @@ const Buysell = ({
     event.preventDefault();
 
     const floatRegExp = new RegExp(
-      /(^(?=.+)(?:[1-9]\d*|0)?(?:\.\d+)?$)|(^\d\.$)/
+      /(^(?=.+)(?:[1-9]\d*|0)?(?:\.\d{1,18})?$)|(^\d+?\.$)|(^\+?(?!0\d+)$|(^$)|(^\.$))/
     );
     if (
       floatRegExp.test(event.target.value.toString()) ||
@@ -200,8 +213,9 @@ const Buysell = ({
           <div className="px-4">
             <div className="flex items-center justify-between">
               <div
-                className={`${slotIndex === 0 ? "bg-green-500" : "bg-gray-500"
-                  } px-4 py-2 text-white rounded-lg cursor-pointer`}
+                className={`${
+                  slotIndex === 0 ? "bg-green-500" : "bg-gray-500"
+                } px-4 py-2 text-white rounded-lg cursor-pointer`}
                 onClick={() => setSlotIndex(0)}
               >
                 <p className="flex">
@@ -216,8 +230,9 @@ const Buysell = ({
                 </p>
               </div>
               <div
-                className={`${slotIndex === 1 ? "bg-red-500" : "bg-gray-500"
-                  } px-4 py-2 text-white rounded-lg cursor-pointer`}
+                className={`${
+                  slotIndex === 1 ? "bg-red-500" : "bg-gray-500"
+                } px-4 py-2 text-white rounded-lg cursor-pointer`}
                 onClick={() => setSlotIndex(1)}
               >
                 <p className="flex">
@@ -251,7 +266,12 @@ const Buysell = ({
                   }}
                   endAdornment={
                     <InputAdornment position="end">
-                      <IconButton style={{ fontSize: '14px' }} onClick={handleBuyMax}>MAX</IconButton>
+                      <IconButton
+                        style={{ fontSize: "14px" }}
+                        onClick={handleBuyMax}
+                      >
+                        MAX
+                      </IconButton>
                     </InputAdornment>
                   }
                 />
@@ -333,8 +353,9 @@ const Buysell = ({
           <div className="px-4">
             <div className="flex items-center justify-between">
               <div
-                className={`${slotIndex === 0 ? "bg-green-500" : "bg-gray-500"
-                  } px-4 py-2 text-white rounded-lg cursor-pointer`}
+                className={`${
+                  slotIndex === 0 ? "bg-green-500" : "bg-gray-500"
+                } px-4 py-2 text-white rounded-lg cursor-pointer`}
                 onClick={() => setSlotIndex(0)}
               >
                 <p className="flex">
@@ -349,8 +370,9 @@ const Buysell = ({
                 </p>
               </div>
               <div
-                className={`${slotIndex === 1 ? "bg-red-500" : "bg-gray-500"
-                  } px-4 py-2 text-white rounded-lg cursor-pointer`}
+                className={`${
+                  slotIndex === 1 ? "bg-red-500" : "bg-gray-500"
+                } px-4 py-2 text-white rounded-lg cursor-pointer`}
                 onClick={() => setSlotIndex(1)}
               >
                 <p className="flex">
@@ -384,7 +406,12 @@ const Buysell = ({
                   }}
                   endAdornment={
                     <InputAdornment position="end">
-                      <IconButton style={{ fontSize: '14px' }} onClick={handleSellMax}>MAX</IconButton>
+                      <IconButton
+                        style={{ fontSize: "14px" }}
+                        onClick={handleSellMax}
+                      >
+                        MAX
+                      </IconButton>
                     </InputAdornment>
                   }
                 />

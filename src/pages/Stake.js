@@ -29,14 +29,14 @@ function Stake() {
               </div>
             </div>
           </div>
-          <div className="grid md:grid-rows-2 grid-rows-3 grid-flow-col gap-1 overflow-x-auto md:overflow-x-hidden">
-            <div className="px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl bg-secondary pt-0 rounded-lg mx-2">
+          <div className="grid md:grid-rows-2 grid-rows-3 grid-flow-col gap-1 overflow-x-auto md:overflow-x-hidden px-4">
+            <div className="sm:px-6 lg:px-8 py-8 w-full max-w-9xl bg-secondary pt-0 rounded-lg mx-2">
               <Withdrawtabs />
             </div>
-            <div className="px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl bg-secondary pt-0 rounded-lg mx-2">
+            <div className="sm:px-6 lg:px-8 py-8 w-full max-w-9xl bg-secondary pt-0 rounded-lg mx-2">
               <Stakedtabs />
             </div>
-            <div className="px-4 sm:px-6 lg:px-8 py-8 md:w-full max-w-9xl bg-secondary pt-0 w-4/12 rounded-lg mx-2">
+            <div className="sm:px-6 lg:px-8 py-8 md:w-full max-w-9xl bg-secondary pt-0 w-4/12 rounded-lg mx-2">
               <Rewards />
             </div>
           </div>
