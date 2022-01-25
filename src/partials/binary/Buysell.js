@@ -125,7 +125,7 @@ const Buysell = ({
         );
         await tx.wait();
 
-        await onUpdatePrice(tx, "BUY", new Date().getTime());
+        await onUpdatePrice(tx, "BUY", new Date().getTime(), order.toFixed(), slotIndex);
       }
 
       setBuyAmount(0);
@@ -153,7 +153,7 @@ const Buysell = ({
         );
         await tx.wait();
 
-        await onUpdatePrice(tx, "SELL", new Date().getTime());
+        await onUpdatePrice(tx, "SELL", new Date().getTime(), order.toFixed(), slotIndex);
       }
 
       setSellAmount(0);
@@ -213,9 +213,8 @@ const Buysell = ({
           <div className="px-4">
             <div className="flex items-center justify-between">
               <div
-                className={`${
-                  slotIndex === 0 ? "bg-green-500" : "bg-gray-500"
-                } px-4 py-2 text-white rounded-lg cursor-pointer`}
+                className={`${slotIndex === 0 ? "bg-green-500" : "bg-gray-500"
+                  } px-4 py-2 text-white rounded-lg cursor-pointer`}
                 onClick={() => setSlotIndex(0)}
               >
                 <p className="flex">
@@ -230,9 +229,8 @@ const Buysell = ({
                 </p>
               </div>
               <div
-                className={`${
-                  slotIndex === 1 ? "bg-red-500" : "bg-gray-500"
-                } px-4 py-2 text-white rounded-lg cursor-pointer`}
+                className={`${slotIndex === 1 ? "bg-red-500" : "bg-gray-500"
+                  } px-4 py-2 text-white rounded-lg cursor-pointer`}
                 onClick={() => setSlotIndex(1)}
               >
                 <p className="flex">
@@ -353,9 +351,8 @@ const Buysell = ({
           <div className="px-4">
             <div className="flex items-center justify-between">
               <div
-                className={`${
-                  slotIndex === 0 ? "bg-green-500" : "bg-gray-500"
-                } px-4 py-2 text-white rounded-lg cursor-pointer`}
+                className={`${slotIndex === 0 ? "bg-green-500" : "bg-gray-500"
+                  } px-4 py-2 text-white rounded-lg cursor-pointer`}
                 onClick={() => setSlotIndex(0)}
               >
                 <p className="flex">
@@ -370,9 +367,8 @@ const Buysell = ({
                 </p>
               </div>
               <div
-                className={`${
-                  slotIndex === 1 ? "bg-red-500" : "bg-gray-500"
-                } px-4 py-2 text-white rounded-lg cursor-pointer`}
+                className={`${slotIndex === 1 ? "bg-red-500" : "bg-gray-500"
+                  } px-4 py-2 text-white rounded-lg cursor-pointer`}
                 onClick={() => setSlotIndex(1)}
               >
                 <p className="flex">

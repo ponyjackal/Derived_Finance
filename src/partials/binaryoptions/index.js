@@ -108,7 +108,7 @@ const BinaryInside = () => {
     setLoadingPrice(false);
   };
 
-  const handleUpdatePrice = async (tx, status, timestamp) => {
+  const handleUpdatePrice = async (tx, status, timestamp, amount, slotIndex) => {
     setLoading(true);
     setLoadingPrice(true);
 
@@ -124,17 +124,19 @@ const BinaryInside = () => {
     }));
 
     setTrades(val => [
-      ...val,
       {
+        amount,
         status,
         timestamp,
         transaction: tx.hash,
         trader: tx.from,
+        answer: slotIndex === 0 ? 'LONG' : 'SHORT',
         long: new BigNumber(data[0].toString()).toFixed(),
         short: new BigNumber(data[1].toString()).toFixed(),
         prevLong: val.length === 0 ? "500000000000000000" : val[val.length - 1].long,
         prevShort: val.length === 0 ? "500000000000000000" : val[val.length - 1].short,
       },
+      ...val,
     ]);
     setPrices(val => [
       ...val,
