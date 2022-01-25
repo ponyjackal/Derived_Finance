@@ -14,7 +14,7 @@ import BigNumber from "bignumber.js";
 
 import { useChain } from "../../context/chain";
 import { useFinance } from "../../context/finance";
-import { toShort18, toLong18 } from "../../utils/Contract";
+import { toShort18, toLong18, stringToHex } from "../../utils/Contract";
 
 const Withdrawtabs = () => {
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -24,7 +24,7 @@ const Withdrawtabs = () => {
   const [withdrawAmount, setWithdrawAmount] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const { DVDXContract, USDXContract, DepotContract } = useChain();
+  const { DVDXContract, DepotContract } = useChain();
   const { balances, loadingBalances } = useFinance();
 
   const amount = useMemo(() => {
@@ -50,7 +50,7 @@ const Withdrawtabs = () => {
 
   const checkValidation = (value) => {
     const floatRegExp = new RegExp(
-      /(^(?=.+)(?:[1-9]\d*|0)?(?:\.\d+)?$)|(^\d\.$)/
+      /(^(?=.+)(?:[1-9]\d*|0)?(?:\.\d{1,18})?$)|(^\d+?\.$)|(^\+?(?!0\d+)$|(^$)|(^\.$))/
     );
 
     return floatRegExp.test(value.toString()) || value === "";
@@ -116,7 +116,7 @@ const Withdrawtabs = () => {
 
     try {
       const mAmount = toLong18(mintAmount);
-      await DVDXContract.issueSynths(USDXContract.address, mAmount.toString());
+      await DVDXContract.issueSynths(stringToHex("dvdx", 4), mAmount.toFixed());
     } catch (error) {
       console.error("DVDX Mint Error: ", error.message);
     }
@@ -128,10 +128,10 @@ const Withdrawtabs = () => {
     setLoading(true);
 
     try {
-      const mAmount = toLong18(mintAmount);
-      await DVDXContract.burnSynths(USDXContract.address, mAmount.toString());
+      const mAmount = toLong18(burnAmount);
+      await DVDXContract.burnSynths(stringToHex("usdx", 4), mAmount.toFixed());
     } catch (error) {
-      console.error("DVDX Mint Error: ", error.message);
+      console.error("USDX Burn Error: ", error.message);
     }
 
     setLoading(false);
@@ -142,9 +142,9 @@ const Withdrawtabs = () => {
 
     try {
       const mAmount = toLong18(depositAmount);
-      await DepotContract.depositSynths(mAmount.toString());
+      await DepotContract.depositSynths(mAmount.toFixed());
     } catch (error) {
-      console.error("DVDX Mint Error: ", error.message);
+      console.error("USDX Deposit Error: ", error.message);
     }
 
     setLoading(false);
@@ -154,10 +154,10 @@ const Withdrawtabs = () => {
     setLoading(true);
 
     try {
-      const mAmount = toLong18(depositAmount);
-      await DepotContract.withdrawSynthetix(mAmount.toString());
+      const mAmount = toLong18(withdrawAmount);
+      await DepotContract.withdrawSynthetix(mAmount.toFixed());
     } catch (error) {
-      console.error("DVDX Mint Error: ", error.message);
+      console.error("DVDX Withdraw Error: ", error.message);
     }
 
     setLoading(false);
