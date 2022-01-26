@@ -33,12 +33,9 @@ function Trade() {
                 Transaction History
               </h1>
               <div className="flex bg-secondary p-3 flex-col">
-                <h1 className=" text-white text-2xl font-bold">
+                <h1 className="text-white text-2xl font-bold mb-4">
                   Recent Trading
                 </h1>
-                <p className=" text-gray-600 text-md">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                </p>
                 <TransactionTable />
               </div>
             </div>

@@ -26,6 +26,7 @@ export class TradeBox extends Component {
   handleChange = (event) => {
     this.setState({ age: event.target.value });
   };
+
   handleChange1 = (event) => {
     this.setState({ age1: event.target.value });
   };
@@ -38,6 +39,7 @@ export class TradeBox extends Component {
       });
     }, 500);
   };
+
   render() {
     return (
       <div className="row col-span-full sm:col-span-6  bg-secondary rounded-md ">

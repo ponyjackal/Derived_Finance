@@ -145,6 +145,7 @@ export class Transactiontable extends Component {
         accessor: "value",
       },
     ];
+
     return (
       <div>
         <ReactTable
