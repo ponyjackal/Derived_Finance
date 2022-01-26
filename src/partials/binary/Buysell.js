@@ -113,14 +113,14 @@ const Buysell = ({
         if (allowanceBN.lt(order)) {
           const tx = await DerivedTokenContract.approve(
             MarketContract.address,
-            order.toString()
+            order.toFixed()
           );
           await tx.wait();
         }
 
         const tx = await MarketContract.buy(
           questionId,
-          order.toString(),
+          order.toFixed(),
           slotIndex
         );
         await tx.wait();
@@ -148,7 +148,7 @@ const Buysell = ({
 
         const tx = await MarketContract.sell(
           questionId,
-          order.toString(),
+          order.toFixed(),
           slotIndex
         );
         await tx.wait();
