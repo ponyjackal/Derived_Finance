@@ -25,9 +25,9 @@ const Withdrawtabs = () => {
   const [loading, setLoading] = useState(false);
 
   const { DVDXContract, DepotContract } = useChain();
-  const { balances, loadingBalances } = useFinance();
+  const { balances, debts, loadingBalances } = useFinance();
 
-  const amount = useMemo(() => {
+  const strBalances = useMemo(() => {
     if (!balances)
       return {
         dvdx: new BigNumber(0).toFixed(4),
@@ -39,6 +39,17 @@ const Withdrawtabs = () => {
       usdx: toShort18(balances.usdx).toFixed(4),
     };
   }, [balances]);
+
+  const availableDVDX = useMemo(() => {
+    if (!balances || !balances.dvdx || !debts) return "0.0000";
+
+    const debt = Object.keys(debts).reduce(
+      (value, token) => value.plus(debts[token]),
+      new BigNumber(0)
+    );
+
+    return toShort18(balances.dvdx.minus(debt).toFixed()).toFixed(4);
+  }, [balances, debts]);
 
   const isDisabled = (value, limit) => {
     return (
@@ -61,20 +72,20 @@ const Withdrawtabs = () => {
   };
 
   // Handle Max Button Actions
-  const handleDVDXMax = () => {
-    setMintAmount(amount.dvdx);
+  const handleMintMax = () => {
+    setMintAmount(availableDVDX);
   };
 
   const handleBurnMax = () => {
-    setBurnAmount(amount.usdx);
+    setBurnAmount(strBalances.usdx);
   };
 
   const handleDepositMax = () => {
-    setDepositAmount(amount.usdx);
+    setDepositAmount(strBalances.usdx);
   };
 
   const handleWithdrawMax = () => {
-    setWithdrawAmount(amount.dvdx);
+    setWithdrawAmount(strBalances.dvdx);
   };
 
   // Text Input change handlers
@@ -116,9 +127,9 @@ const Withdrawtabs = () => {
 
     try {
       const mAmount = toLong18(mintAmount);
-      await DVDXContract.issueSynths(stringToHex("dvdx", 4), mAmount.toFixed());
+      await DVDXContract.issueSynths(stringToHex("USDx", 4), mAmount.toFixed());
     } catch (error) {
-      console.error("DVDX Mint Error: ", error.message);
+      console.error("USDx Mint Error: ", error.message);
     }
 
     setLoading(false);
@@ -129,9 +140,9 @@ const Withdrawtabs = () => {
 
     try {
       const mAmount = toLong18(burnAmount);
-      await DVDXContract.burnSynths(stringToHex("usdx", 4), mAmount.toFixed());
+      await DVDXContract.burnSynths(stringToHex("USDx", 4), mAmount.toFixed());
     } catch (error) {
-      console.error("USDX Burn Error: ", error.message);
+      console.error("USDx Burn Error: ", error.message);
     }
 
     setLoading(false);
@@ -232,7 +243,7 @@ const Withdrawtabs = () => {
               {loadingBalances ? (
                 <Skeleton width={100} height={50} />
               ) : (
-                `${amount.usdx} USDx`
+                `${strBalances.usdx} USDx`
               )}
             </h1>
           </div>
@@ -246,7 +257,7 @@ const Withdrawtabs = () => {
               margin: "20px 9px",
               fontSize: "20px",
             }}
-            disabled={isDisabled(depositAmount || "0", amount.usdx)}
+            disabled={isDisabled(depositAmount || "0", strBalances.usdx)}
             onClick={handleDeposit}
           >
             Deposit
@@ -265,7 +276,7 @@ const Withdrawtabs = () => {
               fontSize: "10px",
               marginRight: "25%",
             }}
-            onClick={handleDVDXMax}
+            onClick={handleMintMax}
           >
             Max Amount
           </Button>
@@ -314,7 +325,7 @@ const Withdrawtabs = () => {
               {loadingBalances ? (
                 <Skeleton width={100} height={50} />
               ) : (
-                `${amount.dvdx} DVDX`
+                `${availableDVDX} DVDX`
               )}
             </h1>
           </div>
@@ -328,7 +339,7 @@ const Withdrawtabs = () => {
               margin: "20px 9px",
               fontSize: "20px",
             }}
-            disabled={isDisabled(mintAmount || "0", amount.dvdx)}
+            disabled={isDisabled(mintAmount || "0", availableDVDX)}
             onClick={handleMint}
           >
             Mint
@@ -396,7 +407,7 @@ const Withdrawtabs = () => {
               {loadingBalances ? (
                 <Skeleton width={100} height={50} />
               ) : (
-                `${amount.dvdx} DVDX`
+                `${strBalances.dvdx} DVDX`
               )}
             </h1>
           </div>
@@ -410,7 +421,7 @@ const Withdrawtabs = () => {
               margin: "20px 9px",
               fontSize: "20px",
             }}
-            disabled={isDisabled(withdrawAmount || "0", amount.dvdx)}
+            disabled={isDisabled(withdrawAmount || "0", strBalances.dvdx)}
             onClick={handleWithdraw}
           >
             Withdraw
@@ -478,7 +489,7 @@ const Withdrawtabs = () => {
               {loadingBalances ? (
                 <Skeleton width={100} height={50} />
               ) : (
-                `${amount.usdx} USDx`
+                `${strBalances.usdx} USDx`
               )}
             </h1>
           </div>
@@ -492,7 +503,7 @@ const Withdrawtabs = () => {
               margin: "20px 9px",
               fontSize: "20px",
             }}
-            disabled={isDisabled(burnAmount || "0", amount.usdx)}
+            disabled={isDisabled(burnAmount || "0", strBalances.usdx)}
             onClick={handleBurn}
           >
             Burn

@@ -8,8 +8,8 @@ import { useFinance } from "../../context/finance";
 import { toShort18 } from "../../utils/Contract";
 
 const Valueblocks = () => {
-  const { balances, loadingBalances } = useFinance();
-  const amount = useMemo(() => {
+  const { balances, debts, loadingBalances } = useFinance();
+  const strBalances = useMemo(() => {
     if (!balances)
       return {
         usdx: new BigNumber(0).toFixed(5),
@@ -19,6 +19,17 @@ const Valueblocks = () => {
       usdx: toShort18(balances.usdx).toFixed(5),
     };
   }, [balances]);
+
+  const strDebts = useMemo(() => {
+    if (!debts)
+      return {
+        usdx: new BigNumber(0).toFixed(5),
+      };
+
+    return {
+      usdx: toShort18(debts.usdx).toFixed(5),
+    };
+  }, [debts]);
 
   return (
     <div className="w-full">
@@ -68,7 +79,7 @@ const Valueblocks = () => {
                   <Skeleton width={100} height={50} />
                 ) : (
                   <>
-                    0.00000 <AttachMoneyOutlinedIcon />
+                    {strDebts.usdx} <AttachMoneyOutlinedIcon />
                   </>
                 )}
               </p>
@@ -96,7 +107,7 @@ const Valueblocks = () => {
                 <Skeleton width={100} height={50} />
               ) : (
                 <>
-                  {amount.usdx} <AttachMoneyOutlinedIcon />
+                  {strBalances.usdx} <AttachMoneyOutlinedIcon />
                 </>
               )}
             </p>
