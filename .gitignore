@@ -1,6 +1,9 @@
 node_modules
 
 .env
+.env.development
+.env.local
+
 .vscode
 coverage
 coverage.json

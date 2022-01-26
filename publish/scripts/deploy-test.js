@@ -6,13 +6,15 @@
 const hre = require("hardhat");
 const w3utils = require("web3-utils");
 const ethers = require("ethers");
-require("dotenv").config();
+require("dotenv").config({ path: `.env.${process.env.NODE_ENV}` });
 
 const {
   CHAINLINK,
   ZERO_ADDRESS,
   SYNTHETIX_TOTAL_SUPPLY,
 } = require("../../utils");
+
+console.log("env", process.env.NODE_ENV);
 
 async function main() {
   // Hardhat always runs the compile task when running scripts with its command
@@ -21,6 +23,7 @@ async function main() {
   // If this script is run directly using `node` you may want to call compile
   // manually to make sure everything is compiled
   // await hre.run('compile');
+
   console.log(
     ethers.utils.hexZeroPad(
       ethers.utils.hexlify(ethers.utils.toUtf8Bytes("DVDX")),
@@ -31,6 +34,28 @@ async function main() {
       4
     )
   );
+
+  // ----------------
+  // Safe Decimal Math library
+  // ----------------
+  const SafeDecimalMath = await hre.ethers.getContractFactory(
+    "SafeDecimalMath"
+  );
+  const safeDecimalMath = await SafeDecimalMath.attach(
+    "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512"
+  );
+
+  // Synthetix Contract
+  const Synthetix = await hre.ethers.getContractFactory("Synthetix", {
+    libraries: {
+      SafeDecimalMath: safeDecimalMath.address,
+    },
+  });
+  const synthetix = await Synthetix.attach(
+    "0xc6e7DF5E7b4f2A278906862b61205850344D4e7d" // The deployed contract address
+  );
+
+  await synthetix.issueSynths("0x44564458", 100000);
 }
 
 // We recommend this pattern to be able to use async/await everywhere
