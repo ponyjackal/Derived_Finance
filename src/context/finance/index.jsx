@@ -16,6 +16,7 @@ export const FinanceProvider = ({ children }) => {
   const [loadingBalances, setLoadingBalances] = useState(false);
   const [balances, setBalances] = useState({});
   const [debts, setDebts] = useState({});
+  const [issuables, setIssuables] = useState({});
 
   const fetchBalances = async () => {
     setLoadingBalances(true);
@@ -23,6 +24,10 @@ export const FinanceProvider = ({ children }) => {
     const usdx = await USDXContract.balanceOf(account);
     const dvdx = await DVDXContract.balanceOf(account);
     const usdxDebts = await DVDXContract.debtBalanceOf(
+      account,
+      stringToHex("USDx")
+    );
+    const usdxIssuables = await DVDXContract.remainingIssuableSynths(
       account,
       stringToHex("USDx")
     );
@@ -34,6 +39,10 @@ export const FinanceProvider = ({ children }) => {
 
     setDebts({
       usdx: new BigNumber(usdxDebts.toString()),
+    });
+
+    setIssuables({
+      usdx: new BigNumber(usdxIssuables.toString()),
     });
 
     setLoadingBalances(false);
@@ -61,6 +70,7 @@ export const FinanceProvider = ({ children }) => {
         loadingBalances,
         balances,
         debts,
+        issuables,
       }}
     >
       {children}

@@ -3,12 +3,12 @@ import { Tabs, TabList, Tab, TabPanel } from "react-tabs";
 import "react-tabs/style/react-tabs.css";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import Select from "@mui/material/Select";
+// import MenuItem from "@mui/material/MenuItem";
+// import FormControl from "@mui/material/FormControl";
+// import Select from "@mui/material/Select";
 import Button from "@mui/material/Button";
-import InputLabel from "@mui/material/InputLabel";
-import MonetizationOnOutlinedIcon from "@mui/icons-material/MonetizationOnOutlined";
+// import InputLabel from "@mui/material/InputLabel";
+// import MonetizationOnOutlinedIcon from "@mui/icons-material/MonetizationOnOutlined";
 import Skeleton from "@mui/material/Skeleton";
 import BigNumber from "bignumber.js";
 
@@ -20,12 +20,15 @@ const Withdrawtabs = () => {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [mintAmount, setMintAmount] = useState("");
   const [burnAmount, setBurnAmount] = useState("");
-  const [depositAmount, setDepositAmount] = useState("");
-  const [withdrawAmount, setWithdrawAmount] = useState("");
+  // const [depositAmount, setDepositAmount] = useState("");
+  // const [withdrawAmount, setWithdrawAmount] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const { DVDXContract, DepotContract } = useChain();
-  const { balances, debts, loadingBalances } = useFinance();
+  const {
+    DVDXContract,
+    // DepotContract,
+  } = useChain();
+  const { balances, issuables, loadingBalances } = useFinance();
 
   const strBalances = useMemo(() => {
     if (!balances)
@@ -41,15 +44,10 @@ const Withdrawtabs = () => {
   }, [balances]);
 
   const availableDVDX = useMemo(() => {
-    if (!balances || !balances.dvdx || !debts) return "0.0000";
+    if (!issuables || !issuables.usdx) return "0.0000";
 
-    const debt = Object.keys(debts).reduce(
-      (value, token) => value.plus(debts[token]),
-      new BigNumber(0)
-    );
-
-    return toShort18(balances.dvdx.minus(debt).toFixed()).toFixed(4);
-  }, [balances, debts]);
+    return toShort18(issuables.usdx.toFixed()).toFixed(4);
+  }, [issuables]);
 
   const isDisabled = (value, limit) => {
     return (
@@ -80,13 +78,13 @@ const Withdrawtabs = () => {
     setBurnAmount(strBalances.usdx);
   };
 
-  const handleDepositMax = () => {
-    setDepositAmount(strBalances.usdx);
-  };
+  // const handleDepositMax = () => {
+  //   setDepositAmount(strBalances.usdx);
+  // };
 
-  const handleWithdrawMax = () => {
-    setWithdrawAmount(strBalances.dvdx);
-  };
+  // const handleWithdrawMax = () => {
+  //   setWithdrawAmount(strBalances.dvdx);
+  // };
 
   // Text Input change handlers
   const handleChangeMintAmount = (event) => {
@@ -105,21 +103,21 @@ const Withdrawtabs = () => {
     }
   };
 
-  const handleChangeDepositAmount = (event) => {
-    event.preventDefault();
+  // const handleChangeDepositAmount = (event) => {
+  //   event.preventDefault();
 
-    if (checkValidation(event.target.value)) {
-      setDepositAmount(event.target.value);
-    }
-  };
+  //   if (checkValidation(event.target.value)) {
+  //     setDepositAmount(event.target.value);
+  //   }
+  // };
 
-  const handleChangeWithdrawAmount = (event) => {
-    event.preventDefault();
+  // const handleChangeWithdrawAmount = (event) => {
+  //   event.preventDefault();
 
-    if (checkValidation(event.target.value)) {
-      setWithdrawAmount(event.target.value);
-    }
-  };
+  //   if (checkValidation(event.target.value)) {
+  //     setWithdrawAmount(event.target.value);
+  //   }
+  // };
 
   // Handle Operation Button Actions
   const handleMint = async () => {
@@ -148,41 +146,41 @@ const Withdrawtabs = () => {
     setLoading(false);
   };
 
-  const handleDeposit = async () => {
-    setLoading(true);
+  // const handleDeposit = async () => {
+  //   setLoading(true);
 
-    try {
-      const mAmount = toLong18(depositAmount);
-      await DepotContract.depositSynths(mAmount.toFixed());
-    } catch (error) {
-      console.error("USDX Deposit Error: ", error.message);
-    }
+  //   try {
+  //     const mAmount = toLong18(depositAmount);
+  //     await DepotContract.depositSynths(mAmount.toFixed());
+  //   } catch (error) {
+  //     console.error("USDX Deposit Error: ", error.message);
+  //   }
 
-    setLoading(false);
-  };
+  //   setLoading(false);
+  // };
 
-  const handleWithdraw = async () => {
-    setLoading(true);
+  // const handleWithdraw = async () => {
+  //   setLoading(true);
 
-    try {
-      const mAmount = toLong18(withdrawAmount);
-      await DepotContract.withdrawSynthetix(mAmount.toFixed());
-    } catch (error) {
-      console.error("DVDX Withdraw Error: ", error.message);
-    }
+  //   try {
+  //     const mAmount = toLong18(withdrawAmount);
+  //     await DepotContract.withdrawSynthetix(mAmount.toFixed());
+  //   } catch (error) {
+  //     console.error("DVDX Withdraw Error: ", error.message);
+  //   }
 
-    setLoading(false);
-  };
+  //   setLoading(false);
+  // };
 
   return (
     <Tabs selectedIndex={selectedIndex} onSelect={handleSelect}>
       <TabList style={{ width: "93%" }}>
-        <Tab>Deposit</Tab>
+        {/* <Tab>Deposit</Tab> */}
         <Tab>Mint</Tab>
-        <Tab>Withdraw</Tab>
+        {/* <Tab>Withdraw</Tab> */}
         <Tab>Burn</Tab>
       </TabList>
-      <TabPanel>
+      {/* <TabPanel>
         <div className="flex items-center justify-between">
           <h1 className="text-white text-2xl font-bold p-3">Amount</h1>
           <Button
@@ -263,7 +261,7 @@ const Withdrawtabs = () => {
             Deposit
           </Button>
         </div>
-      </TabPanel>
+      </TabPanel> */}
       <TabPanel>
         <div className="flex items-center justify-between">
           <h1 className="text-white text-2xl font-bold p-3">Amount</h1>
@@ -300,7 +298,7 @@ const Withdrawtabs = () => {
               onChange={handleChangeMintAmount}
             />
           </Box>
-          <Box className="w-full m-2 bg-primary rounded-sm">
+          {/* <Box className="w-full m-2 bg-primary rounded-sm">
             <FormControl fullWidth style={{ width: "96%", margin: "8px" }}>
               <InputLabel id="demo-simple-select-label">DVDX</InputLabel>
               <Select
@@ -312,7 +310,7 @@ const Withdrawtabs = () => {
                 </MenuItem>
               </Select>
             </FormControl>
-          </Box>
+          </Box> */}
           <hr
             className="w-px bg-gray-200 mx-3 mt-0.5 hidden md:block"
             style={{ height: "85px" }}
@@ -346,7 +344,7 @@ const Withdrawtabs = () => {
           </Button>
         </div>
       </TabPanel>
-      <TabPanel>
+      {/* <TabPanel>
         <div className="flex items-center justify-between">
           <h1 className="text-white text-2xl font-bold p-3">Amount</h1>
           <Button
@@ -427,7 +425,7 @@ const Withdrawtabs = () => {
             Withdraw
           </Button>
         </div>
-      </TabPanel>
+      </TabPanel> */}
       <TabPanel>
         <div className="flex items-center justify-between">
           <h1 className="text-white text-2xl font-bold p-3">Amount</h1>
@@ -464,7 +462,7 @@ const Withdrawtabs = () => {
               onChange={handleChangeBurnAmount}
             />
           </Box>
-          <Box className="w-full m-2 bg-primary rounded-sm">
+          {/* <Box className="w-full m-2 bg-primary rounded-sm">
             <FormControl fullWidth style={{ width: "96%", margin: "8px" }}>
               <InputLabel id="demo-simple-select-label">USDx</InputLabel>
               <Select
@@ -476,7 +474,7 @@ const Withdrawtabs = () => {
                 </MenuItem>
               </Select>
             </FormControl>
-          </Box>
+          </Box> */}
           <hr
             className="w-px bg-gray-200 mx-3 mt-0.5 hidden md:block"
             style={{ height: "85px" }}
