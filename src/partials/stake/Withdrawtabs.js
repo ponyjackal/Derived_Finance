@@ -28,7 +28,7 @@ const Withdrawtabs = () => {
     DVDXContract,
     // DepotContract,
   } = useChain();
-  const { balances, debts, loadingBalances } = useFinance();
+  const { balances, issuables, loadingBalances } = useFinance();
 
   const strBalances = useMemo(() => {
     if (!balances)
@@ -44,15 +44,10 @@ const Withdrawtabs = () => {
   }, [balances]);
 
   const availableDVDX = useMemo(() => {
-    if (!balances || !balances.dvdx || !debts) return "0.0000";
+    if (!issuables || !issuables.usdx) return "0.0000";
 
-    const debt = Object.keys(debts).reduce(
-      (value, token) => value.plus(debts[token]),
-      new BigNumber(0)
-    );
-
-    return toShort18(balances.dvdx.minus(debt).toFixed()).toFixed(4);
-  }, [balances, debts]);
+    return toShort18(issuables.usdx.toFixed()).toFixed(4);
+  }, [issuables]);
 
   const isDisabled = (value, limit) => {
     return (
