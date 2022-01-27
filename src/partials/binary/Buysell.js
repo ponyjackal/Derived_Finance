@@ -265,7 +265,7 @@ const Buysell = ({
                   endAdornment={
                     <InputAdornment position="end">
                       <IconButton
-                        style={{ fontSize: "14px" }}
+                        style={{ fontSize: "14px", color: 'white' }}
                         onClick={handleBuyMax}
                       >
                         MAX
@@ -403,7 +403,7 @@ const Buysell = ({
                   endAdornment={
                     <InputAdornment position="end">
                       <IconButton
-                        style={{ fontSize: "14px" }}
+                        style={{ fontSize: "14px", color: 'white' }}
                         onClick={handleSellMax}
                       >
                         MAX

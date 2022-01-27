@@ -4,24 +4,32 @@ import CircularProgress from "@mui/material/CircularProgress";
 import { BigNumber } from "bignumber.js";
 
 import { useChain } from "../../context/chain";
+import { toShort18 } from "../../utils/Contract";
 
-const ExpiredTab = ({ questionId, answer, balances }) => {
+const answers = {
+  LONG: "YES",
+  SHORT: "NO",
+};
+
+const mapAnswers = {
+  LONG: 0,
+  SHORT: 1,
+};
+
+const ExpiredTab = ({ questionId, long, short, answer, balances }) => {
   const [pendingTransaction, setPendingTransaction] = useState(false);
   const { MarketContract } = useChain();
 
-  const answers = {
-    LONG: "YES",
-    SHORT: "NO",
-  };
+  const isDisabled = useMemo(() => balances[mapAnswers[answer]].isEqualTo(new BigNumber(0)), [answer, balances]);
 
-  const isDisabled = useMemo(() => {
-    const mapAnswers = {
-      LONG: 0,
-      SHORT: 1,
+  const reward = useMemo(() => {
+    const mapPrices = {
+      LONG: long,
+      SHORT: short,
     };
 
-    return balances[mapAnswers[answer]].isEqualTo(new BigNumber(0));
-  }, [answer, balances]);
+    return toShort18(balances[mapAnswers[answer]].multipliedBy(new BigNumber(mapPrices[answer])).toFixed()).toFixed();
+  }, [balances, answer, long, short]);
 
   const handleClaim = async () => {
     setPendingTransaction(true);
@@ -52,6 +60,10 @@ const ExpiredTab = ({ questionId, answer, balances }) => {
         <div className="flex items-center justify-between px-5 py-1">
           <p className="text-gray-400 text-xs">NO</p>
           <p className="text-white text-xs">{balances[1].toFixed(2)}</p>
+        </div>
+        <div className="flex items-center justify-between px-5 py-1">
+          <p className="text-gray-400 text-xs">Reward</p>
+          <p className="text-white text-xs">{reward} USDx</p>
         </div>
         <div className="pt-4">
           <Button

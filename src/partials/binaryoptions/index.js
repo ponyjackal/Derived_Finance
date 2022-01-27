@@ -17,7 +17,7 @@ import {
 } from "../../services/market";
 
 import { toShort18 } from "../../utils/Contract";
-import { toFriendlyTime, toShortAddress } from "../../utils/Utils";
+import { toFriendlyTimeFormat, toShortAddress } from "../../utils/Utils";
 import { getJsonIpfs } from "../../utils/Ipfs";
 import { useChain } from "../../context/chain";
 
@@ -91,7 +91,7 @@ const BinaryInside = () => {
       setQuestion({
         ...data,
         details,
-        resolveTime: toFriendlyTime(+data.resolveTime || 0),
+        resolveTime: toFriendlyTimeFormat(+data.resolveTime || 0),
         long: long.toFixed(2),
         short: short.toFixed(2),
         liquidity: lpVolume.toFixed(2),
