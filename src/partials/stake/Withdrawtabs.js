@@ -125,7 +125,11 @@ const Withdrawtabs = () => {
 
     try {
       const mAmount = toLong18(mintAmount);
-      await DVDXContract.issueSynths(stringToHex("USDx", 4), mAmount.toFixed());
+      const tx = await DVDXContract.issueSynths(
+        stringToHex("USDx", 4),
+        mAmount.toFixed()
+      );
+      await tx.wait();
 
       await fetchBalances();
     } catch (error) {
@@ -140,7 +144,11 @@ const Withdrawtabs = () => {
 
     try {
       const mAmount = toLong18(burnAmount);
-      await DVDXContract.burnSynths(stringToHex("USDx", 4), mAmount.toFixed());
+      const tx = await DVDXContract.burnSynths(
+        stringToHex("USDx", 4),
+        mAmount.toFixed()
+      );
+      await tx.wait();
 
       await fetchBalances();
     } catch (error) {
