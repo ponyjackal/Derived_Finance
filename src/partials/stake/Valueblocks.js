@@ -61,7 +61,8 @@ const Valueblocks = () => {
                 <Skeleton width={100} height={50} />
               ) : (
                 <>
-                  {stakedDVDX} <AttachMoneyOutlinedIcon />
+                  {stakedDVDX} DVDX
+                  {/* <AttachMoneyOutlinedIcon /> */}
                 </>
               )}
             </p>
