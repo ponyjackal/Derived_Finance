@@ -28,7 +28,7 @@ const Withdrawtabs = () => {
     DVDXContract,
     // DepotContract,
   } = useChain();
-  const { balances, issuables, loadingBalances } = useFinance();
+  const { balances, issuables, loadingBalances, fetchBalances } = useFinance();
 
   const strBalances = useMemo(() => {
     if (!balances)
@@ -125,7 +125,13 @@ const Withdrawtabs = () => {
 
     try {
       const mAmount = toLong18(mintAmount);
-      await DVDXContract.issueSynths(stringToHex("USDx", 4), mAmount.toFixed());
+      const tx = await DVDXContract.issueSynths(
+        stringToHex("USDx", 4),
+        mAmount.toFixed()
+      );
+      await tx.wait();
+
+      await fetchBalances();
     } catch (error) {
       console.error("USDx Mint Error: ", error.message);
     }
@@ -138,7 +144,13 @@ const Withdrawtabs = () => {
 
     try {
       const mAmount = toLong18(burnAmount);
-      await DVDXContract.burnSynths(stringToHex("USDx", 4), mAmount.toFixed());
+      const tx = await DVDXContract.burnSynths(
+        stringToHex("USDx", 4),
+        mAmount.toFixed()
+      );
+      await tx.wait();
+
+      await fetchBalances();
     } catch (error) {
       console.error("USDx Burn Error: ", error.message);
     }
@@ -275,6 +287,7 @@ const Withdrawtabs = () => {
               marginRight: "25%",
             }}
             onClick={handleMintMax}
+            disabled={loading || loadingBalances}
           >
             Max Amount
           </Button>
@@ -323,7 +336,7 @@ const Withdrawtabs = () => {
               {loadingBalances ? (
                 <Skeleton width={100} height={50} />
               ) : (
-                `${availableDVDX} DVDX`
+                `${availableDVDX} USDx`
               )}
             </h1>
           </div>
@@ -337,7 +350,11 @@ const Withdrawtabs = () => {
               margin: "20px 9px",
               fontSize: "20px",
             }}
-            disabled={isDisabled(mintAmount || "0", availableDVDX)}
+            disabled={
+              isDisabled(mintAmount || "0", availableDVDX) ||
+              loading ||
+              loadingBalances
+            }
             onClick={handleMint}
           >
             Mint
@@ -438,6 +455,7 @@ const Withdrawtabs = () => {
               fontSize: "10px",
               marginRight: "25%",
             }}
+            disabled={loading || loadingBalances}
             onClick={handleBurnMax}
           >
             Max Amount
@@ -501,7 +519,11 @@ const Withdrawtabs = () => {
               margin: "20px 9px",
               fontSize: "20px",
             }}
-            disabled={isDisabled(burnAmount || "0", strBalances.usdx)}
+            disabled={
+              isDisabled(burnAmount || "0", strBalances.usdx) ||
+              loading ||
+              loadingBalances
+            }
             onClick={handleBurn}
           >
             Burn
