@@ -17,6 +17,7 @@ export const FinanceProvider = ({ children }) => {
   const [balances, setBalances] = useState({});
   const [debts, setDebts] = useState({});
   const [issuables, setIssuables] = useState({});
+  const [transferableDVDX, setTransferableDVDX] = useState(new BigNumber(0));
 
   const fetchBalances = async () => {
     setLoadingBalances(true);
@@ -31,6 +32,7 @@ export const FinanceProvider = ({ children }) => {
       account,
       stringToHex("USDx")
     );
+    const dvdxTransferable = await DVDXContract.transferableSynthetix(account);
 
     setBalances({
       usdx: new BigNumber(usdx.toString()),
@@ -44,6 +46,8 @@ export const FinanceProvider = ({ children }) => {
     setIssuables({
       usdx: new BigNumber(usdxIssuables.toString()),
     });
+
+    setTransferableDVDX(new BigNumber(dvdxTransferable.toString()));
 
     setLoadingBalances(false);
   };
@@ -60,6 +64,8 @@ export const FinanceProvider = ({ children }) => {
       setDebts({
         usdx: new BigNumber(0),
       });
+
+      setTransferableDVDX(new BigNumber(0));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [USDXContract, DVDXContract, account]);
@@ -71,6 +77,8 @@ export const FinanceProvider = ({ children }) => {
         balances,
         debts,
         issuables,
+        transferableDVDX,
+        fetchBalances,
       }}
     >
       {children}
