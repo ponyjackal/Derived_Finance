@@ -18,7 +18,7 @@ export const contractAddresses = {
     97: "0x28C476B860cD6e81B63cc4F1aFdCD35F3Fd5053a",
   },
   // Fee Pool
-  pool: {
+  feePool: {
     56: "",
     97: "0x941FFDE44F70a96d68086fe9697bfc112f6D711E",
   },

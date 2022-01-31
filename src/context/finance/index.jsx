@@ -10,7 +10,7 @@ export const FinanceContext = createContext({});
 export const useFinance = () => useContext(FinanceContext);
 
 export const FinanceProvider = ({ children }) => {
-  const { USDXContract, DVDXContract } = useChain();
+  const { USDXContract, DVDXContract, FeePoolContract } = useChain();
   const { account } = useWeb3React();
 
   const [loadingBalances, setLoadingBalances] = useState(false);
@@ -18,6 +18,7 @@ export const FinanceProvider = ({ children }) => {
   const [debts, setDebts] = useState({});
   const [issuables, setIssuables] = useState({});
   const [transferableDVDX, setTransferableDVDX] = useState(new BigNumber(0));
+  const [rewards, setRewards] = useState({});
 
   const fetchBalances = async () => {
     setLoadingBalances(true);
@@ -33,6 +34,10 @@ export const FinanceProvider = ({ children }) => {
       stringToHex("USDx")
     );
     const dvdxTransferable = await DVDXContract.transferableSynthetix(account);
+    const feeRewards = await FeePoolContract.feesAvailable(
+      account,
+      stringToHex("DVDX")
+    );
 
     setBalances({
       usdx: new BigNumber(usdx.toString()),
@@ -49,11 +54,16 @@ export const FinanceProvider = ({ children }) => {
 
     setTransferableDVDX(new BigNumber(dvdxTransferable.toString()));
 
+    setRewards({
+      fee: new BigNumber(feeRewards[0].toString()),
+      total: new BigNumber(feeRewards[1].toString()),
+    });
+
     setLoadingBalances(false);
   };
 
   useEffect(() => {
-    if (USDXContract && DVDXContract && account) {
+    if (USDXContract && DVDXContract && FeePoolContract && account) {
       fetchBalances();
     } else {
       setBalances({
@@ -68,7 +78,7 @@ export const FinanceProvider = ({ children }) => {
       setTransferableDVDX(new BigNumber(0));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [USDXContract, DVDXContract, account]);
+  }, [USDXContract, DVDXContract, FeePoolContract, account]);
 
   return (
     <FinanceContext.Provider
@@ -76,6 +86,7 @@ export const FinanceProvider = ({ children }) => {
         loadingBalances,
         balances,
         debts,
+        rewards,
         issuables,
         transferableDVDX,
         fetchBalances,
