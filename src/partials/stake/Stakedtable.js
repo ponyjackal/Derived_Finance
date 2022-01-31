@@ -25,7 +25,7 @@ export class Stakedtable extends Component {
         <ReactTable
           data={data}
           columns={columns}
-          defaultPageSize={3}
+          defaultPageSize={5}
           pageSizeOptions={[5, 10]}
           className="bg-primary text-white font-bold text-center m-6 rounded-lg"
         />

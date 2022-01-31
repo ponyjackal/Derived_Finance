@@ -52,6 +52,7 @@ const Withdrawtabs = () => {
   const isDisabled = (value, limit) => {
     return (
       new BigNumber(value).isZero() ||
+      new BigNumber(value).isNegative() ||
       new BigNumber(value).isGreaterThan(new BigNumber(limit)) ||
       loading
     );
