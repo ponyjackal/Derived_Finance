@@ -44,6 +44,11 @@ export const ChainProvider = ({ children }) => {
       setDepotContract(depot);
     } else {
       setUSDXContract(null);
+      setDVDXContract(null);
+      setMarketContract(null);
+      setDerivedTokenContract(null);
+      setFeePoolContract(null);
+      setDepotContract(null);
     }
   }, [library, active, chainId]);
 
