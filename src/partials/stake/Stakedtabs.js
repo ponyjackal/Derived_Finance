@@ -5,10 +5,12 @@ import Skeleton from "@mui/material/Skeleton";
 import Stakedtable from "./Stakedtable";
 
 import { useFinance } from "../../context/finance";
+import { useTransaction } from "../../context/transaction";
 import { toShort18 } from "../../utils/Contract";
 
 const Stakedtabs = () => {
   const { balances, transferableDVDX, loadingBalances } = useFinance();
+  const { loading: loadingStakings } = useTransaction();
 
   const stakedDVDX = useMemo(() => {
     if (!balances || !balances.dvdx) return "0.0000";
@@ -67,7 +69,7 @@ const Stakedtabs = () => {
           </h1>
         )}
       </div>
-      <Stakedtable className="w-full" />
+      <Stakedtable className="w-full" loading={loadingStakings} />
       <div className="flex justify-center md:justify-start"></div>
     </div>
   );
