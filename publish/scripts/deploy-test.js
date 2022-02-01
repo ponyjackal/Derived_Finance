@@ -25,14 +25,8 @@ async function main() {
   // await hre.run('compile');
 
   console.log(
-    ethers.utils.hexZeroPad(
-      ethers.utils.hexlify(ethers.utils.toUtf8Bytes("DVDX")),
-      4
-    ),
-    ethers.utils.hexZeroPad(
-      ethers.utils.hexlify(ethers.utils.toUtf8Bytes("XDR")),
-      4
-    )
+    ethers.utils.hexDataSlice(ethers.utils.formatBytes32String("DVDX"), 0, 4),
+    ethers.utils.hexDataSlice(ethers.utils.formatBytes32String("USDx"), 0, 4)
   );
 
   // ----------------
@@ -52,10 +46,19 @@ async function main() {
     },
   });
   const synthetix = await Synthetix.attach(
-    "0xc6e7DF5E7b4f2A278906862b61205850344D4e7d" // The deployed contract address
+    "0x96F3Ce39Ad2BfDCf92C0F6E2C2CAbF83874660Fc" // The deployed contract address
   );
 
-  await synthetix.issueSynths("0x44564458", 100000);
+  await synthetix.issueSynths("0x55534478", 100000);
+
+  console.log("usdx is issued");
+
+  const Synth = await hre.ethers.getContractFactory("Synth");
+  const usdx = await Synth.attach(
+    "0xA56F946D6398Dd7d9D4D9B337Cf9E0F68982ca5B" // The deployed contract address
+  );
+
+  await usdx.transfer("0x70997970c51812dc3a010c7d01b50e0d17dc79c8", 100000);
 }
 
 // We recommend this pattern to be able to use async/await everywhere

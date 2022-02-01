@@ -59,12 +59,7 @@ async function main() {
   const exchangeRates = await ExchangeRates.deploy(
     owner,
     oracle, // DVDXOracle; TODO
-    [
-      ethers.utils.hexZeroPad(
-        ethers.utils.hexlify(ethers.utils.toUtf8Bytes("DVD")),
-        4
-      ),
-    ],
+    [ethers.utils.hexDataSlice(ethers.utils.formatBytes32String("DVDX"), 0, 4)],
     [ethers.utils.parseEther("0.2")], // chainlink props
     CHAINLINK[network].linkToken,
     CHAINLINK[network].oracle,
@@ -299,8 +294,9 @@ async function main() {
       `Synth ${currencyKey}`,
       currencyKey,
       owner,
-      ethers.utils.hexZeroPad(
-        ethers.utils.hexlify(ethers.utils.toUtf8Bytes(currencyKey)),
+      ethers.utils.hexDataSlice(
+        ethers.utils.formatBytes32String(currencyKey),
+        0,
         4
       )
     );
@@ -338,8 +334,9 @@ async function main() {
       .filter((currency) => currency !== "USDx")
       .concat(["DVDX"])
       .map((currency) =>
-        ethers.utils.hexZeroPad(
-          ethers.utils.hexlify(ethers.utils.toUtf8Bytes(currency)),
+        ethers.utils.hexDataSlice(
+          ethers.utils.formatBytes32String(currency),
+          0,
           4
         )
       ),
