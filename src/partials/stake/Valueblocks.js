@@ -58,7 +58,7 @@ const Valueblocks = () => {
             <p className="text-white text-3xl font-body font-black flex items-center">
               {/* 0.00000 <AttachMoneyOutlinedIcon /> */}
               {loadingBalances ? (
-                <Skeleton width={100} height={50} />
+                <Skeleton width={200} height={50} />
               ) : (
                 <>
                   {stakedDVDX} DVDX
@@ -85,7 +85,7 @@ const Valueblocks = () => {
               <p className="text-white text-3xl font-body font-black flex items-center">
                 {/* 0.00000 <AttachMoneyOutlinedIcon /> */}
                 {loadingBalances ? (
-                  <Skeleton width={100} height={50} />
+                  <Skeleton width={200} height={50} />
                 ) : (
                   <>
                     {strDebts.usdx} <AttachMoneyOutlinedIcon />
@@ -113,7 +113,7 @@ const Valueblocks = () => {
             </div>
             <p className="text-white text-3xl font-body font-black flex items-center">
               {loadingBalances ? (
-                <Skeleton width={100} height={50} />
+                <Skeleton width={200} height={50} />
               ) : (
                 <>
                   {strBalances.usdx} <AttachMoneyOutlinedIcon />

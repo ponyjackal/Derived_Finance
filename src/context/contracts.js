@@ -4,7 +4,7 @@ import MarketABI from "../abis/DerivedPredictionMarket.json";
 import DerivedTokenABI from "../abis/DerivedToken.json";
 import USDXTokenABI from "../abis/USDX.json";
 import DVDXTokenABI from "../abis/DVDX.json";
-import PoolABI from "../abis/Pool.json";
+import FeePoolABI from "../abis/FeePool.json";
 import DepotABI from "../abis/Depot.json";
 
 import { contractAddresses } from "./address";
@@ -29,9 +29,9 @@ export const getDVDXTokenContract = (chainId, library) => {
   return new Contract(address, DVDXTokenABI, library.getSigner());
 };
 
-export const getPoolContract = (chainId, library) => {
-  const address = contractAddresses.pool[chainId];
-  return new Contract(address, PoolABI, library.getSigner());
+export const getFeePoolContract = (chainId, library) => {
+  const address = contractAddresses.feePool[chainId];
+  return new Contract(address, FeePoolABI, library.getSigner());
 };
 
 export const getDepotContract = (chainId, library) => {

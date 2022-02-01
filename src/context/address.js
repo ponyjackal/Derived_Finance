@@ -10,17 +10,17 @@ export const contractAddresses = {
   // Main ERC20
   dvdx: {
     56: "",
-    97: "0xee4232868E3D8F482AD6dBEb4BABCe5782680d33",
+    97: "0x547Ec0aa6fdAf55A55939960B3BAdc6D9407b031",
   },
   // Asset ERC20
   usdx: {
     56: "",
-    97: "0x28C476B860cD6e81B63cc4F1aFdCD35F3Fd5053a",
+    97: "0x567FBbbD6C95a5072451db829d6480ffA1324757",
   },
   // Fee Pool
-  pool: {
+  feePool: {
     56: "",
-    97: "0x941FFDE44F70a96d68086fe9697bfc112f6D711E",
+    97: "0x1ecbD390c948c59266CC1eEA110375804834271c",
   },
   // Depot
   depot: {
