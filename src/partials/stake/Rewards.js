@@ -12,10 +12,11 @@ import Skeleton from "@mui/material/Skeleton";
 import { useChain } from "../../context/chain";
 import { useFinance } from "../../context/finance";
 import { toShort18, stringToHex } from "../../utils/Contract";
+import BigNumber from "bignumber.js";
 
 const Rewards = () => {
   const { FeePoolContract } = useChain();
-  const { loadingBalances, balances, rewards, fetchBalances } = useFinance();
+  const { loadingBalances, balances, fees, fetchBalances } = useFinance();
   const [loading, setLoading] = useState(false);
 
   const availableDVDX = useMemo(() => {
@@ -24,11 +25,25 @@ const Rewards = () => {
     return toShort18(balances.dvdx.toFixed()).toFixed(4);
   }, [balances]);
 
+  const availableFee = useMemo(() => {
+    if (!fees) {
+      return {
+        fee: "0.0000",
+        total: "0.0000",
+      };
+    }
+
+    return {
+      fee: (fees.fee || new BigNumber(0)).toFixed(4),
+      total: (fees.total || new BigNumber(0)).toFixed(4),
+    };
+  }, [fees]);
+
   const handleClaimRewards = async () => {
     setLoading(true);
 
     try {
-      const tx = await FeePoolContract.claimFees(stringToHex("DVDX"));
+      const tx = await FeePoolContract.claimFees(stringToHex("USDx"));
       await tx.wait();
 
       await fetchBalances();
@@ -38,8 +53,6 @@ const Rewards = () => {
 
     setLoading(false);
   };
-
-  console.log("DEBUG-rewards: ", { rewards });
 
   // return (
   //   <div className="p-4 pt-8">
@@ -121,11 +134,21 @@ const Rewards = () => {
         )}
       </div>
       <div className="flex justify-between mb-4 px-2">
-        <p className="text-white">Available to claim</p>
+        <p className="text-white">Available rewards to claim</p>
         {loadingBalances ? (
           <Skeleton width={200} height={35} />
         ) : (
-          <p className="text-white text-xl font-bold">100,000 DVDX</p>
+          <p className="text-white text-xl font-bold">100,000 USDx</p>
+        )}
+      </div>
+      <div className="flex justify-between mb-4 px-2">
+        <p className="text-white">Available fees to claim</p>
+        {loadingBalances ? (
+          <Skeleton width={200} height={35} />
+        ) : (
+          <p className="text-white text-xl font-bold">
+            {availableFee.total} USDx
+          </p>
         )}
       </div>
       <div className="flex justify-between mb-4 px-2">
@@ -152,7 +175,7 @@ const Rewards = () => {
           Claim
         </Button>
 
-        <Button
+        {/* <Button
           variant="contained"
           className="cursor-pointer"
           style={{
@@ -163,7 +186,7 @@ const Rewards = () => {
           }}
         >
           Claim & Stake
-        </Button>
+        </Button> */}
       </div>
     </div>
   );
