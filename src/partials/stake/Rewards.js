@@ -138,14 +138,6 @@ const Rewards = () => {
         {loadingBalances ? (
           <Skeleton width={200} height={35} />
         ) : (
-          <p className="text-white text-xl font-bold">100,000 USDx</p>
-        )}
-      </div>
-      <div className="flex justify-between mb-4 px-2">
-        <p className="text-white">Available fees to claim</p>
-        {loadingBalances ? (
-          <Skeleton width={200} height={35} />
-        ) : (
           <p className="text-white text-xl font-bold">
             {availableFee.total} USDx
           </p>

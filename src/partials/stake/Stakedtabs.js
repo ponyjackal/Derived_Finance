@@ -10,7 +10,7 @@ import { toShort18 } from "../../utils/Contract";
 
 const Stakedtabs = () => {
   const { balances, transferableDVDX, loadingBalances } = useFinance();
-  const { loading: loadingStakings } = useTransaction();
+  const { loading: loadingStakings, stakeTransactions } = useTransaction();
 
   const stakedDVDX = useMemo(() => {
     if (!balances || !balances.dvdx) return "0.0000";
@@ -69,7 +69,11 @@ const Stakedtabs = () => {
           </h1>
         )}
       </div>
-      <Stakedtable className="w-full" loading={loadingStakings} />
+      <Stakedtable
+        className="w-full"
+        loading={loadingStakings}
+        transactions={stakeTransactions}
+      />
       <div className="flex justify-center md:justify-start"></div>
     </div>
   );

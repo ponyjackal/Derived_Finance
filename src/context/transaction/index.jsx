@@ -17,19 +17,21 @@ export const TransactionProvider = ({ children }) => {
     const initialize = async () => {
       setLoading(true);
 
-      const data = await getTransactions(
-        chainId,
-        contractAddresses.dvdx[chainId]
-      );
-      setStakeTransactions(data);
+      try {
+        const data = await getTransactions(
+          chainId,
+          contractAddresses.dvdx[chainId]
+        );
+        setStakeTransactions(data);
+      } catch (error) {
+        console.error("Fetching transactions error: ", error.message);
+      }
 
       setLoading(false);
     };
 
     chainId && initialize();
   }, [chainId]);
-
-  console.log("DEBUG-stakeTransactions: ", { stakeTransactions });
 
   return (
     <TransactionContext.Provider value={{ loading, stakeTransactions }}>
