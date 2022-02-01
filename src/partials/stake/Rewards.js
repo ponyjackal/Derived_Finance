@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 // import Box from "@mui/material/Box";
 // import FormControl from "@mui/material/FormControl";
 // import MenuItem from "@mui/material/MenuItem";
@@ -9,17 +9,37 @@ import React, { useMemo } from "react";
 import Button from "@mui/material/Button";
 import Skeleton from "@mui/material/Skeleton";
 
+import { useChain } from "../../context/chain";
 import { useFinance } from "../../context/finance";
-import { toShort18 } from "../../utils/Contract";
+import { toShort18, stringToHex } from "../../utils/Contract";
 
 const Rewards = () => {
-  const { balances, loadingBalances } = useFinance();
+  const { FeePoolContract } = useChain();
+  const { loadingBalances, balances, rewards, fetchBalances } = useFinance();
+  const [loading, setLoading] = useState(false);
 
   const availableDVDX = useMemo(() => {
     if (!balances || !balances.dvdx) return "0.0000";
 
     return toShort18(balances.dvdx.toFixed()).toFixed(4);
   }, [balances]);
+
+  const handleClaimRewards = async () => {
+    setLoading(true);
+
+    try {
+      const tx = await FeePoolContract.claimFees(stringToHex("DVDX"));
+      await tx.wait();
+
+      await fetchBalances();
+    } catch (error) {
+      console.error("Claiming Reward error: ", error.message);
+    }
+
+    setLoading(false);
+  };
+
+  console.log("DEBUG-rewards: ", { rewards });
 
   // return (
   //   <div className="p-4 pt-8">
@@ -126,6 +146,8 @@ const Rewards = () => {
             margin: "20px 9px",
             fontSize: "12px",
           }}
+          disabled={loading || loadingBalances}
+          onClick={handleClaimRewards}
         >
           Claim
         </Button>
