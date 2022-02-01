@@ -519,6 +519,8 @@ contract Synthetix is ExternStateToken {
         require(destinationAddress != address(0), "Zero destination");
         require(destinationAddress != address(this), "Synthetix is invalid destination");
         require(destinationAddress != address(proxy), "Proxy is invalid destination");
+        require(address(synths[sourceCurrencyKey]) != address(0), "Source Synth does not exist");
+        require(address(synths[destinationCurrencyKey]) != address(0), "Destination Synth does not exist");
 
         // Note: We don't need to check their balance as the burn() below will do a safe subtraction which requires
         // the subtraction to not overflow, which would happen if their balance is not sufficient.
@@ -627,6 +629,7 @@ contract Synthetix is ExternStateToken {
         // No need to check if price is stale, as it is checked in issuableSynths.
     {
         require(amount <= remainingIssuableSynths(messageSender, currencyKey), "Amount too large");
+        require(address(synths[currencyKey]) != address(0), "Synth does not exist");
 
         // Keep track of the debt they're about to create
         _addToDebtRegister(currencyKey, amount);
@@ -665,6 +668,7 @@ contract Synthetix is ExternStateToken {
         optionalProxy
         // No need to check for stale rates as effectiveValue checks rates
     {
+        require(address(synths[currencyKey]) != address(0), "Synth does not exist");
         // How much debt do they have?
         uint debtToRemove = effectiveValue(currencyKey, amount, "XDR");
         uint debt = debtBalanceOf(messageSender, "XDR");
