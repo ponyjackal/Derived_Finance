@@ -17,15 +17,11 @@ export const TransactionProvider = ({ children }) => {
     const initialize = async () => {
       setLoading(true);
 
-      try {
-        const data = await getTransactions(
-          chainId,
-          contractAddresses.dvdx[chainId]
-        );
-        setStakeTransactions(data);
-      } catch (error) {
-        console.error("Fetching transactions error: ", error.message);
-      }
+      const data = await getTransactions(
+        chainId,
+        contractAddresses.dvdx[chainId]
+      );
+      setStakeTransactions(data);
 
       setLoading(false);
     };
