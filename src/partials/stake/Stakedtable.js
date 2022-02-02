@@ -35,8 +35,6 @@ const Stakedtable = ({ loading, transactions }) => {
     }));
   }, [transactions]);
 
-  console.log("DEBUG-transactions: ", { transactions });
-
   return (
     <div>
       <ReactTable
