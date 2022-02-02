@@ -133,6 +133,8 @@ const Withdrawtabs = () => {
       await tx.wait();
 
       await fetchBalances();
+
+      setMintAmount("");
     } catch (error) {
       console.error("USDx Mint Error: ", error.message);
     }
@@ -152,6 +154,8 @@ const Withdrawtabs = () => {
       await tx.wait();
 
       await fetchBalances();
+
+      setBurnAmount("");
     } catch (error) {
       console.error("USDx Burn Error: ", error.message);
     }

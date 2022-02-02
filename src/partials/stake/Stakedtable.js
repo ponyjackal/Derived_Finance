@@ -3,22 +3,28 @@ import ReactTable from "react-table-6";
 import "react-table-6/react-table.css";
 import "../../css/table.css";
 
-const Stakedtable = ({ loading }) => {
+const Stakedtable = ({ loading, transactions }) => {
   const data = [];
   const columns = [
     {
-      Header: "Token",
-      accessor: "token",
+      Header: "From",
+      accessor: "from",
     },
     {
-      Header: "Balance",
-      accessor: "balance",
+      Header: "Type",
+      accessor: "type",
     },
     {
-      Header: "USD Value",
-      accessor: "usd_value",
+      Header: "Amount",
+      accessor: "amount",
+    },
+    {
+      Header: "Timestamp",
+      accessor: "timestamp",
     },
   ];
+
+  console.log("DEBUG-transactions: ", { transactions });
 
   return (
     <div>

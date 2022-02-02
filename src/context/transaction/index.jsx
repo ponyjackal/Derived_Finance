@@ -29,8 +29,6 @@ export const TransactionProvider = ({ children }) => {
     chainId && initialize();
   }, [chainId]);
 
-  console.log("DEBUG-stakeTransactions: ", { stakeTransactions });
-
   return (
     <TransactionContext.Provider value={{ loading, stakeTransactions }}>
       {children}

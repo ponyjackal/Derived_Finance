@@ -18,7 +18,7 @@ export const FinanceProvider = ({ children }) => {
   const [debts, setDebts] = useState({});
   const [issuables, setIssuables] = useState({});
   const [transferableDVDX, setTransferableDVDX] = useState(new BigNumber(0));
-  const [rewards, setRewards] = useState({});
+  const [fees, setFees] = useState({});
 
   const fetchBalances = async () => {
     setLoadingBalances(true);
@@ -36,7 +36,7 @@ export const FinanceProvider = ({ children }) => {
     const dvdxTransferable = await DVDXContract.transferableSynthetix(account);
     const feeRewards = await FeePoolContract.feesAvailable(
       account,
-      stringToHex("DVDX")
+      stringToHex("USDx")
     );
 
     setBalances({
@@ -54,7 +54,7 @@ export const FinanceProvider = ({ children }) => {
 
     setTransferableDVDX(new BigNumber(dvdxTransferable.toString()));
 
-    setRewards({
+    setFees({
       fee: new BigNumber(feeRewards[0].toString()),
       total: new BigNumber(feeRewards[1].toString()),
     });
@@ -86,7 +86,7 @@ export const FinanceProvider = ({ children }) => {
         loadingBalances,
         balances,
         debts,
-        rewards,
+        fees,
         issuables,
         transferableDVDX,
         fetchBalances,
