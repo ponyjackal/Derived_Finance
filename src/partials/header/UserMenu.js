@@ -1,8 +1,9 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useWeb3React } from "@web3-react/core";
 
-import Transition from "../../utils/Transition";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+
+import Transition from "../../utils/Transition";
 import Meta from "../../images/meta-mask.png";
 import Binance from "../../images/binance.png";
 import Wallet from "../../images/wallet-connect.png";
@@ -52,13 +53,13 @@ function UserMenu() {
       setVisible(false);
       disconnect();
     } else {
-      setDropdownOpen(!dropdownOpen)
+      setDropdownOpen(!dropdownOpen);
     }
   };
 
   const connectWallet = async (key) => {
     if (!ConnectorNames[key]) {
-      console.error('Wallet connection error: not supported');
+      console.error("Wallet connection error: not supported");
       return;
     }
 
@@ -68,7 +69,7 @@ function UserMenu() {
 
   return (
     <div className="flex">
-      {visible ? <Connectedtabs /> : null}
+      {visible || active ? <Connectedtabs /> : null}
       {/* <Connectedtabs /> */}
       <div className="relative inline-flex">
         <button
@@ -81,9 +82,7 @@ function UserMenu() {
           <div className="flex items-center truncate">
             <span className="truncate ml-2 text-sm text-white font-medium bg-headings mx-10 p-2 rounded-lg h-10">
               {(account && toShortAddress(account, 5)) || "Connect wallet"}
-              {!active && (
-                <ArrowDropDownIcon />
-              )}
+              {!active && <ArrowDropDownIcon />}
             </span>
           </div>
         </button>
@@ -106,28 +105,28 @@ function UserMenu() {
               <ul>
                 <li
                   className="flex text-white font-bold text-lg items-center bg-secondary m-3 p-2 rounded-lg h-14 cursor-pointer"
-                  onClick={() => connectWallet('injected')}
+                  onClick={() => connectWallet("injected")}
                 >
                   <img src={Meta} className="w-10 mr-5" alt="" />
                   Meta Mask
                 </li>
                 <li
                   className="flex text-white font-bold text-lg items-center bg-secondary m-3 p-2 rounded-lg h-14 cursor-pointer"
-                  onClick={() => connectWallet('injected')}
+                  onClick={() => connectWallet("injected")}
                 >
                   <img src={Binance} className="w-10 mr-5" alt="" />
                   Binance Chain Wallet
                 </li>
                 <li
                   className="flex text-white font-bold text-lg items-center bg-secondary m-3 p-2 rounded-lg h-14 cursor-pointer"
-                  onClick={() => connectWallet('injected')}
+                  onClick={() => connectWallet("injected")}
                 >
                   <img src={Wallet} className="w-10 mr-5" alt="" />
                   Wallet Connect
                 </li>
                 <li
                   className="flex text-white font-bold text-lg items-center bg-secondary m-3 p-2 rounded-lg h-14 cursor-pointer"
-                  onClick={() => connectWallet('injected')}
+                  onClick={() => connectWallet("injected")}
                 >
                   <img src={Portis} className="w-10 mr-5" alt="" />
                   Portis
