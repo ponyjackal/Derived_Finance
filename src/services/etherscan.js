@@ -9,11 +9,21 @@ const SCAN_API_ENDPOINTS = {
 
 export const getTransactions = async (chainId, address) => {
   try {
-    const res = await axios.get(
-      `${SCAN_API_ENDPOINTS[chainId]}?module=account&action=txlist&address=${address}&apikey=${API_KEY}`
-    );
+    let data = [],
+      res = [],
+      page = 1,
+      offset = 30;
+    do {
+      const resp = await axios.get(
+        `${SCAN_API_ENDPOINTS[chainId]}?module=account&action=txlist&address=${address}&page=${page}&offset=${offset}&sort=desc&apikey=${API_KEY}`
+      );
 
-    return res.data.result;
+      res = [...resp.data.result];
+      data = [...data, ...resp.data.result];
+      page++;
+    } while (res.length);
+
+    return data;
   } catch (error) {
     console.error(`Fetching ${address} transactions error: `, error.message);
   }
