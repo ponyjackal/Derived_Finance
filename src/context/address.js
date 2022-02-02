@@ -5,7 +5,7 @@ export const contractAddresses = {
   },
   derivedToken: {
     56: "",
-    97: "0xe92C13C39c9c2F1589C1d9dedAad06057BF3C593",
+    97: "0x2448431fdC02d1f5c308C84c2020566003D2Cc9f",
   },
   // Main ERC20
   dvdx: {
