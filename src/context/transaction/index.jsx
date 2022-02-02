@@ -2,7 +2,7 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 import { useWeb3React } from "@web3-react/core";
 
 import { contractAddresses } from "../address";
-import { getTransactions } from "../../utils/Web3";
+import { getTransactions } from "../../services/etherscan";
 
 export const TransactionContext = createContext({});
 

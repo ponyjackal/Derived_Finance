@@ -1,18 +1,19 @@
-import React from "react";
+import { useMemo } from "react";
 import ReactTable from "react-table-6";
 import "react-table-6/react-table.css";
 import "../../css/table.css";
 
+import { toFriendlyTimeFormat } from "../../utils/Utils";
+
 const Stakedtable = ({ loading, transactions }) => {
-  const data = [];
   const columns = [
+    {
+      Header: "Hash",
+      accessor: "hash",
+    },
     {
       Header: "From",
       accessor: "from",
-    },
-    {
-      Header: "Type",
-      accessor: "type",
     },
     {
       Header: "Amount",
@@ -23,6 +24,16 @@ const Stakedtable = ({ loading, transactions }) => {
       accessor: "timestamp",
     },
   ];
+  const data = useMemo(() => {
+    if (!transactions) return [];
+
+    return transactions.map((tx) => ({
+      from: tx.from,
+      hash: tx.hash,
+      amount: "0.0000",
+      timestamp: toFriendlyTimeFormat(parseInt(tx.timeStamp, 10)),
+    }));
+  }, [transactions]);
 
   console.log("DEBUG-transactions: ", { transactions });
 
