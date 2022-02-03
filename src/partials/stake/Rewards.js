@@ -143,14 +143,14 @@ const Rewards = () => {
           </p>
         )}
       </div>
-      <div className="flex justify-between mb-4 px-2">
+      {/* <div className="flex justify-between mb-4 px-2">
         <p className="text-white">APY</p>
         {loadingBalances ? (
           <Skeleton width={200} height={35} />
         ) : (
           <p className="text-white text-xl font-bold">123.23 %</p>
         )}
-      </div>
+      </div> */}
       <div className="flex justify-between">
         <Button
           variant="contained"
