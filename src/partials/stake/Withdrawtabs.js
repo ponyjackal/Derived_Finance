@@ -335,7 +335,7 @@ const Withdrawtabs = () => {
           />
           <div className="flex flex-col md:w-6/12 w-full items-center justify-center">
             <h1 className="text-white text-sm w-full flex justify-center mb-2">
-              Available To Mint
+              USDX equivalent
             </h1>
             <h1 className="text-white text-md font-bold w-full flex justify-center">
               {loadingBalances ? (

@@ -1,5 +1,4 @@
-import { useMemo, useState, useEffect } from "react";
-import { useWeb3React } from "@web3-react/core";
+import { useMemo } from "react";
 
 import Box from "@mui/material/Box";
 import FormControl from "@mui/material/FormControl";
@@ -12,24 +11,16 @@ import { toShort18 } from "../../utils/Contract";
 
 const Connectedtabs = () => {
   const { balances } = useFinance();
-  const { library, account } = useWeb3React();
-  const [balance, setBalance] = useState("0.0000");
 
   const usdx = useMemo(() => {
     if (!balances) return "0.0000";
     return toShort18(balances.usdx || new BigNumber(0)).toFixed(4);
   }, [balances]);
 
-  useEffect(() => {
-    const initialize = async () => {
-      const signer = library.getSigner();
-      const val = await signer.provider.getBalance(account);
-
-      setBalance(toShort18(new BigNumber(val.toString())).toFixed(4));
-    };
-
-    library && account && initialize();
-  }, [library, account]);
+  const dvdx = useMemo(() => {
+    if (!balances) return "0.0000";
+    return toShort18(balances.dvdx || new BigNumber(0)).toFixed(4);
+  }, [balances]);
 
   return (
     <div className="flex flex-row mx-4">
@@ -48,7 +39,7 @@ const Connectedtabs = () => {
           cursor: "default",
         }}
       >
-        BNB: {balance}
+        DVDX: {dvdx}
       </p>
       <p
         style={{
