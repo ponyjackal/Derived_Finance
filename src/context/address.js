@@ -1,11 +1,11 @@
 export const contractAddresses = {
   market: {
     56: "",
-    97: "0x151366B22346d2A39229705f4f729eD01DdBf518",
+    97: "0x4B8677822D2948bCdfb133C5AD62A9Bb5a681822",
   },
   derivedToken: {
     56: "",
-    97: "0x2448431fdC02d1f5c308C84c2020566003D2Cc9f",
+    97: "0xE41B000268eDBFc239988237D7Cc6B995aD3e1Dc",
   },
   // Main ERC20
   dvdx: {
