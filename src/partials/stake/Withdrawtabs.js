@@ -43,7 +43,7 @@ const Withdrawtabs = () => {
     };
   }, [balances]);
 
-  const availableDVDX = useMemo(() => {
+  const issuableUSDx = useMemo(() => {
     if (!issuables || !issuables.usdx) return "0.0000";
 
     return toShort18(issuables.usdx.toFixed()).toFixed(4);
@@ -72,7 +72,7 @@ const Withdrawtabs = () => {
 
   // Handle Max Button Actions
   const handleMintMax = () => {
-    setMintAmount(availableDVDX);
+    setMintAmount(strBalances.dvdx);
   };
 
   const handleBurnMax = () => {
@@ -341,7 +341,7 @@ const Withdrawtabs = () => {
               {loadingBalances ? (
                 <Skeleton width={100} height={50} />
               ) : (
-                `${availableDVDX} USDx`
+                `${issuableUSDx} USDx`
               )}
             </h1>
           </div>
@@ -356,7 +356,7 @@ const Withdrawtabs = () => {
               fontSize: "20px",
             }}
             disabled={
-              isDisabled(mintAmount || "0", availableDVDX) ||
+              isDisabled(mintAmount || "0", strBalances.dvdx) ||
               loading ||
               loadingBalances
             }
