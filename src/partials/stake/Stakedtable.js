@@ -4,6 +4,7 @@ import "react-table-6/react-table.css";
 import "../../css/table.css";
 
 import { toFriendlyTimeFormat } from "../../utils/Utils";
+import { METHOD_TOPICS } from "../../utils/Contract";
 
 const Stakedtable = ({ loading, transactions }) => {
   const columns = [
@@ -16,8 +17,8 @@ const Stakedtable = ({ loading, transactions }) => {
       accessor: "from",
     },
     {
-      Header: "Amount",
-      accessor: "amount",
+      Header: "Type",
+      accessor: "type",
     },
     {
       Header: "Timestamp",
@@ -27,12 +28,18 @@ const Stakedtable = ({ loading, transactions }) => {
   const data = useMemo(() => {
     if (!transactions) return [];
 
-    return transactions.map((tx) => ({
-      from: tx.from,
-      hash: tx.hash,
-      amount: "0.0000",
-      timestamp: toFriendlyTimeFormat(parseInt(tx.timeStamp, 10)),
-    }));
+    return transactions
+      .filter(
+        (tx) =>
+          tx.input === METHOD_TOPICS.ISSUE_SYNTH ||
+          tx.input === METHOD_TOPICS.BURN_SYNTH
+      )
+      .map((tx) => ({
+        from: tx.from,
+        hash: tx.hash,
+        type: tx.input === METHOD_TOPICS.ISSUE_SYNTH ? "MINT" : "BURN",
+        timestamp: toFriendlyTimeFormat(parseInt(tx.timeStamp, 10)),
+      }));
   }, [transactions]);
 
   return (

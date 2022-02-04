@@ -10,7 +10,7 @@ import { useFinance } from "../../context/finance";
 import { toShort18 } from "../../utils/Contract";
 
 const Connectedtabs = () => {
-  const { balances } = useFinance();
+  const { balances, transferableDVDX } = useFinance();
 
   const usdx = useMemo(() => {
     if (!balances) return "0.0000";
@@ -18,9 +18,9 @@ const Connectedtabs = () => {
   }, [balances]);
 
   const dvdx = useMemo(() => {
-    if (!balances) return "0.0000";
-    return toShort18(balances.dvdx || new BigNumber(0)).toFixed(4);
-  }, [balances]);
+    if (!transferableDVDX) return "0.0000";
+    return toShort18(transferableDVDX || new BigNumber(0)).toFixed(4);
+  }, [transferableDVDX]);
 
   return (
     <div className="flex flex-row mx-4">

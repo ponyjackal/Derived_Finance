@@ -13,24 +13,31 @@ export const TransactionProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
   const [stakeTransactions, setStakeTransactions] = useState([]);
 
+  const fetchStakeTransactions = async () => {
+    setLoading(true);
+
+    const data = await getTransactions(
+      chainId,
+      contractAddresses.dvdx[chainId]
+    );
+    setStakeTransactions(data);
+
+    setLoading(false);
+  };
+
   useEffect(() => {
-    const initialize = async () => {
-      setLoading(true);
-
-      const data = await getTransactions(
-        chainId,
-        contractAddresses.dvdx[chainId]
-      );
-      setStakeTransactions(data);
-
-      setLoading(false);
-    };
-
-    chainId && initialize();
+    chainId && fetchStakeTransactions();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chainId]);
 
   return (
-    <TransactionContext.Provider value={{ loading, stakeTransactions }}>
+    <TransactionContext.Provider
+      value={{
+        loading,
+        stakeTransactions,
+        fetchStakeTransactions,
+      }}
+    >
       {children}
     </TransactionContext.Provider>
   );
