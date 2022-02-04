@@ -34,7 +34,7 @@ const Withdrawtabs = () => {
   const {
     balances,
     transferableDVDX,
-    issuables,
+    // issuables,
     loadingBalances,
     fetchBalances,
   } = useFinance();
@@ -53,11 +53,11 @@ const Withdrawtabs = () => {
     };
   }, [balances, transferableDVDX]);
 
-  const issuableUSDx = useMemo(() => {
-    if (!issuables || !issuables.usdx) return "0.0000";
+  // const issuableUSDx = useMemo(() => {
+  //   if (!issuables || !issuables.usdx) return "0.0000";
 
-    return toShort18(issuables.usdx.toFixed()).toFixed(4);
-  }, [issuables]);
+  //   return toShort18(issuables.usdx.toFixed()).toFixed(4);
+  // }, [issuables]);
 
   const isDisabled = (value, limit) => {
     return (
