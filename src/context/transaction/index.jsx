@@ -13,8 +13,8 @@ export const TransactionProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
   const [stakeTransactions, setStakeTransactions] = useState([]);
 
-  const handleAddTransaction = (tx, topic) => {
-    setStakeTransactions((txs) => [{ ...tx, input: topic }, ...txs]);
+  const handleAddTransaction = (tx, topic, timestamp) => {
+    setStakeTransactions((txs) => [{ ...tx, input: topic, timestamp }, ...txs]);
   };
 
   const fetchStakeTransactions = async () => {

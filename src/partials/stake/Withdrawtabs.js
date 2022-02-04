@@ -37,6 +37,7 @@ const Withdrawtabs = () => {
     // DepotContract,
   } = useChain();
   const {
+    debts,
     balances,
     transferableDVDX,
     // issuables,
@@ -57,6 +58,17 @@ const Withdrawtabs = () => {
       usdx: toShort18(balances.usdx).toFixed(4),
     };
   }, [balances, transferableDVDX]);
+
+  const strDebts = useMemo(() => {
+    if (!debts)
+      return {
+        usdx: new BigNumber(0).toFixed(5),
+      };
+
+    return {
+      usdx: toShort18(debts.usdx).toFixed(5),
+    };
+  }, [debts]);
 
   // const issuableUSDx = useMemo(() => {
   //   if (!issuables || !issuables.usdx) return "0.0000";
@@ -91,7 +103,7 @@ const Withdrawtabs = () => {
   };
 
   const handleBurnMax = () => {
-    setBurnAmount(strBalances.usdx);
+    setBurnAmount(strDebts.usdx);
   };
 
   // const handleDepositMax = () => {
@@ -152,7 +164,11 @@ const Withdrawtabs = () => {
       await tx.wait();
 
       await fetchBalances();
-      addTransaction(tx, METHOD_TOPICS.ISSUE_SYNTH);
+      addTransaction(
+        tx,
+        METHOD_TOPICS.ISSUE_SYNTH,
+        parseInt(new Date().getTime() / 1000, 10)
+      );
 
       setMintAmount("");
     } catch (error) {
@@ -174,7 +190,11 @@ const Withdrawtabs = () => {
       await tx.wait();
 
       await fetchBalances();
-      addTransaction(tx, METHOD_TOPICS.BURN_SYNTH);
+      addTransaction(
+        tx,
+        METHOD_TOPICS.BURN_SYNTH,
+        parseInt(new Date().getTime() / 1000, 10)
+      );
 
       setBurnAmount("");
     } catch (error) {
@@ -544,7 +564,7 @@ const Withdrawtabs = () => {
               {loadingBalances ? (
                 <Skeleton width={100} height={50} />
               ) : (
-                `${strBalances.usdx} USDx`
+                `${strDebts.usdx} USDx`
               )}
             </h1>
           </div>
@@ -559,7 +579,7 @@ const Withdrawtabs = () => {
               fontSize: "20px",
             }}
             disabled={
-              isDisabled(burnAmount || "0", strBalances.usdx) ||
+              isDisabled(burnAmount || "0", strDebts.usdx) ||
               loading ||
               loadingBalances
             }
