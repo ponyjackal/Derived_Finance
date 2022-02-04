@@ -30,15 +30,17 @@ const Withdrawtabs = () => {
   // const [withdrawAmount, setWithdrawAmount] = useState("");
   const [loading, setLoading] = useState(false);
   const [availableUSDx, setAvailableUSDx] = useState("0.0000");
+  const [availableDVDX, setAvailableDVDX] = useState("0.0000");
 
   const {
     DVDXContract,
-    ExchangeRateContract,
+    // ExchangeRateContract,
     // DepotContract,
   } = useChain();
   const {
     debts,
     balances,
+    rates,
     transferableDVDX,
     // issuables,
     loadingBalances,
@@ -152,9 +154,8 @@ const Withdrawtabs = () => {
     setLoading(true);
 
     try {
-      const rate = await ExchangeRateContract.rates(stringToHex("USDx", 4));
       const mAmount = new BigNumber(mintAmount || "0")
-        .multipliedBy(new BigNumber(rate.toString()))
+        .multipliedBy(new BigNumber(rates.usdx.toString()))
         .dividedBy(new BigNumber(50));
 
       const tx = await DVDXContract.issueSynths(
@@ -232,16 +233,27 @@ const Withdrawtabs = () => {
 
   useEffect(() => {
     const calculateUSDx = async () => {
-      const rate = await ExchangeRateContract.rates(stringToHex("USDx", 4));
       const mAmount = new BigNumber(mintAmount || "0")
-        .multipliedBy(new BigNumber(rate.toString()))
+        .multipliedBy(new BigNumber(rates.usdx.toString()))
         .dividedBy(new BigNumber(50));
 
       setAvailableUSDx(toShort18(mAmount.toFixed()).toFixed());
     };
 
-    ExchangeRateContract && calculateUSDx();
-  }, [mintAmount, ExchangeRateContract]);
+    rates && rates.usdx && calculateUSDx();
+  }, [mintAmount, rates]);
+
+  useEffect(() => {
+    const calculateDVDX = async () => {
+      const bAmount = toLong18(burnAmount || "0")
+        .multipliedBy(new BigNumber(50))
+        .dividedBy(new BigNumber(rates.usdx.toString()));
+
+      setAvailableDVDX(bAmount.toFixed());
+    };
+
+    rates && rates.usdx && calculateDVDX();
+  }, [burnAmount, rates]);
 
   return (
     <Tabs selectedIndex={selectedIndex} onSelect={handleSelect}>
@@ -389,7 +401,7 @@ const Withdrawtabs = () => {
           />
           <div className="flex flex-col md:w-6/12 w-full items-center justify-center">
             <h1 className="text-white text-sm w-full flex justify-center mb-2">
-              USDX equivalent
+              USDx equivalent
             </h1>
             <h1 className="text-white text-md font-bold w-full flex justify-center">
               {loadingBalances ? (
@@ -558,13 +570,13 @@ const Withdrawtabs = () => {
           />
           <div className="flex flex-col md:w-6/12 w-full items-center justify-center">
             <h1 className="text-white text-sm w-full flex justify-center mb-2">
-              Available To Burn
+              DVDX equivalent
             </h1>
             <h1 className="text-white text-md font-bold w-full flex justify-center">
               {loadingBalances ? (
                 <Skeleton width={100} height={50} />
               ) : (
-                `${strDebts.usdx} USDx`
+                `${availableDVDX} DVDX`
               )}
             </h1>
           </div>
