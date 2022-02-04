@@ -13,6 +13,10 @@ export const TransactionProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
   const [stakeTransactions, setStakeTransactions] = useState([]);
 
+  const handleAddTransaction = (tx, topic) => {
+    setStakeTransactions((txs) => [{ ...tx, input: topic }, ...txs]);
+  };
+
   const fetchStakeTransactions = async () => {
     setLoading(true);
 
@@ -35,7 +39,7 @@ export const TransactionProvider = ({ children }) => {
       value={{
         loading,
         stakeTransactions,
-        fetchStakeTransactions,
+        addTransaction: handleAddTransaction,
       }}
     >
       {children}

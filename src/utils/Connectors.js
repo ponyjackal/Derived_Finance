@@ -10,20 +10,22 @@ export const CHAIN_IDS = {
 
 export const supportedChainIds = [CHAIN_IDS.TEST_BSC];
 
-export const supportedChainHexIds = supportedChainIds.map(chainId => toHexString(chainId));
+export const supportedChainHexIds = supportedChainIds.map((chainId) =>
+  toHexString(chainId)
+);
 
 export const defaultChainId = CHAIN_IDS.TEST_BSC;
 
 export const defaultChainHexId = toHexString(CHAIN_IDS.TEST_BSC);
 
-export const CONNECTOR_LOCAL_KEY = 'derived-connector';
+export const CONNECTOR_LOCAL_KEY = "derived-connector";
 
 export const injected = new InjectedConnector({
   supportedChainIds,
 });
 
 export const ConnectorNames = {
-  injected: 'injected',
+  injected: "injected",
 };
 
 export const Connectors = {

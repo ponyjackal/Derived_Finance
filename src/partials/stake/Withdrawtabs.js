@@ -15,7 +15,12 @@ import BigNumber from "bignumber.js";
 import { useChain } from "../../context/chain";
 import { useFinance } from "../../context/finance";
 import { useTransaction } from "../../context/transaction";
-import { toShort18, toLong18, stringToHex } from "../../utils/Contract";
+import {
+  toShort18,
+  toLong18,
+  stringToHex,
+  METHOD_TOPICS,
+} from "../../utils/Contract";
 
 const Withdrawtabs = () => {
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -38,7 +43,7 @@ const Withdrawtabs = () => {
     loadingBalances,
     fetchBalances,
   } = useFinance();
-  const { fetchStakeTransactions } = useTransaction();
+  const { addTransaction } = useTransaction();
 
   const strBalances = useMemo(() => {
     if (!balances || !transferableDVDX)
@@ -147,7 +152,7 @@ const Withdrawtabs = () => {
       await tx.wait();
 
       await fetchBalances();
-      await fetchStakeTransactions();
+      addTransaction(tx, METHOD_TOPICS.ISSUE_SYNTH);
 
       setMintAmount("");
     } catch (error) {
@@ -169,7 +174,7 @@ const Withdrawtabs = () => {
       await tx.wait();
 
       await fetchBalances();
-      await fetchStakeTransactions();
+      addTransaction(tx, METHOD_TOPICS.BURN_SYNTH);
 
       setBurnAmount("");
     } catch (error) {
