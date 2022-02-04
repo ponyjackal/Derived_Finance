@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { Tabs, TabList, Tab, TabPanel } from "react-tabs";
 import "react-tabs/style/react-tabs.css";
 import Box from "@mui/material/Box";
@@ -24,6 +24,7 @@ const Withdrawtabs = () => {
   // const [depositAmount, setDepositAmount] = useState("");
   // const [withdrawAmount, setWithdrawAmount] = useState("");
   const [loading, setLoading] = useState(false);
+  const [availableUSDx, setAvailableUSDx] = useState("0.0000");
 
   const {
     DVDXContract,
@@ -204,6 +205,19 @@ const Withdrawtabs = () => {
   //   setLoading(false);
   // };
 
+  useEffect(() => {
+    const calculateUSDx = async () => {
+      const rate = await ExchangeRateContract.rates(stringToHex("USDx", 4));
+      const mAmount = new BigNumber(mintAmount || "0")
+        .multipliedBy(new BigNumber(rate.toString()))
+        .dividedBy(new BigNumber(5));
+
+      setAvailableUSDx(toShort18(mAmount.toFixed()).toFixed(4));
+    };
+
+    ExchangeRateContract && calculateUSDx();
+  }, [mintAmount, ExchangeRateContract]);
+
   return (
     <Tabs selectedIndex={selectedIndex} onSelect={handleSelect}>
       <TabList style={{ width: "93%" }}>
@@ -356,7 +370,7 @@ const Withdrawtabs = () => {
               {loadingBalances ? (
                 <Skeleton width={100} height={50} />
               ) : (
-                `${issuableUSDx} USDx`
+                `${availableUSDx} USDx`
               )}
             </h1>
           </div>
