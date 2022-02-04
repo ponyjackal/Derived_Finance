@@ -31,13 +31,13 @@ const Stakedtable = ({ loading, transactions }) => {
     return transactions
       .filter(
         (tx) =>
-          tx.input === METHOD_TOPICS.ISSUE_SYNTH ||
-          tx.input === METHOD_TOPICS.BURN_SYNTH
+          tx.input.includes(METHOD_TOPICS.ISSUE_SYNTH) ||
+          tx.input.includes(METHOD_TOPICS.BURN_SYNTH)
       )
       .map((tx) => ({
         from: tx.from,
         hash: tx.hash,
-        type: tx.input === METHOD_TOPICS.ISSUE_SYNTH ? "MINT" : "BURN",
+        type: tx.input.includes(METHOD_TOPICS.ISSUE_SYNTH) ? "MINT" : "BURN",
         timestamp: toFriendlyTimeFormat(parseInt(tx.timeStamp, 10)),
       }));
   }, [transactions]);

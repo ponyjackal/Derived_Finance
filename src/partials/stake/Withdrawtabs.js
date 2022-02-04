@@ -15,7 +15,12 @@ import BigNumber from "bignumber.js";
 import { useChain } from "../../context/chain";
 import { useFinance } from "../../context/finance";
 import { useTransaction } from "../../context/transaction";
-import { toShort18, toLong18, stringToHex } from "../../utils/Contract";
+import {
+  toShort18,
+  toLong18,
+  stringToHex,
+  METHOD_TOPICS,
+} from "../../utils/Contract";
 
 const Withdrawtabs = () => {
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -38,7 +43,7 @@ const Withdrawtabs = () => {
     loadingBalances,
     fetchBalances,
   } = useFinance();
-  const { fetchStakeTransactions } = useTransaction();
+  const { addTransaction } = useTransaction();
 
   const strBalances = useMemo(() => {
     if (!balances || !transferableDVDX)
@@ -136,10 +141,10 @@ const Withdrawtabs = () => {
 
     try {
       const rate = await ExchangeRateContract.rates(stringToHex("USDx", 4));
-      const mAmount = new BigNumber(mintAmount)
+      const mAmount = new BigNumber(mintAmount || "0")
         .multipliedBy(new BigNumber(rate.toString()))
-        .dividedBy(new BigNumber(5));
-      // const mAmount = toLong18(mintAmount);
+        .dividedBy(new BigNumber(50));
+
       const tx = await DVDXContract.issueSynths(
         stringToHex("USDx", 4),
         mAmount.toFixed()
@@ -147,7 +152,7 @@ const Withdrawtabs = () => {
       await tx.wait();
 
       await fetchBalances();
-      await fetchStakeTransactions();
+      addTransaction(tx, METHOD_TOPICS.ISSUE_SYNTH);
 
       setMintAmount("");
     } catch (error) {
@@ -169,7 +174,7 @@ const Withdrawtabs = () => {
       await tx.wait();
 
       await fetchBalances();
-      await fetchStakeTransactions();
+      addTransaction(tx, METHOD_TOPICS.BURN_SYNTH);
 
       setBurnAmount("");
     } catch (error) {
@@ -210,9 +215,9 @@ const Withdrawtabs = () => {
       const rate = await ExchangeRateContract.rates(stringToHex("USDx", 4));
       const mAmount = new BigNumber(mintAmount || "0")
         .multipliedBy(new BigNumber(rate.toString()))
-        .dividedBy(new BigNumber(5));
+        .dividedBy(new BigNumber(50));
 
-      setAvailableUSDx(toShort18(mAmount.toFixed()).toFixed(4));
+      setAvailableUSDx(toShort18(mAmount.toFixed()).toFixed());
     };
 
     ExchangeRateContract && calculateUSDx();
