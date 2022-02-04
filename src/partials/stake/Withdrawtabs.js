@@ -141,10 +141,10 @@ const Withdrawtabs = () => {
 
     try {
       const rate = await ExchangeRateContract.rates(stringToHex("USDx", 4));
-      const mAmount = new BigNumber(mintAmount)
+      const mAmount = new BigNumber(mintAmount || "0")
         .multipliedBy(new BigNumber(rate.toString()))
-        .dividedBy(new BigNumber(5));
-      // const mAmount = toLong18(mintAmount);
+        .dividedBy(new BigNumber(50));
+
       const tx = await DVDXContract.issueSynths(
         stringToHex("USDx", 4),
         mAmount.toFixed()
@@ -215,9 +215,9 @@ const Withdrawtabs = () => {
       const rate = await ExchangeRateContract.rates(stringToHex("USDx", 4));
       const mAmount = new BigNumber(mintAmount || "0")
         .multipliedBy(new BigNumber(rate.toString()))
-        .dividedBy(new BigNumber(5));
+        .dividedBy(new BigNumber(50));
 
-      setAvailableUSDx(toShort18(mAmount.toFixed()).toFixed(4));
+      setAvailableUSDx(toShort18(mAmount.toFixed()).toFixed());
     };
 
     ExchangeRateContract && calculateUSDx();
