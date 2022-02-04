@@ -10,7 +10,8 @@ export const FinanceContext = createContext({});
 export const useFinance = () => useContext(FinanceContext);
 
 export const FinanceProvider = ({ children }) => {
-  const { USDXContract, DVDXContract, FeePoolContract } = useChain();
+  const { USDXContract, DVDXContract, FeePoolContract, ExchangeRateContract } =
+    useChain();
   const { account } = useWeb3React();
 
   const [loadingBalances, setLoadingBalances] = useState(false);
@@ -19,6 +20,7 @@ export const FinanceProvider = ({ children }) => {
   const [issuables, setIssuables] = useState({});
   const [transferableDVDX, setTransferableDVDX] = useState(new BigNumber(0));
   const [fees, setFees] = useState({});
+  const [rates, setRates] = useState({});
 
   const fetchBalances = async () => {
     setLoadingBalances(true);
@@ -38,6 +40,7 @@ export const FinanceProvider = ({ children }) => {
       account,
       stringToHex("USDx")
     );
+    const rateUsdx = await ExchangeRateContract.rates(stringToHex("USDx", 4));
 
     setBalances({
       usdx: new BigNumber(usdx.toString()),
@@ -59,11 +62,21 @@ export const FinanceProvider = ({ children }) => {
       total: new BigNumber(feeRewards[1].toString()),
     });
 
+    setRates({
+      usdx: new BigNumber(rateUsdx.toString()),
+    });
+
     setLoadingBalances(false);
   };
 
   useEffect(() => {
-    if (USDXContract && DVDXContract && FeePoolContract && account) {
+    if (
+      USDXContract &&
+      DVDXContract &&
+      FeePoolContract &&
+      ExchangeRateContract &&
+      account
+    ) {
       fetchBalances();
     } else {
       setBalances({
@@ -78,7 +91,13 @@ export const FinanceProvider = ({ children }) => {
       setTransferableDVDX(new BigNumber(0));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [USDXContract, DVDXContract, FeePoolContract, account]);
+  }, [
+    USDXContract,
+    DVDXContract,
+    FeePoolContract,
+    ExchangeRateContract,
+    account,
+  ]);
 
   return (
     <FinanceContext.Provider
@@ -88,6 +107,7 @@ export const FinanceProvider = ({ children }) => {
         debts,
         fees,
         issuables,
+        rates,
         transferableDVDX,
         fetchBalances,
       }}
