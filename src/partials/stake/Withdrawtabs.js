@@ -14,6 +14,7 @@ import BigNumber from "bignumber.js";
 
 import { useChain } from "../../context/chain";
 import { useFinance } from "../../context/finance";
+import { useTransaction } from "../../context/transaction";
 import { toShort18, toLong18, stringToHex } from "../../utils/Contract";
 
 const Withdrawtabs = () => {
@@ -29,20 +30,27 @@ const Withdrawtabs = () => {
     ExchangeRateContract,
     // DepotContract,
   } = useChain();
-  const { balances, issuables, loadingBalances, fetchBalances } = useFinance();
+  const {
+    balances,
+    transferableDVDX,
+    issuables,
+    loadingBalances,
+    fetchBalances,
+  } = useFinance();
+  const { fetchStakeTransactions } = useTransaction();
 
   const strBalances = useMemo(() => {
-    if (!balances)
+    if (!balances || !transferableDVDX)
       return {
         dvdx: new BigNumber(0).toFixed(4),
         usdx: new BigNumber(0).toFixed(4),
       };
 
     return {
-      dvdx: toShort18(balances.dvdx).toFixed(4),
+      dvdx: toShort18(transferableDVDX).toFixed(4),
       usdx: toShort18(balances.usdx).toFixed(4),
     };
-  }, [balances]);
+  }, [balances, transferableDVDX]);
 
   const issuableUSDx = useMemo(() => {
     if (!issuables || !issuables.usdx) return "0.0000";
@@ -138,6 +146,7 @@ const Withdrawtabs = () => {
       await tx.wait();
 
       await fetchBalances();
+      await fetchStakeTransactions();
 
       setMintAmount("");
     } catch (error) {
@@ -159,6 +168,7 @@ const Withdrawtabs = () => {
       await tx.wait();
 
       await fetchBalances();
+      await fetchStakeTransactions();
 
       setBurnAmount("");
     } catch (error) {

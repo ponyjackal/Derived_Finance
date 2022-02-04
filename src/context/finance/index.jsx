@@ -24,7 +24,7 @@ export const FinanceProvider = ({ children }) => {
     setLoadingBalances(true);
 
     const usdx = await USDXContract.balanceOf(account);
-    const dvdx = await DVDXContract.transferableSynthetix(account);
+    const dvdx = await DVDXContract.balanceOf(account);
     const usdxDebts = await DVDXContract.debtBalanceOf(
       account,
       stringToHex("USDx")
