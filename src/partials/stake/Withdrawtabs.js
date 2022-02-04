@@ -26,6 +26,7 @@ const Withdrawtabs = () => {
 
   const {
     DVDXContract,
+    ExchangeRateContract,
     // DepotContract,
   } = useChain();
   const { balances, issuables, loadingBalances, fetchBalances } = useFinance();
@@ -125,7 +126,11 @@ const Withdrawtabs = () => {
     setLoading(true);
 
     try {
-      const mAmount = toLong18(mintAmount);
+      const rate = await ExchangeRateContract.rates(stringToHex("USDx", 4));
+      const mAmount = new BigNumber(mintAmount)
+        .multipliedBy(new BigNumber(rate.toString()))
+        .dividedBy(new BigNumber(5));
+      // const mAmount = toLong18(mintAmount);
       const tx = await DVDXContract.issueSynths(
         stringToHex("USDx", 4),
         mAmount.toFixed()

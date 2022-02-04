@@ -27,4 +27,8 @@ export const contractAddresses = {
     56: "",
     97: "0xD2b8514f4cd73557a3cDE089E76B1A2D46bdE10B",
   },
+  exchangeRate: {
+    56: "",
+    97: "0x9f27E276749ea7db384ba7F1D40474BFb87180C7",
+  },
 };
