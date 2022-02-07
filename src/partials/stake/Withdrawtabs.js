@@ -21,6 +21,7 @@ import {
   stringToHex,
   METHOD_TOPICS,
 } from "../../utils/Contract";
+import { smaller } from "../../utils/Utils";
 
 const Withdrawtabs = () => {
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -105,7 +106,7 @@ const Withdrawtabs = () => {
   };
 
   const handleBurnMax = () => {
-    setBurnAmount(strDebts.usdx);
+    setBurnAmount(smaller(strDebts.usdx, strBalances.usdx));
   };
 
   // const handleDepositMax = () => {
@@ -591,7 +592,10 @@ const Withdrawtabs = () => {
               fontSize: "20px",
             }}
             disabled={
-              isDisabled(burnAmount || "0", strDebts.usdx) ||
+              isDisabled(
+                burnAmount || "0",
+                smaller(strDebts.usdx, strBalances.usdx)
+              ) ||
               loading ||
               loadingBalances
             }
