@@ -261,7 +261,7 @@ async function main() {
   // Synths
   // ----------------
   // const currencyKeys = ["XDR", "sUSD", "sAUD", "sEUR", "sBTC", "iBTC"];
-  const currencyKeys = ["XDR", "USDx"];
+  const currencyKeys = ["XDR", "USDx", "dBTC", "dETH", "dBNB"];
   const synths = [];
 
   const PurgeableSynth = await hre.ethers.getContractFactory("PurgeableSynth", {
@@ -343,7 +343,9 @@ async function main() {
     // ["1", "0.5", "1.25", "0.1", "5000", "4000"].map((number) =>
     //   ethers.utils.parseEther(number)
     // ),
-    ["1", "0.1"].map((number) => ethers.utils.parseEther(number)),
+    ["1", "37018", "2668", "369", "0.1"].map((number) =>
+      ethers.utils.parseEther(number)
+    ),
     timestamp
   );
 
