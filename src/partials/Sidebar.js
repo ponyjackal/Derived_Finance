@@ -4,6 +4,7 @@ import { NavLink, useLocation, Link } from "react-router-dom";
 import DashboardOutlinedIcon from "@mui/icons-material/DashboardOutlined";
 import CompareArrowsOutlinedIcon from "@mui/icons-material/CompareArrowsOutlined";
 import PriceCheckOutlinedIcon from "@mui/icons-material/PriceCheckOutlined";
+import CurrencyExchangeIcon from "@mui/icons-material/CurrencyExchange";
 // import CorporateFareOutlinedIcon from "@mui/icons-material/CorporateFareOutlined";
 import ReceiptLongOutlinedIcon from "@mui/icons-material/ReceiptLongOutlined";
 import AdminPanelSettingsOutlinedIcon from "@mui/icons-material/AdminPanelSettingsOutlined";
@@ -258,6 +259,21 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
                     <PriceCheckOutlinedIcon />
                     <span className="font-heading text-base font-bold ml-3 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
                       Stake
+                    </span>
+                  </div>
+                </Link>
+              </li>
+              {/* Exchange */}
+              <li
+                className={`px-3 py-2 rounded-lg mb-0.5 last:mb-0 ${
+                  pathname === "/Exchange" && "bg-headings"
+                }`}
+              >
+                <Link to="/Exchange">
+                  <div className="flex items-center text-white hover:text-gray-200 truncate transition duration-150">
+                    <CurrencyExchangeIcon />
+                    <span className="font-heading text-base font-bold ml-3 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
+                      Exchange
                     </span>
                   </div>
                 </Link>
