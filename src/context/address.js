@@ -31,4 +31,16 @@ export const contractAddresses = {
     56: "",
     97: "0x9f27E276749ea7db384ba7F1D40474BFb87180C7",
   },
+  btc: {
+    56: "",
+    97: "0x3434EaE0e072B3765CA57FED4c33A615AA164793",
+  },
+  eth: {
+    56: "",
+    97: "0x9449FF5eF61906210443305e19ABdd4648b9f8e2",
+  },
+  bnb: {
+    56: "",
+    97: "0x9338AA85B5bD5d77852ECb9Db109a9784a1Ec2f5",
+  },
 };

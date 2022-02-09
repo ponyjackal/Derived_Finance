@@ -7,6 +7,7 @@ import DVDXTokenABI from "../abis/DVDX.json";
 import FeePoolABI from "../abis/FeePool.json";
 import DepotABI from "../abis/Depot.json";
 import ExchangeRateABI from "../abis/ExchangeRate.json";
+import SynthABI from "../abis/Synth.json";
 
 import { contractAddresses } from "./address";
 
@@ -43,4 +44,8 @@ export const getDepotContract = (chainId, library) => {
 export const getExchangeRateContract = (chainId, library) => {
   const address = contractAddresses.exchangeRate[chainId];
   return new Contract(address, ExchangeRateABI, library.getSigner());
+};
+
+export const getSynthContract = (address, library) => {
+  return new Contract(address, SynthABI, library.getSigner());
 };
