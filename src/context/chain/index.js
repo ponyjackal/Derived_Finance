@@ -9,7 +9,10 @@ import {
   getFeePoolContract,
   getDepotContract,
   getExchangeRateContract,
+  getSynthContract,
 } from "../contracts";
+import { contractAddresses } from "../address";
+import { AVAILALBE_TOKENS } from "../../utils/Tokens";
 
 export const ChainContext = createContext({});
 
@@ -24,6 +27,7 @@ export const ChainProvider = ({ children }) => {
   const [FeePoolContract, setFeePoolContract] = useState(null);
   const [DepotContract, setDepotContract] = useState(null);
   const [ExchangeRateContract, setExchangeRateContract] = useState(null);
+  const [SynthContracts, setSynthContracts] = useState({});
 
   useEffect(() => {
     if (library && active && chainId) {
@@ -47,6 +51,13 @@ export const ChainProvider = ({ children }) => {
 
       const exchangeRate = getExchangeRateContract(chainId, library);
       setExchangeRateContract(exchangeRate);
+
+      const synthContracts = {};
+      for (const token of AVAILALBE_TOKENS) {
+        synthContracts[token.key] = getSynthContract(contractAddresses[token.key][chainId], library);
+      }
+
+      setSynthContracts(synthContracts);
     } else {
       setUSDXContract(null);
       setDVDXContract(null);
@@ -68,6 +79,7 @@ export const ChainProvider = ({ children }) => {
         FeePoolContract,
         DepotContract,
         ExchangeRateContract,
+        SynthContracts,
       }}
     >
       {children}

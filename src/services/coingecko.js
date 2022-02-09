@@ -12,3 +12,12 @@ export const getPrice = async (id) => {
     console.error('Getting price error: ', error.message);
   }
 };
+
+export const getCoinPrices = async (coinId, day) => {
+  try {
+    const resp = await httpClient.get(`/coins/${coinId}/market_chart?vs_currency=usd&days=${day}`);
+    return resp.data;
+  } catch (error) {
+    console.log('Getting coin price error: ', error.message);
+  }
+};

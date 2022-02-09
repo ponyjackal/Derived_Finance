@@ -20,10 +20,12 @@ import { toShort18 } from "../../utils/Contract";
 import { toFriendlyTimeFormat, toShortAddress } from "../../utils/Utils";
 import { getJsonIpfs } from "../../utils/Ipfs";
 import { useChain } from "../../context/chain";
+import { useFinance } from "../../context/finance";
 
 const BinaryInside = () => {
   const { questionId } = useParams();
   const { MarketContract, DerivedTokenContract } = useChain();
+  const { fetchBalances } = useFinance();
   const { chainId, account } = useWeb3React();
 
   const [loading, setLoading] = useState(false);
@@ -105,6 +107,7 @@ const BinaryInside = () => {
   const handleRefreshPrice = async () => {
     setLoadingPrice(true);
     await handleFetchDetails();
+    await fetchBalances();
     setLoadingPrice(false);
   };
 
