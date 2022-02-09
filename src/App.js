@@ -7,6 +7,7 @@ import Dashboard from "./pages/Dashboard";
 import Trade from "./pages/Trade";
 import Stake from "./pages/Stake";
 import Binary from "./pages/Binary";
+import Exchange from "./pages/Exchange";
 // import Farming from "./pages/Farming";
 import Binaryoptionsinside from "./pages/Binaryoptionsinside";
 
@@ -35,6 +36,9 @@ function App() {
       </Route>
       <Route exact path="/Stake">
         <Stake />
+      </Route>
+      <Route exact path="/Exchange">
+        <Exchange />
       </Route>
       <Route exact path="/Binary">
         <Binary />
