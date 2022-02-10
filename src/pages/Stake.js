@@ -5,7 +5,7 @@ import Header from "../partials/Header";
 import Footer from "../partials/Footer";
 import Withdrawtabs from "../partials/stake/Withdrawtabs";
 import Stakedtabs from "../partials/stake/Stakedtabs";
-// import Rewards from "../partials/stake/Rewards";
+import Rewards from "../partials/stake/Rewards";
 
 function Stake() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -31,15 +31,12 @@ function Stake() {
           </div>
           <div className="w-full">
             <div className="w-full lg:flex gap-4 px-8 mb-6">
-              <div className="w-full bg-secondary rounded-lg">
-                <Withdrawtabs />
-              </div>
-              {/* <div className="lg:w-3/5 bg-secondary rounded-lg">
+              <div className="lg:w-3/5 bg-secondary rounded-lg">
                 <Withdrawtabs />
               </div>
               <div className="lg:w-2/5 bg-secondary px-4 rounded-lg">
                 <Rewards />
-              </div> */}
+              </div>
             </div>
             <div className="w-full px-8">
               <div className="bg-secondary rounded-lg">
