@@ -258,7 +258,9 @@ const Withdrawtabs = () => {
 
   return (
     <Tabs selectedIndex={selectedIndex} onSelect={handleSelect}>
-      <TabList style={{ width: "93%" }}>
+      <TabList
+        style={{ width: "93%", display: "flex", justifyContent: "center" }}
+      >
         {/* <Tab>Deposit</Tab> */}
         <Tab>Mint</Tab>
         {/* <Tab>Withdraw</Tab> */}
