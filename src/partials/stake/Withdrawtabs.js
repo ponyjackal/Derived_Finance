@@ -15,7 +15,12 @@ import BigNumber from "bignumber.js";
 import { useChain } from "../../context/chain";
 import { useFinance } from "../../context/finance";
 import { useTransaction } from "../../context/transaction";
-import { toShort18, toLong18, stringToHex, METHOD_TOPICS } from "../../utils/Contract";
+import {
+  toShort18,
+  toLong18,
+  stringToHex,
+  METHOD_TOPICS,
+} from "../../utils/Contract";
 import { smaller } from "../../utils/Utils";
 
 const Withdrawtabs = () => {
@@ -75,11 +80,18 @@ const Withdrawtabs = () => {
   // }, [issuables]);
 
   const isDisabled = (value, limit) => {
-    return new BigNumber(value).isZero() || new BigNumber(value).isNegative() || new BigNumber(value).isGreaterThan(new BigNumber(limit)) || loading;
+    return (
+      new BigNumber(value).isZero() ||
+      new BigNumber(value).isNegative() ||
+      new BigNumber(value).isGreaterThan(new BigNumber(limit)) ||
+      loading
+    );
   };
 
   const checkValidation = (value) => {
-    const floatRegExp = new RegExp(/(^(?=.+)(?:[1-9]\d*|0)?(?:\.\d{1,18})?$)|(^\d+?\.$)|(^\+?(?!0\d+)$|(^$)|(^\.$))/);
+    const floatRegExp = new RegExp(
+      /(^(?=.+)(?:[1-9]\d*|0)?(?:\.\d{1,18})?$)|(^\d+?\.$)|(^\+?(?!0\d+)$|(^$)|(^\.$))/
+    );
 
     return floatRegExp.test(value.toString()) || value === "";
   };
@@ -143,13 +155,22 @@ const Withdrawtabs = () => {
     setLoading(true);
 
     try {
-      const mAmount = new BigNumber(mintAmount || "0").multipliedBy(new BigNumber(rates.usdx.toString())).dividedBy(new BigNumber(50));
+      const mAmount = new BigNumber(mintAmount || "0")
+        .multipliedBy(new BigNumber(rates.usdx.toString()))
+        .dividedBy(new BigNumber(50));
 
-      const tx = await DVDXContract.issueSynths(stringToHex("USDx", 4), mAmount.toFixed());
+      const tx = await DVDXContract.issueSynths(
+        stringToHex("USDx", 4),
+        mAmount.toFixed()
+      );
       await tx.wait();
 
       await fetchBalances();
-      addTransaction(tx, METHOD_TOPICS.ISSUE_SYNTH, parseInt(new Date().getTime() / 1000, 10));
+      addTransaction(
+        tx,
+        METHOD_TOPICS.ISSUE_SYNTH,
+        parseInt(new Date().getTime() / 1000, 10)
+      );
 
       setMintAmount("");
     } catch (error) {
@@ -164,11 +185,18 @@ const Withdrawtabs = () => {
 
     try {
       const mAmount = toLong18(burnAmount);
-      const tx = await DVDXContract.burnSynths(stringToHex("USDx", 4), mAmount.toFixed());
+      const tx = await DVDXContract.burnSynths(
+        stringToHex("USDx", 4),
+        mAmount.toFixed()
+      );
       await tx.wait();
 
       await fetchBalances();
-      addTransaction(tx, METHOD_TOPICS.BURN_SYNTH, parseInt(new Date().getTime() / 1000, 10));
+      addTransaction(
+        tx,
+        METHOD_TOPICS.BURN_SYNTH,
+        parseInt(new Date().getTime() / 1000, 10)
+      );
 
       setBurnAmount("");
     } catch (error) {
@@ -206,7 +234,9 @@ const Withdrawtabs = () => {
 
   useEffect(() => {
     const calculateUSDx = async () => {
-      const mAmount = new BigNumber(mintAmount || "0").multipliedBy(new BigNumber(rates.usdx.toString())).dividedBy(new BigNumber(50));
+      const mAmount = new BigNumber(mintAmount || "0")
+        .multipliedBy(new BigNumber(rates.usdx.toString()))
+        .dividedBy(new BigNumber(50));
 
       setAvailableUSDx(toShort18(mAmount.toFixed()).toFixed());
     };
@@ -228,7 +258,7 @@ const Withdrawtabs = () => {
 
   return (
     <Tabs selectedIndex={selectedIndex} onSelect={handleSelect}>
-      <TabList style={{ width: "43%", display: "flex", justifyContent: "center" }}>
+      <TabList>
         {/* <Tab>Deposit</Tab> */}
         <Tab>Mint</Tab>
         <Tab>Burn</Tab>
@@ -344,7 +374,14 @@ const Withdrawtabs = () => {
             noValidate
             autoComplete="off"
           >
-            <TextField id="outlined-basic" variant="outlined" placeholder="0.0000" className="bg-primary rounded-sm text-white w-full" value={mintAmount} onChange={handleChangeMintAmount} />
+            <TextField
+              id="outlined-basic"
+              variant="outlined"
+              placeholder="0.0000"
+              className="bg-primary rounded-sm text-white w-full"
+              value={mintAmount}
+              onChange={handleChangeMintAmount}
+            />
           </Box>
           {/* <Box className="w-full m-2 bg-primary rounded-sm">
             <FormControl fullWidth style={{ width: "96%", margin: "8px" }}>
@@ -359,10 +396,21 @@ const Withdrawtabs = () => {
               </Select>
             </FormControl>
           </Box> */}
-          <hr className="w-px bg-gray-200 mx-3 mt-0.5 hidden md:block" style={{ height: "85px" }} />
+          <hr
+            className="w-px bg-gray-200 mx-3 mt-0.5 hidden md:block"
+            style={{ height: "85px" }}
+          />
           <div className="flex flex-col md:w-6/12 w-full items-center justify-center">
-            <h1 className="text-white text-sm w-full flex justify-center mb-2">USDx equivalent</h1>
-            <h1 className="text-white text-md font-bold w-full flex justify-center">{loadingBalances ? <Skeleton width={100} height={50} /> : `${availableUSDx} USDx`}</h1>
+            <h1 className="text-white text-sm w-full flex justify-center mb-2">
+              USDx equivalent
+            </h1>
+            <h1 className="text-white text-md font-bold w-full flex justify-center">
+              {loadingBalances ? (
+                <Skeleton width={100} height={50} />
+              ) : (
+                `${availableUSDx} USDx`
+              )}
+            </h1>
           </div>
         </div>
         <div className="flex justify-center md:justify-start">
@@ -374,7 +422,11 @@ const Withdrawtabs = () => {
               margin: "20px 9px",
               fontSize: "20px",
             }}
-            disabled={isDisabled(mintAmount || "0", strBalances.dvdx) || loading || loadingBalances}
+            disabled={
+              isDisabled(mintAmount || "0", strBalances.dvdx) ||
+              loading ||
+              loadingBalances
+            }
             onClick={handleMint}
           >
             Mint
@@ -491,7 +543,14 @@ const Withdrawtabs = () => {
             noValidate
             autoComplete="off"
           >
-            <TextField id="outlined-basic" variant="outlined" placeholder="0.0000" className="bg-primary rounded-sm text-white w-full" value={burnAmount} onChange={handleChangeBurnAmount} />
+            <TextField
+              id="outlined-basic"
+              variant="outlined"
+              placeholder="0.0000"
+              className="bg-primary rounded-sm text-white w-full"
+              value={burnAmount}
+              onChange={handleChangeBurnAmount}
+            />
           </Box>
           {/* <Box className="w-full m-2 bg-primary rounded-sm">
             <FormControl fullWidth style={{ width: "96%", margin: "8px" }}>
@@ -506,10 +565,21 @@ const Withdrawtabs = () => {
               </Select>
             </FormControl>
           </Box> */}
-          <hr className="w-px bg-gray-200 mx-3 mt-0.5 hidden md:block" style={{ height: "85px" }} />
+          <hr
+            className="w-px bg-gray-200 mx-3 mt-0.5 hidden md:block"
+            style={{ height: "85px" }}
+          />
           <div className="flex flex-col md:w-6/12 w-full items-center justify-center">
-            <h1 className="text-white text-sm w-full flex justify-center mb-2">DVDX equivalent</h1>
-            <h1 className="text-white text-md font-bold w-full flex justify-center">{loadingBalances ? <Skeleton width={100} height={50} /> : `${availableDVDX} DVDX`}</h1>
+            <h1 className="text-white text-sm w-full flex justify-center mb-2">
+              DVDX equivalent
+            </h1>
+            <h1 className="text-white text-md font-bold w-full flex justify-center">
+              {loadingBalances ? (
+                <Skeleton width={100} height={50} />
+              ) : (
+                `${availableDVDX} DVDX`
+              )}
+            </h1>
           </div>
         </div>
         <div className="flex justify-center md:justify-start">
@@ -521,7 +591,14 @@ const Withdrawtabs = () => {
               margin: "20px 9px",
               fontSize: "20px",
             }}
-            disabled={isDisabled(burnAmount || "0", smaller(strDebts.usdx, strBalances.usdx)) || loading || loadingBalances}
+            disabled={
+              isDisabled(
+                burnAmount || "0",
+                smaller(strDebts.usdx, strBalances.usdx)
+              ) ||
+              loading ||
+              loadingBalances
+            }
             onClick={handleBurn}
           >
             Burn
