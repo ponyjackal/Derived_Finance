@@ -1,8 +1,9 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { Component } from "react";
 import { Modal } from "react-responsive-modal";
 import "react-responsive-modal/styles.css";
 
-const label = { inputProps: { "aria-label": "Checkbox demo" } };
+// const label = { inputProps: { "aria-label": "Checkbox demo" } };
 
 export class Questions extends Component {
   constructor(props) {
@@ -67,7 +68,7 @@ export class Questions extends Component {
                   <a
                     href="https://google.com"
                     target="_blank"
-                    className="text-blue-500 text-md p-2 underline"
+                    className="text-blue-500 text-md p-2 underline" rel="noreferrer"
                   >
                     abcd
                   </a>
@@ -77,7 +78,7 @@ export class Questions extends Component {
                   <a
                     href="https://google.com"
                     target="_blank"
-                    className="text-blue-500 text-md p-2 underline"
+                    className="text-blue-500 text-md p-2 underline" rel="noreferrer"
                   >
                     abcd
                   </a>
