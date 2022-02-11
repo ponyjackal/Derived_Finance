@@ -10,6 +10,7 @@ import Binary from "./pages/Binary";
 import Exchange from "./pages/Exchange";
 // import Farming from "./pages/Farming";
 import Binaryoptionsinside from "./pages/Binaryoptionsinside";
+import Admin from "./pages/Admin";
 
 import "./App.css";
 import "./css/style.scss";
@@ -39,6 +40,9 @@ function App() {
       </Route>
       <Route exact path="/Exchange">
         <Exchange />
+      </Route>
+      <Route exact path="/Admin">
+        <Admin />
       </Route>
       <Route exact path="/Binary">
         <Binary />
