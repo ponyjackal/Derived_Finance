@@ -261,8 +261,8 @@ const Withdrawtabs = () => {
       <TabList>
         {/* <Tab>Deposit</Tab> */}
         <Tab>Mint</Tab>
-        {/* <Tab>Withdraw</Tab> */}
         <Tab>Burn</Tab>
+        {/* <Tab>Withdraw</Tab> */}
       </TabList>
       {/* <TabPanel>
         <div className="flex items-center justify-between">
