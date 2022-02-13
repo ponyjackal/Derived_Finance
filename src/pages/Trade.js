@@ -2,13 +2,24 @@ import React, { useState } from "react";
 import TradeBox from "../partials/trade/TradeBox";
 import Sidebar from "../partials/Sidebar";
 import Header from "../partials/Header";
-import DashboardCard05 from "../partials/dashboard/DashboardCard05";
+// import DashboardCard05 from "../partials/dashboard/DashboardCard05";
 import Footer from "../partials/Footer";
 import Cryptoslider from "../partials/trade/Cryptoslider";
 import TransactionTable from "../partials/trade/TransactionTable";
+import ExchangeChart from "../partials/trade/ExchangeChart";
 
 function Trade() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [fromToken, setFromToken] = useState("btc");
+  const [toToken, setToToken] = useState("usdx");
+
+  const handleChangeFromToken = (event) => {
+    setFromToken(event.target.value);
+  };
+
+  const handleChangeToToken = (event) => {
+    setToToken(event.target.value);
+  };
 
   return (
     <div className="flex h-screen overflow-hidden bg-primary">
@@ -23,8 +34,13 @@ function Trade() {
           <div className="px-4 sm:px-6 lg:px-8 py-8 w-full mx-auto bg-primary">
             <p className="text-white text-3xl my-5">Trade</p>
             <div className="grid grid-cols-12 gap-2">
-              <TradeBox />
-              <DashboardCard05 style={{ height: "80%" }} />
+              <TradeBox
+                fromToken={fromToken}
+                toToken={toToken}
+                onChangeFromToken={handleChangeFromToken}
+                onChangeToToken={handleChangeToToken}
+              />
+              <ExchangeChart />
               {/* <Chartselect/> */}
             </div>
             <div>

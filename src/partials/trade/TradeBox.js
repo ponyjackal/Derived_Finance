@@ -1,79 +1,81 @@
-import React, { Component } from "react";
+import React, { useMemo } from "react";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import ArrowCircleDownOutlinedIcon from "@mui/icons-material/ArrowCircleDownOutlined";
-import MonetizationOnOutlinedIcon from "@mui/icons-material/MonetizationOnOutlined";
+// import MonetizationOnOutlinedIcon from "@mui/icons-material/MonetizationOnOutlined";
 import WifiProtectedSetupOutlinedIcon from "@mui/icons-material/WifiProtectedSetupOutlined";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import Button from "@mui/material/Button";
-import InputLabel from "@mui/material/InputLabel";
-import busd from "../../images/busd.png";
-import usdc from "../../images/usdc.png";
+// import InputLabel from "@mui/material/InputLabel";
+// import busd from "../../images/busd.png";
+// import usdc from "../../images/usdc.png";
+import { AVAILALBE_TOKENS } from "../../utils/Tokens";
+import { useFinance } from "../../context/finance";
+import { toShort18 } from "../../utils/Contract";
 import "../../App.css";
 
-export class TradeBox extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      age: "",
-      value: "1 BUSD = 1.0005 USDC",
-    };
-  }
+const TradeBox = ({ fromToken, toToken, onChangeFromToken, onChangeToToken }) => {
+  const { balances, synthBalances } = useFinance();
 
-  handleChange = (event) => {
-    this.setState({ age: event.target.value });
-  };
+  const fromTokenBalance = useMemo(() => {
+    if (fromToken === 'usdx') {
+      if (!balances || !balances.usdx) return '0.0000';
+      return toShort18(balances.usdx.toFixed()).toFixed(4);
+    }
 
-  handleChange1 = (event) => {
-    this.setState({ age1: event.target.value });
-  };
+    if (!synthBalances || !synthBalances[fromToken]) return '0.0000';
+    return toShort18(synthBalances[fromToken].toFixed()).toFixed(4);
+  }, [fromToken, balances, synthBalances]);
 
-  refresh = () => {
-    this.setState({ value: "" });
-    setTimeout(() => {
-      this.setState({
-        value: "1 BUSD = 1.0005 USDC",
-      });
-    }, 500);
-  };
+  const toTokenBalance = useMemo(() => {
+    if (toToken === 'usdx') {
+      if (!balances || !balances.usdx) return '0.0000';
+      return toShort18(balances.usdx.toFixed()).toFixed(4);
+    }
 
-  render() {
-    return (
-      <div className="row col-span-full sm:col-span-6  bg-secondary rounded-md ">
+    if (!synthBalances || !synthBalances[toToken]) return '0.0000';
+    return toShort18(synthBalances[toToken].toFixed()).toFixed(4);
+  }, [toToken, balances, synthBalances]);
+
+  const coinList = useMemo(() => [
+    ...AVAILALBE_TOKENS,
+    {
+      key: 'usdx',
+      coinId: 'usdx',
+      name: 'USDx',
+      icon: require("../../images/tokens/usdx.svg").default,
+    }
+  ], []);
+
+  return (
+    <div className="row col-span-full sm:col-span-6  bg-secondary rounded-md ">
         <div className="flex justify-between">
           <div className="text-lg text-white m-3">From</div>
           <div className="text-md text-gray-500 m-3 underline">
-            Balance : 500
+            Balance : {fromTokenBalance}
           </div>
         </div>
         <div className=" flex">
           <Box className="w-48 m-2 bg-primary rounded-sm">
             <FormControl fullWidth>
-              <InputLabel
-                id="demo-simple-select-label"
-                style={{
-                  display: "flex",
-                  justifyContent: "space-evenly",
-                  width: "75%",
-                  alignItems: "center",
-                }}
-              >
-                <img alt="BUSD Icon" src={busd} className="w-6" />
-                BUSD
-              </InputLabel>
               <Select
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
-                value={this.state.age}
+                value={fromToken}
                 required
-                onChange={(e) => this.handleChange(e)}
+                onChange={onChangeFromToken}
               >
-                <MenuItem value={1}>
-                  <MonetizationOnOutlinedIcon />
-                </MenuItem>
+                {coinList.map(token => (
+                  <MenuItem key={token.key} value={token.key}>
+                    <div className="flex gap-x-2 items-center">
+                      <img alt={token.name} src={token.icon} width={15} height={15} />
+                      {token.name}
+                    </div>
+                  </MenuItem>
+                ))}
               </Select>
             </FormControl>
           </Box>
@@ -104,34 +106,27 @@ export class TradeBox extends Component {
         <div className="flex justify-between">
           <div className="text-lg text-white m-3">To</div>
           <div className="text-md text-gray-500 m-3 underline">
-            Balance : 1500
+            Balance : {toTokenBalance}
           </div>
         </div>
         <div className=" flex">
           <Box className="w-48 m-2 bg-primary rounded-sm">
             <FormControl fullWidth>
-              <InputLabel
-                id="demo-simple-select-label"
-                style={{
-                  display: "flex",
-                  justifyContent: "space-evenly",
-                  width: "75%",
-                  alignItems: "center",
-                }}
-              >
-                <img alt="BUSD ICON" src={usdc} className="w-6" />
-                BUSD
-              </InputLabel>
               <Select
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
-                value={this.state.age1}
+                value={toToken}
                 required
-                onChange={(e) => this.handleChange1(e)}
+                onChange={onChangeToToken}
               >
-                <MenuItem value={1}>
-                  <MonetizationOnOutlinedIcon />
-                </MenuItem>
+                {coinList.map(token => (
+                  <MenuItem key={token.key} value={token.key}>
+                    <div className="flex gap-x-2 items-center">
+                      <img alt={token.name} src={token.icon} width={15} height={15} />
+                      {token.name}
+                    </div>
+                  </MenuItem>
+                ))}
               </Select>
             </FormControl>
           </Box>
@@ -155,10 +150,9 @@ export class TradeBox extends Component {
         </div>
         <div className="flex justify-center">
           <div className="text-gray-500 my-5 flex justify-center text-center">
-            <p>{this.state.value}</p>
+            <p></p>
             <WifiProtectedSetupOutlinedIcon
               className="text-white ml-4"
-              onClick={() => this.refresh()}
             />
           </div>
         </div>
@@ -195,8 +189,7 @@ export class TradeBox extends Component {
           </div>
         </div>
       </div>
-    );
-  }
-}
+  );
+};
 
 export default TradeBox;
