@@ -5,6 +5,7 @@ import { MarketProvider } from "./context/market";
 import { ChainProvider } from "./context/chain";
 import { FinanceProvider } from "./context/finance";
 import { TransactionProvider } from "./context/transaction";
+import { DisclaimerProvider } from "./context/disclaimer";
 import { getLibrary } from "./utils/Connectors";
 
 const Providers = ({ children }) => {
@@ -14,7 +15,9 @@ const Providers = ({ children }) => {
         <ChainProvider>
           <FinanceProvider>
             <MarketProvider>
-              <TransactionProvider>{children}</TransactionProvider>
+              <TransactionProvider>
+                <DisclaimerProvider>{children}</DisclaimerProvider>
+              </TransactionProvider>
             </MarketProvider>
           </FinanceProvider>
         </ChainProvider>
