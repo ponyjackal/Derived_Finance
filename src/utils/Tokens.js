@@ -13,7 +13,7 @@ export const AVAILALBE_TOKENS = [
   },
   {
     key: "bnb",
-    coinId: "binance-coin",
+    coinId: "binancecoin",
     name: "dBNB",
     icon: require("../images/tokens/bnb.svg").default,
   },

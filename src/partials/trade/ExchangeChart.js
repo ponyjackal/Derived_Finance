@@ -34,7 +34,7 @@ const ExchangeChart = () => {
   useEffect(() => {
     const fetchPrices = async () => {
       try {
-        const res = await getCoinPrices("bitcoin", 1);
+        const res = await getCoinPrices("bitcoin", 1, 1000 * 60 * 24);
         setTrades(res.prices);
       } catch (error) {
         console.error("Exchange error: ", error.message);
@@ -43,7 +43,7 @@ const ExchangeChart = () => {
 
     fetchPrices();
 
-    // const intervalId = setInterval(fetchPrices, 1000);
+    // const intervalId = setInterval(fetchPrices, 60000);
 
     // return () => {
     //   clearInterval(intervalId);
