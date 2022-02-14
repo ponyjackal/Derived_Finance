@@ -311,13 +311,12 @@ contract FeePool is Proxyable, SelfDestructible, LimitedSetup {
         recentFeePeriods[FEE_PERIOD_LENGTH - 2].rewardsToDistribute = lastFeePeriod.rewardsToDistribute
             .sub(lastFeePeriod.rewardsClaimed)
             .add(secondLastFeePeriod.rewardsToDistribute);
-
         // Shift the previous fee periods across to make room for the new one.
         // Condition checks for overflow when uint subtracts one from zero
         // Could be written with int instead of uint, but then we have to convert everywhere
         // so it felt better from a gas perspective to just change the condition to check
         // for overflow after subtracting one from zero.
-        for (uint i = FEE_PERIOD_LENGTH - 2; i < FEE_PERIOD_LENGTH; i--) {
+        for (uint i = FEE_PERIOD_LENGTH - 2; i > 0; i--) {
             uint next = i + 1;
             recentFeePeriods[next].feePeriodId = recentFeePeriods[i].feePeriodId;
             recentFeePeriods[next].startingDebtIndex = recentFeePeriods[i].startingDebtIndex;
@@ -330,7 +329,6 @@ contract FeePool is Proxyable, SelfDestructible, LimitedSetup {
 
         // Clear the first element of the array to make sure we don't have any stale values.
         delete recentFeePeriods[0];
-
         // Open up the new fee period. Take a snapshot of the total value of the system.
         // Increment periodId from the recent closed period feePeriodId
         recentFeePeriods[0].feePeriodId = recentFeePeriods[1].feePeriodId.add(1);
