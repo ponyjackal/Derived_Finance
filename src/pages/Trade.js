@@ -2,13 +2,51 @@ import React, { useState } from "react";
 import TradeBox from "../partials/trade/TradeBox";
 import Sidebar from "../partials/Sidebar";
 import Header from "../partials/Header";
-import DashboardCard05 from "../partials/dashboard/DashboardCard05";
+// import DashboardCard05 from "../partials/dashboard/DashboardCard05";
 import Footer from "../partials/Footer";
 import Cryptoslider from "../partials/trade/Cryptoslider";
 import TransactionTable from "../partials/trade/TransactionTable";
+import ExchangeChart from "../partials/trade/ExchangeChart";
+import { toShort18, toLong18, stringToHex } from "../utils/Contract";
+import { useChain } from "../context/chain";
+import { MAPPING_TOKENS } from "../utils/Tokens";
 
 function Trade() {
+  const { DVDXContract } = useChain();
+
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [fromToken, setFromToken] = useState("btc");
+  const [toToken, setToToken] = useState("usdx");
+  const [fromAmount, setFromAmount] = useState("");
+  const [toAmount, setToAmount] = useState("");
+
+  const handleChangeFromToken = (event) => {
+    setFromToken(event.target.value);
+  };
+
+  const handleChangeToToken = (event) => {
+    setToToken(event.target.value);
+  };
+
+  const handleChangeFromAmount = async (event) => {
+    const value = event.target.value;
+
+    const floatRegExp = new RegExp(
+      /(^(?=.+)(?:[1-9]\d*|0)?(?:\.\d+)?$)|(^\d\.$)/
+    );
+    if (floatRegExp.test(value.toString()) || value === "") {
+      setFromAmount(value);
+
+      const valueBN = toLong18(value);
+      const effectiveValue = await DVDXContract.effectiveValue(
+        stringToHex(MAPPING_TOKENS[fromToken], 4),
+        valueBN.toFixed(),
+        stringToHex(MAPPING_TOKENS[toToken], 4)
+      );
+      const small = toShort18(effectiveValue.toString());
+      setToAmount(small);
+    }
+  };
 
   return (
     <div className="flex h-screen overflow-hidden bg-primary">
@@ -23,8 +61,16 @@ function Trade() {
           <div className="px-4 sm:px-6 lg:px-8 py-8 w-full mx-auto bg-primary">
             <p className="text-white text-3xl my-5">Trade</p>
             <div className="grid grid-cols-12 gap-2">
-              <TradeBox />
-              <DashboardCard05 style={{ height: "80%" }} />
+              <TradeBox
+                fromToken={fromToken}
+                toToken={toToken}
+                fromAmount={fromAmount}
+                toAmount={toAmount}
+                onChangeFromToken={handleChangeFromToken}
+                onChangeToToken={handleChangeToToken}
+                onChangeFromAmount={handleChangeFromAmount}
+              />
+              <ExchangeChart fromToken={fromToken} toToken={toToken} />
               {/* <Chartselect/> */}
             </div>
             <div>

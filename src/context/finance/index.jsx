@@ -10,12 +10,13 @@ export const FinanceContext = createContext({});
 export const useFinance = () => useContext(FinanceContext);
 
 export const FinanceProvider = ({ children }) => {
-  const { USDXContract, DVDXContract, FeePoolContract, ExchangeRateContract } =
+  const { USDXContract, DVDXContract, FeePoolContract, ExchangeRateContract, SynthContracts } =
     useChain();
   const { account } = useWeb3React();
 
   const [loadingBalances, setLoadingBalances] = useState(false);
   const [balances, setBalances] = useState({});
+  const [synthBalances, setSynthBalances] = useState({});
   const [debts, setDebts] = useState({});
   const [issuables, setIssuables] = useState({});
   const [transferableDVDX, setTransferableDVDX] = useState(new BigNumber(0));
@@ -42,6 +43,12 @@ export const FinanceProvider = ({ children }) => {
     );
     const rateUsdx = await ExchangeRateContract.rates(stringToHex("USDx", 4));
 
+    const synthes = {};
+    for (const synthKey of Object.keys(SynthContracts)) {
+      const balance = await SynthContracts[synthKey].balanceOf(account);
+      synthes[synthKey] = new BigNumber(balance.toString());
+    }
+
     setBalances({
       usdx: new BigNumber(usdx.toString()),
       dvdx: new BigNumber(dvdx.toString()),
@@ -66,6 +73,8 @@ export const FinanceProvider = ({ children }) => {
       usdx: new BigNumber(rateUsdx.toString()),
     });
 
+    setSynthBalances(synthes);
+
     setLoadingBalances(false);
   };
 
@@ -75,6 +84,7 @@ export const FinanceProvider = ({ children }) => {
       DVDXContract &&
       FeePoolContract &&
       ExchangeRateContract &&
+      SynthContracts &&
       account
     ) {
       fetchBalances();
@@ -96,6 +106,7 @@ export const FinanceProvider = ({ children }) => {
     DVDXContract,
     FeePoolContract,
     ExchangeRateContract,
+    SynthContracts,
     account,
   ]);
 
@@ -104,6 +115,7 @@ export const FinanceProvider = ({ children }) => {
       value={{
         loadingBalances,
         balances,
+        synthBalances,
         debts,
         fees,
         issuables,
