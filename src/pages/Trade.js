@@ -7,11 +7,18 @@ import Footer from "../partials/Footer";
 import Cryptoslider from "../partials/trade/Cryptoslider";
 import TransactionTable from "../partials/trade/TransactionTable";
 import ExchangeChart from "../partials/trade/ExchangeChart";
+import { toShort18, toLong18, stringToHex } from "../utils/Contract";
+import { useChain } from "../context/chain";
+import { MAPPING_TOKENS } from "../utils/Tokens";
 
 function Trade() {
+  const { DVDXContract } = useChain();
+
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [fromToken, setFromToken] = useState("btc");
   const [toToken, setToToken] = useState("usdx");
+  const [fromAmount, setFromAmount] = useState("");
+  const [toAmount, setToAmount] = useState("");
 
   const handleChangeFromToken = (event) => {
     setFromToken(event.target.value);
@@ -19,6 +26,26 @@ function Trade() {
 
   const handleChangeToToken = (event) => {
     setToToken(event.target.value);
+  };
+
+  const handleChangeFromAmount = async (event) => {
+    const value = event.target.value;
+
+    const floatRegExp = new RegExp(
+      /(^(?=.+)(?:[1-9]\d*|0)?(?:\.\d+)?$)|(^\d\.$)/
+    );
+    if (floatRegExp.test(value.toString()) || value === "") {
+      setFromAmount(value);
+
+      const valueBN = toLong18(value);
+      const effectiveValue = await DVDXContract.effectiveValue(
+        stringToHex(MAPPING_TOKENS[fromToken], 4),
+        valueBN.toFixed(),
+        stringToHex(MAPPING_TOKENS[toToken], 4)
+      );
+      const small = toShort18(effectiveValue.toString());
+      setToAmount(small);
+    }
   };
 
   return (
@@ -37,10 +64,13 @@ function Trade() {
               <TradeBox
                 fromToken={fromToken}
                 toToken={toToken}
+                fromAmount={fromAmount}
+                toAmount={toAmount}
                 onChangeFromToken={handleChangeFromToken}
                 onChangeToToken={handleChangeToToken}
+                onChangeFromAmount={handleChangeFromAmount}
               />
-              <ExchangeChart />
+              <ExchangeChart fromToken={fromToken} toToken={toToken} />
               {/* <Chartselect/> */}
             </div>
             <div>

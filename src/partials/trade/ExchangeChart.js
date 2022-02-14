@@ -3,12 +3,13 @@ import React, { useState, useEffect, useMemo } from "react";
 import RealtimeChart from "../../charts/RealtimeChart";
 import { tailwindConfig, hexToRGB } from "../../utils/Utils";
 import { getCoinPrices } from "../../services/coingecko";
+import { AVAILALBE_TOKENS } from "../../utils/Tokens";
 
-const ExchangeChart = () => {
+const ExchangeChart = ({ fromToken, toToken }) => {
   const [trades, setTrades] = useState([]);
 
-  const labels = useMemo(() => trades.map(trade => trade[0]), [trades]);
-  const data = useMemo(() => trades.map(trade => trade[1]), [trades]);
+  const labels = useMemo(() => trades.map((trade) => trade[0]), [trades]);
+  const data = useMemo(() => trades.map((trade) => trade[1]), [trades]);
   const chartData = useMemo(() => {
     return {
       labels,
@@ -31,24 +32,22 @@ const ExchangeChart = () => {
     };
   }, [labels, data]);
 
+  const fetchPrices = async (coinId) => {
+    try {
+      const res = await getCoinPrices(coinId, 1, 1000 * 60 * 24);
+      setTrades(res.prices);
+    } catch (error) {
+      console.error("Exchange error: ", error.message);
+    }
+  };
+
   useEffect(() => {
-    const fetchPrices = async () => {
-      try {
-        const res = await getCoinPrices("bitcoin", 1, 1000 * 60 * 24);
-        setTrades(res.prices);
-      } catch (error) {
-        console.error("Exchange error: ", error.message);
-      }
-    };
+    const token =
+      AVAILALBE_TOKENS.find((t) => t.key === fromToken) ||
+      AVAILALBE_TOKENS.find((t) => t.key === toToken);
 
-    fetchPrices();
-
-    // const intervalId = setInterval(fetchPrices, 60000);
-
-    // return () => {
-    //   clearInterval(intervalId);
-    // };
-  }, []);
+    token && fetchPrices(token.coinId);
+  }, [fromToken, toToken]);
 
   return (
     <div className="flex flex-col col-span-full sm:col-span-6 bg-primary shadow-lg rounded-sm border border-gray-200">

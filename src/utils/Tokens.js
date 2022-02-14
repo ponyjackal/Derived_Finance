@@ -18,3 +18,10 @@ export const AVAILALBE_TOKENS = [
     icon: require("../images/tokens/bnb.svg").default,
   },
 ];
+
+export const MAPPING_TOKENS = {
+  btc: 'dBTC',
+  eth: 'dETH',
+  bnb: 'dBNB',
+  usdx: 'USDx'
+};
