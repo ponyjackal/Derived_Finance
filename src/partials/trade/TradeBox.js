@@ -10,7 +10,7 @@ import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import Button from "@mui/material/Button";
 import { useWeb3React } from "@web3-react/core";
 
-import { AVAILALBE_TOKENS } from "../../utils/Tokens";
+import { AVAILALBE_TOKENS, MAPPING_TOKENS } from "../../utils/Tokens";
 import { useFinance } from "../../context/finance";
 import { useChain } from "../../context/chain";
 import { toShort18, toLong18 } from "../../utils/Contract";
@@ -82,16 +82,10 @@ const TradeBox = ({
 
     try {
       const valueBN = toLong18(fromAmount);
-      console.log("DEBUG-payload: ", {
-        fromToken: stringToHex(fromToken.name),
-        value: valueBN.toFixed(),
-        toToken: stringToHex(toToken.name),
-        account,
-      });
       const tx = await DVDXContract.exchange(
-        stringToHex(fromToken.name),
+        stringToHex(MAPPING_TOKENS[fromToken]),
         valueBN.toFixed(),
-        stringToHex(toToken.name),
+        stringToHex(MAPPING_TOKENS[toToken]),
         account
       );
       await tx.wait();
@@ -236,7 +230,7 @@ const TradeBox = ({
           </Button>
         </div>
       </div>
-      <div className=" flex justify-center w-full">
+      {/* <div className=" flex justify-center w-full">
         <div className=" flex justify-center text-center w-full m-4">
           <div className="text-gray-500 flex justify-center text-center font-headings">
             Enter an amount to see more trading details
@@ -252,7 +246,7 @@ const TradeBox = ({
         <div className="text-md text-gray-200 m-3">
           Max Reward 5.04 DEX <span className="text-headings">$16.68</span>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };
