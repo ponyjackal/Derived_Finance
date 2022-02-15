@@ -34,4 +34,5 @@ export const stringToHex = (str, bytes = 32) => {
 export const METHOD_TOPICS = {
   ISSUE_SYNTH: "0x49755b9e",
   BURN_SYNTH: "0xaf023335",
+  EXCHANGE_SYNTH: "0x405d3adf",
 };

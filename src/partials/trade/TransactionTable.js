@@ -1,63 +1,71 @@
-import React, { useState, useEffect } from "react";
-import { useWeb3React } from "@web3-react/core";
+import React, { useMemo } from "react";
 import ReactTable from "react-table-6";
 import "react-table-6/react-table.css";
 import "../../css/table.css";
 
-import { useChain } from "../../context/chain";
-import { getTransactions } from "../../services/etherscan";
+import { METHOD_TOPICS } from "../../utils/Contract";
+import { toFriendlyTimeFormat } from "../../utils/Utils";
+import { useTransaction } from "../../context/transaction";
 
+// const columns = [
+//   {
+//     Header: "Transaction ID",
+//     accessor: "transaction_id",
+//   },
+//   {
+//     Header: "Type",
+//     accessor: "type",
+//   },
+//   {
+//     Header: "Date Time",
+//     accessor: "date_time",
+//   },
+//   {
+//     Header: "Amount",
+//     accessor: "amount",
+//   },
+//   {
+//     Header: "Status",
+//     accessor: "status",
+//   },
+//   {
+//     Header: "Value",
+//     accessor: "value",
+//   },
+// ];
 const columns = [
   {
-    Header: "Transaction ID",
-    accessor: "transaction_id",
+    Header: "Hash",
+    accessor: "hash",
+  },
+  {
+    Header: "From",
+    accessor: "from",
   },
   {
     Header: "Type",
     accessor: "type",
   },
   {
-    Header: "Date Time",
-    accessor: "date_time",
-  },
-  {
-    Header: "Amount",
-    accessor: "amount",
-  },
-  {
-    Header: "Status",
-    accessor: "status",
-  },
-  {
-    Header: "Value",
-    accessor: "value",
+    Header: "Timestamp",
+    accessor: "timestamp",
   },
 ];
 
 const Transactiontable = () => {
-  const { chainId } = useWeb3React();
-  const { DVDXContract } = useChain();
-  const [loading, setLoading] = useState(false);
-  const [data, setData] = useState([]);
-
-  const fetchTransactions = async () => {
-    setLoading(true);
-
-    try {
-      const res = await getTransactions(chainId, DVDXContract.address);
-      setData([]);
-      console.log('DEBUG-res: ', { res });
-    } catch (error) {
-      console.error('Fetch transaction error: ', error.message);
-    }
-
-    setLoading(false);
-  };
-
-  useEffect(() => {
-    chainId && DVDXContract && fetchTransactions();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [chainId, DVDXContract]);
+  const { loading, stakeTransactions: transactions } = useTransaction();
+  const data = useMemo(() => {
+    return transactions
+      .filter((transaction) =>
+        transaction.input.includes(METHOD_TOPICS.EXCHANGE_SYNTH)
+      )
+      .map((tx) => ({
+        from: tx.from,
+        hash: tx.hash,
+        type: "EXCHANGE",
+        timestamp: toFriendlyTimeFormat(parseInt(tx.timeStamp, 10)),
+      }));
+  }, [transactions]);
 
   return (
     <div>
