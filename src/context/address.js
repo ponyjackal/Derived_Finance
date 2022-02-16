@@ -5,42 +5,42 @@ export const contractAddresses = {
   },
   derivedToken: {
     56: "",
-    97: "0xE41B000268eDBFc239988237D7Cc6B995aD3e1Dc",
+    97: "0xe437D9E14539886e9e95775d958559BB8Eaf6cD7",
   },
   // Main ERC20
   dvdx: {
     56: "",
-    97: "0x2448431fdC02d1f5c308C84c2020566003D2Cc9f",
+    97: "0xE52Da10157ef818c35B5Ed3Ca9C76772816E2Eae",
   },
   // Asset ERC20
   usdx: {
     56: "",
-    97: "0xE41B000268eDBFc239988237D7Cc6B995aD3e1Dc",
+    97: "0xe437D9E14539886e9e95775d958559BB8Eaf6cD7",
   },
   // Fee Pool
   feePool: {
     56: "",
-    97: "0x81DAca305Ef56c4b9791758C9179973238b346D0",
+    97: "0x68DA04b1192831d59F71630cAEE47D8e516d07F5",
   },
   // Depot
   depot: {
     56: "",
-    97: "0xD2b8514f4cd73557a3cDE089E76B1A2D46bdE10B",
+    97: "0x53643Df434Ec0C3C1294075Bb0a70efEe4dB71C7",
   },
   exchangeRate: {
     56: "",
-    97: "0x9f27E276749ea7db384ba7F1D40474BFb87180C7",
+    97: "0xCA4284bC135F9A96680497B24Be4E1e0e52643f2",
   },
   btc: {
     56: "",
-    97: "0x3434EaE0e072B3765CA57FED4c33A615AA164793",
+    97: "0x1C5ad958898a401164717d511f59EFCE6817Cf37",
   },
   eth: {
     56: "",
-    97: "0x9449FF5eF61906210443305e19ABdd4648b9f8e2",
+    97: "0x06Cd433E84D966E549D9a1De4Ea63C9062E2ae8D",
   },
   bnb: {
     56: "",
-    97: "0x9338AA85B5bD5d77852ECb9Db109a9784a1Ec2f5",
+    97: "0x8fC450efC60aBe8AeaE982837e243Ec1E53778C6",
   },
 };

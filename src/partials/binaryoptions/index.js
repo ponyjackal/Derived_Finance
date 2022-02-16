@@ -24,7 +24,7 @@ import { useFinance } from "../../context/finance";
 
 const BinaryInside = () => {
   const { questionId } = useParams();
-  const { MarketContract, DerivedTokenContract } = useChain();
+  const { MarketContract, USDXContract } = useChain();
   const { fetchBalances } = useFinance();
   const { chainId, account } = useWeb3React();
 
@@ -111,14 +111,20 @@ const BinaryInside = () => {
     setLoadingPrice(false);
   };
 
-  const handleUpdatePrice = async (tx, status, timestamp, amount, slotIndex) => {
+  const handleUpdatePrice = async (
+    tx,
+    status,
+    timestamp,
+    amount,
+    slotIndex
+  ) => {
     setLoading(true);
     setLoadingPrice(true);
 
     const data = await MarketContract.getAnswerPrices(questionId);
     const market = await MarketContract.markets(questionId);
 
-    setQuestion(val => ({
+    setQuestion((val) => ({
       ...val,
       long: toShort18(data[0].toString()).toFixed(2),
       short: toShort18(data[1].toString()).toFixed(2),
@@ -126,22 +132,24 @@ const BinaryInside = () => {
       trade: toShort18(market.tradeVolume.toString()).toFixed(2),
     }));
 
-    setTrades(val => [
+    setTrades((val) => [
       {
         amount,
         status,
         timestamp,
         transaction: tx.hash,
         trader: tx.from,
-        answer: slotIndex === 0 ? 'LONG' : 'SHORT',
+        answer: slotIndex === 0 ? "LONG" : "SHORT",
         long: new BigNumber(data[0].toString()).toFixed(),
         short: new BigNumber(data[1].toString()).toFixed(),
-        prevLong: val.length === 0 ? "500000000000000000" : val[val.length - 1].long,
-        prevShort: val.length === 0 ? "500000000000000000" : val[val.length - 1].short,
+        prevLong:
+          val.length === 0 ? "500000000000000000" : val[val.length - 1].long,
+        prevShort:
+          val.length === 0 ? "500000000000000000" : val[val.length - 1].short,
       },
       ...val,
     ]);
-    setPrices(val => [
+    setPrices((val) => [
       ...val,
       {
         index: val.length,
@@ -181,7 +189,7 @@ const BinaryInside = () => {
       const longBalance = await MarketContract.balanceOf(account, longId);
       const shortBalance = await MarketContract.balanceOf(account, shortId);
 
-      const usdx = await DerivedTokenContract.balanceOf(account);
+      const usdx = await USDXContract.balanceOf(account);
 
       setBalances({
         0: toShort18(longBalance.toString()),
@@ -194,7 +202,7 @@ const BinaryInside = () => {
       setLoading(false);
     };
 
-    if (questionId && account && MarketContract && DerivedTokenContract) {
+    if (questionId && account && MarketContract && USDXContract) {
       initialize();
     } else {
       setBalances({
@@ -203,7 +211,7 @@ const BinaryInside = () => {
       });
       setUSDXBalance(new BigNumber(0));
     }
-  }, [questionId, account, MarketContract, DerivedTokenContract]);
+  }, [questionId, account, MarketContract, USDXContract]);
 
   return (
     <main>
@@ -338,7 +346,11 @@ const BinaryInside = () => {
         </div>
       </div>
       <p className="text-white text-2xl font-bold mx-8">Market Positions</p>
-      <Marketposition {...question} balances={balances} loading={loading || loadingPrice} />
+      <Marketposition
+        {...question}
+        balances={balances}
+        loading={loading || loadingPrice}
+      />
       <p className="text-white text-2xl font-bold underline decoration-secondary mx-8">
         About This Market
       </p>
