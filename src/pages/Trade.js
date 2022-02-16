@@ -39,9 +39,9 @@ function Trade() {
 
       const valueBN = toLong18(value);
       const effectiveValue = await DVDXContract.effectiveValue(
-        stringToHex(MAPPING_TOKENS[fromToken], 4),
+        stringToHex(MAPPING_TOKENS[fromToken]),
         valueBN.toFixed(),
-        stringToHex(MAPPING_TOKENS[toToken], 4)
+        stringToHex(MAPPING_TOKENS[toToken])
       );
       const small = toShort18(effectiveValue.toString());
       setToAmount(small);

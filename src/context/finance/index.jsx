@@ -41,7 +41,7 @@ export const FinanceProvider = ({ children }) => {
       account,
       stringToHex("USDx")
     );
-    const rateUsdx = await ExchangeRateContract.rates(stringToHex("USDx", 4));
+    const rateUsdx = await ExchangeRateContract.rates(stringToHex("USDx"));
 
     const synthes = {};
     for (const synthKey of Object.keys(SynthContracts)) {
