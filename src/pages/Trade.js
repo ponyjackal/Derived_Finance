@@ -15,8 +15,8 @@ function Trade() {
   const { DVDXContract } = useChain();
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [fromToken, setFromToken] = useState("btc");
-  const [toToken, setToToken] = useState("usdx");
+  const [fromToken, setFromToken] = useState("usdx");
+  const [toToken, setToToken] = useState("btc");
   const [fromAmount, setFromAmount] = useState("");
   const [toAmount, setToAmount] = useState("");
 
@@ -48,6 +48,12 @@ function Trade() {
     }
   };
 
+  const handleExchangeCurrency = () => {
+    const from = fromToken;
+    setFromToken(toToken);
+    setToToken(from);
+  };
+
   return (
     <div className="flex h-screen overflow-hidden bg-primary">
       {/* Sidebar */}
@@ -69,6 +75,7 @@ function Trade() {
                 onChangeFromToken={handleChangeFromToken}
                 onChangeToToken={handleChangeToToken}
                 onChangeFromAmount={handleChangeFromAmount}
+                onExchangeCurrency={handleExchangeCurrency}
               />
               <ExchangeChart fromToken={fromToken} toToken={toToken} />
               {/* <Chartselect/> */}
