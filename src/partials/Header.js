@@ -1,6 +1,6 @@
 import React from "react";
 import SearchModal from "./header/SearchModal";
-import Notifications from "./header/Notifications";
+// import Notifications from "./header/Notifications";
 import UserMenu from "./header/UserMenu";
 
 function Header({ sidebarOpen, setSidebarOpen }) {
@@ -42,8 +42,8 @@ function Header({ sidebarOpen, setSidebarOpen }) {
               /> */}
             </div>
             <div className="flex items-center flex-row">
-              <Notifications/>
-              <hr className="w-px h-6 bg-gray-200 mx-3" />
+              {/* <Notifications/>
+              <hr className="w-px h-6 bg-gray-200 mx-3" /> */}
               <UserMenu />
             </div>
           </div>
