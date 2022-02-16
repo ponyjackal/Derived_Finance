@@ -100,6 +100,8 @@ function RealtimeChart({ data, width, height }) {
 
   // Update header values
   useEffect(() => {
+    if (!data || !data.datasets.length || !data.datasets[0].data.length) return;
+
     const currentValue =
       data.datasets[0].data[data.datasets[0].data.length - 1];
     const previousValue =
@@ -124,7 +126,7 @@ function RealtimeChart({ data, width, height }) {
       <div className="px-5 py-3">
         <div className="flex items-start">
           <div className="text-3xl font-bold text-gray-800 mr-2 tabular-nums">
-            $<span ref={chartValue}>57.81</span>
+            $<span ref={chartValue}>0.0000</span>
           </div>
           <div
             ref={chartDeviation}

@@ -6,6 +6,7 @@ import { getCoinPrices } from "../../services/coingecko";
 import { AVAILALBE_TOKENS } from "../../utils/Tokens";
 
 const ExchangeChart = ({ fromToken, toToken }) => {
+  const [loading, setLoading] = useState(false);
   const [trades, setTrades] = useState([]);
 
   const labels = useMemo(() => trades.map((trade) => trade[0]), [trades]);
@@ -33,12 +34,16 @@ const ExchangeChart = ({ fromToken, toToken }) => {
   }, [labels, data]);
 
   const fetchPrices = async (coinId) => {
+    setLoading(true);
+
     try {
       const res = await getCoinPrices(coinId, 1, 1000 * 60 * 24);
       setTrades(res.prices);
     } catch (error) {
       console.error("Exchange error: ", error.message);
     }
+
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -54,12 +59,18 @@ const ExchangeChart = ({ fromToken, toToken }) => {
       <header className="px-5 py-4 border-b border-gray-100 flex items-center">
         <h2 className="font-semibold text-white">Trade Prices</h2>
       </header>
-      <RealtimeChart
-        data={chartData}
-        width={595}
-        height={200}
-        className="text-white"
-      />
+      {loading ? (
+        <div className="w-full h-full flex justify-center items-center p-4">
+        <p>Loading...</p>
+      </div>
+      ) : (
+        <RealtimeChart
+          data={chartData}
+          width={595}
+          height={200}
+          className="text-white"
+        />
+      )}
     </div>
   );
 };

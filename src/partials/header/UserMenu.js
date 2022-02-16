@@ -5,9 +5,9 @@ import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 
 import Transition from "../../utils/Transition";
 import Meta from "../../images/meta-mask.png";
-import Binance from "../../images/binance.png";
+// import Binance from "../../images/binance.png";
 import Wallet from "../../images/wallet-connect.png";
-import Portis from "../../images/portis.png";
+// import Portis from "../../images/portis.png";
 import Connectedtabs from "./Connectedtabs";
 
 import { useConnector } from "../../context/connector";

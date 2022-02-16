@@ -160,7 +160,7 @@ const Withdrawtabs = () => {
         .dividedBy(new BigNumber(50));
 
       const tx = await DVDXContract.issueSynths(
-        stringToHex("USDx", 4),
+        stringToHex("USDx"),
         mAmount.toFixed()
       );
       await tx.wait();
@@ -186,7 +186,7 @@ const Withdrawtabs = () => {
     try {
       const mAmount = toLong18(burnAmount);
       const tx = await DVDXContract.burnSynths(
-        stringToHex("USDx", 4),
+        stringToHex("USDx"),
         mAmount.toFixed()
       );
       await tx.wait();
