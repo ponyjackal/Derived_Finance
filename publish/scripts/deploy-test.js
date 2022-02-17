@@ -30,15 +30,15 @@ async function main() {
     // ethers.utils.hexDataSlice(ethers.utils.formatBytes32String(CHAINLINK[network].jobId), 0, 32)
   );
 
-  // ----------------
-  // Safe Decimal Math library
-  // ----------------
-  const SafeDecimalMath = await hre.ethers.getContractFactory(
-    "SafeDecimalMath"
-  );
-  const safeDecimalMath = await SafeDecimalMath.attach(
-    "0x525C7063E7C20997BaaE9bDa922159152D0e8417"
-  );
+  // // ----------------
+  // // Safe Decimal Math library
+  // // ----------------
+  // const SafeDecimalMath = await hre.ethers.getContractFactory(
+  //   "SafeDecimalMath"
+  // );
+  // const safeDecimalMath = await SafeDecimalMath.attach(
+  //   "0x525C7063E7C20997BaaE9bDa922159152D0e8417"
+  // );
 
   // // Synthetix Contract
   // const Synthetix = await hre.ethers.getContractFactory("Synthetix", {
@@ -64,16 +64,16 @@ async function main() {
   // // deploy additional synths
 
   // FeePool Contract
-  const FeePool = await hre.ethers.getContractFactory("FeePool", {
-    libraries: {
-      SafeDecimalMath: safeDecimalMath.address,
-    },
-  });
-  const feePool = await FeePool.attach(
-    "0xd6e1afe5cA8D00A2EFC01B89997abE2De47fdfAf" // The deployed contract address
-  );
+  // const FeePool = await hre.ethers.getContractFactory("FeePool", {
+  //   libraries: {
+  //     SafeDecimalMath: safeDecimalMath.address,
+  //   },
+  // });
+  // const feePool = await FeePool.attach(
+  //   "0xd6e1afe5cA8D00A2EFC01B89997abE2De47fdfAf" // The deployed contract address
+  // );
 
-  await feePool.closeCurrentFeePeriod();
+  // await feePool.closeCurrentFeePeriod();
   // // ExchangeRates Contract
   // const ExchangeRates = await hre.ethers.getContractFactory("ExchangeRates", {
   //   libraries: {
