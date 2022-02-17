@@ -7,7 +7,11 @@ import "react-responsive-modal/styles.css";
 import { Modal } from "react-responsive-modal";
 import TextareaAutosize from "@mui/material/TextareaAutosize";
 
+import { useMarket } from "../context/market";
+
 function Stake() {
+  const { loading, liveQuestions } = useMarket();
+
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [open, setOpen] = useState(false);
 
@@ -173,14 +177,17 @@ function Stake() {
             </div>
           </Modal>
         </div>
-        <Questions />
-        <Questions />
-        <Questions />
-        <Questions />
-        <Questions />
-        <Questions />
-        <Questions />
-        <Questions />
+        {loading ? (
+          <div className="w-full flex justify-center pt-5">
+            Loading...
+          </div>
+        ) : (
+          <div className="w-full">
+            {liveQuestions && liveQuestions.map(question => (
+              <Questions key={question.id} {...question} />
+            ))}
+          </div>
+        )}
         <Footer />
       </div>
     </div>
