@@ -318,7 +318,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
                 <li
                   className={`px-3 py-2 rounded-lg mb-0.5 last:mb-0 ${
                     (pathname === "/Admin" ||
-                      pathname.includes("Binaryoptionsinside")) &&
+                      pathname.includes("Admin")) &&
                     "bg-headings"
                   }`}
                 >
