@@ -5,7 +5,7 @@ export const contractAddresses = {
   },
   derivedToken: {
     56: "",
-    97: "0xe437D9E14539886e9e95775d958559BB8Eaf6cD7",
+    97: "0xE41B000268eDBFc239988237D7Cc6B995aD3e1Dc",
   },
   // Main ERC20
   dvdx: {
@@ -15,7 +15,7 @@ export const contractAddresses = {
   // Asset ERC20
   usdx: {
     56: "",
-    97: "0xe437D9E14539886e9e95775d958559BB8Eaf6cD7",
+    97: "0xE41B000268eDBFc239988237D7Cc6B995aD3e1Dc",
   },
   // Fee Pool
   feePool: {
