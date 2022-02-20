@@ -2,13 +2,7 @@ import BigNumber from "bignumber.js";
 import dayjs from "dayjs";
 import resolveConfig from "tailwindcss/resolveConfig";
 
-import pinataSDK from "@pinata/sdk";
 import tailwindConfigFile from "../css/tailwind.config";
-
-const pinata = pinataSDK(
-  "f76858a41fe05aa4da68",
-  "868cbcb3156fd036d6ac6eed045e7d793a3bf48ad32472f376957d8c898596fa"
-);
 
 export const tailwindConfig = () => {
   // Tailwind config
@@ -100,9 +94,4 @@ export const smaller = (num1, num2) => {
 
 export const generateUnixTimestamp = (time) => {
   return new Date(time) / 1000;
-};
-
-export const deployToIPFS = async (question) => {
-  const ipfs = await pinata.pinJSONToIPFS(question);
-  return `https://ipfs.io/ipfs/${ipfs.IpfsHash}`;
 };
