@@ -23,7 +23,7 @@ export const useDisclaimer = () => useContext(DisclaimerContext);
 export const DisclaimerProvider = ({ children }) => {
   const [open, setOpen] = useState(false);
   const [showError, setShowError] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   const handleClose = () => {
     setOpen(false);
@@ -36,7 +36,7 @@ export const DisclaimerProvider = ({ children }) => {
 
   const handleHideError = () => {
     setShowError(false);
-    setError('');
+    setError("");
   };
 
   useEffect(() => {
@@ -44,9 +44,12 @@ export const DisclaimerProvider = ({ children }) => {
   }, []);
 
   return (
-    <DisclaimerContext.Provider value={{
-      showError: handleShowError
-    }}>
+    <DisclaimerContext.Provider
+      value={{
+        showDisclaimer: () => setOpen(true),
+        showError: handleShowError,
+      }}
+    >
       {children}
       <Modal
         open={open}
@@ -95,7 +98,7 @@ export const DisclaimerProvider = ({ children }) => {
           </div>
         </Box>
       </Modal>
-      
+
       <Modal
         open={showError}
         onClose={handleHideError}
