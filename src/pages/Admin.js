@@ -22,10 +22,12 @@ import { useMarket } from "../context/market";
 import { useDisclaimer } from "../context/disclaimer";
 import { deployToIPFS } from "../utils/Ipfs";
 import { toLong18 } from "../utils/Contract";
+import { generateUnixTimestamp } from "../utils/Utils";
 
 function Stake() {
   const { MarketContract, USDXContract } = useChain();
-  const { loading, liveQuestions, expiredQuestions } = useMarket();
+  const { loading, liveQuestions, expiredQuestions, addLiveQuestion } =
+    useMarket();
   const { showError } = useDisclaimer();
   const { account } = useWeb3React();
 
@@ -83,21 +85,36 @@ function Stake() {
         );
         await approve.wait();
       }
+
+      const resolveTime = generateUnixTimestamp(question.resolveTime);
       const ipfs = await deployToIPFS({
         ...question,
         funding: amount.toFixed(),
+        resolveTime,
       });
 
       const tx = await MarketContract.createQuestion(
         question.resolver,
         question.title,
         ipfs,
-        question.resolveTime,
+        resolveTime,
         amount.toFixed(),
         question.fee
       );
 
       await tx.wait();
+
+      const questionId = await MarketContract.generateQuestionId(account, ipfs);
+
+      addLiveQuestion({
+        ...question,
+        questionId: new BigNumber(questionId.toString()).toFixed(),
+        funding: amount.toFixed(),
+        meta: ipfs,
+        resolveTime,
+      });
+
+      onCloseModal();
     } catch (error) {
       showError(error.message);
       console.error("Submit error: ", error.message);
