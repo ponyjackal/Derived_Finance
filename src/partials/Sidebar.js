@@ -16,13 +16,14 @@ import TelegramIcon from "@mui/icons-material/Telegram";
 import TwitterIcon from "@mui/icons-material/Twitter";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import LockIcon from "@mui/icons-material/Lock";
-import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
+import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import { styled } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
 
 import { useMarket } from "../context/market";
+import { useDisclaimer } from "../context/disclaimer";
 
 import LogoIcon from "../images/logo.png";
 import MobileLogoIcon from "../images/mob-logo.png";
@@ -47,21 +48,29 @@ function SocialButton() {
       </Grid>
       <Grid item xs={4}>
         <Item>
-          <a href="">
+          <a href="https://t.me/derivedFi" target="_blank" rel="noreferrer">
             <TelegramIcon />
           </a>
         </Item>
       </Grid>
       <Grid item xs={4}>
         <Item>
-          <a href="">
+          <a
+            href="https://twitter.com/DerivedFinance"
+            target="_blank"
+            rel="noreferrer"
+          >
             <TwitterIcon />
           </a>
         </Item>
       </Grid>
       <Grid item xs={4}>
         <Item>
-          <a href="">
+          <a
+            href="https://github.com/DerivedFinance"
+            target="_blank"
+            rel="noreferrer"
+          >
             <GitHubIcon />
           </a>
         </Item>
@@ -93,6 +102,7 @@ function SocialButton() {
 function Sidebar({ sidebarOpen, setSidebarOpen }) {
   const location = useLocation();
   const { isMarketOwner } = useMarket();
+  const { showDisclaimer } = useDisclaimer();
   const { pathname } = location;
 
   const trigger = useRef(null);
@@ -317,8 +327,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
               {isMarketOwner && (
                 <li
                   className={`px-3 py-2 rounded-lg mb-0.5 last:mb-0 ${
-                    (pathname === "/Admin" ||
-                      pathname.includes("Admin")) &&
+                    (pathname === "/Admin" || pathname.includes("Admin")) &&
                     "bg-headings"
                   }`}
                 >
@@ -338,7 +347,11 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
 
         <div className="pt-3 2xl:hidden justify-center mt-5 flex flex-col lg:opacity-0 lg:sidebar-expanded:opacity-100 ">
           <button className="bg-primary shadow-2xl text-white font-regular py-2 rounded my-3 font-heading text-sm hover:drop-shadow-lg text-base">
-            <a href="#">
+            <a
+              href="https://www.coingecko.com/en/coins/derived"
+              target="_blank"
+              rel="noreferrer"
+            >
               <AdminPanelSettingsOutlinedIcon className="text-headings mr-2" />{" "}
               DVDX Price
             </a>
@@ -369,7 +382,11 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
             </a>
           </button>
           <button className="bg-primary shadow-2xl text-white font-regular py-2 px-4 rounded my-3 font-heading text-sm hover:drop-shadow-lg">
-            <a href="#" className="text-headings my-2 font-heading text-base">
+            <a
+              href="#"
+              className="text-headings my-2 font-heading text-base"
+              onClick={showDisclaimer}
+            >
               <PanToolOutlinedIcon className="mx-3" />
               Disclaimer
             </a>
