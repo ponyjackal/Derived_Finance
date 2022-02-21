@@ -6,6 +6,7 @@ import {
   fetchAllExpiredQuestions,
 } from "../../services/market";
 import { useChain } from "../../context/chain";
+import { generateUnixTimestamp } from "../../utils/Utils";
 
 export const MarketContext = createContext({});
 
@@ -19,6 +20,26 @@ export const MarketProvider = ({ children }) => {
   const [expiredQuestions, setExpiredQuestions] = useState([]);
 
   const { chainId, account } = useWeb3React();
+
+  const handleAddLiveQuestion = (question) => {
+    setLiveQuestions(questions => ([
+      ...questions,
+      {
+        id: question.questionId,
+        questionId: question.questionId,
+        title: question.title,
+        createTime: generateUnixTimestamp(new Date()),
+        resolveTime: question.resolveTime,
+        status: "READY",
+        answer: "NONE",
+        long: "500000000000000000",
+        short: "500000000000000000",
+        lpVolume: question.funding,
+        tradeVolume: 0,
+        meta: question.meta,
+      },
+    ]));
+  };
 
   useEffect(() => {
     const initialize = async () => {
@@ -52,6 +73,7 @@ export const MarketProvider = ({ children }) => {
         isMarketOwner,
         liveQuestions,
         expiredQuestions,
+        addLiveQuestion: handleAddLiveQuestion,
       }}
     >
       {children}

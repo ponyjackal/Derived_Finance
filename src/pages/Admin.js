@@ -6,10 +6,11 @@ import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
+import DateTimePicker from "@mui/lab/DateTimePicker";
 
 import { Tabs, TabList, Tab, TabPanel } from "react-tabs";
 import { useWeb3React } from "@web3-react/core";
-import { BigNumber } from 'bignumber.js';
+import { BigNumber } from "bignumber.js";
 
 import Sidebar from "../partials/Sidebar";
 import Header from "../partials/Header";
@@ -18,12 +19,16 @@ import Questions from "../partials/admin/Questions";
 
 import { useChain } from "../context/chain";
 import { useMarket } from "../context/market";
+import { useDisclaimer } from "../context/disclaimer";
 import { deployToIPFS } from "../utils/Ipfs";
 import { toLong18 } from "../utils/Contract";
+import { generateUnixTimestamp } from "../utils/Utils";
 
 function Stake() {
   const { MarketContract, USDXContract } = useChain();
-  const { loading, liveQuestions, expiredQuestions } = useMarket();
+  const { loading, liveQuestions, expiredQuestions, addLiveQuestion } =
+    useMarket();
+  const { showError } = useDisclaimer();
   const { account } = useWeb3React();
 
   const [submitting, setSubmitting] = useState(false);
@@ -47,7 +52,7 @@ function Stake() {
   const coinFields = ["coinId", "coinStrikePrice"];
 
   const isValidated = (value, fields) => {
-    return fields.reduce((v, field) => !!question[field] || v, true);
+    return fields.reduce((v, field) => !!value[field] || v, true);
   };
 
   const handleChange = (event) => {
@@ -63,7 +68,7 @@ function Stake() {
     try {
       if (!isValidated(question, requiredFields)) return;
 
-      if (question.type === 'crypto') {
+      if (question.type === "crypto") {
         if (!isValidated(question, coinFields)) return;
       }
 
@@ -80,22 +85,38 @@ function Stake() {
         );
         await approve.wait();
       }
+
+      const resolveTime = generateUnixTimestamp(question.resolveTime);
       const ipfs = await deployToIPFS({
         ...question,
-        funding: amount.toFixed()
+        funding: amount.toFixed(),
+        resolveTime,
       });
 
       const tx = await MarketContract.createQuestion(
         question.resolver,
         question.title,
         ipfs,
-        question.resolveTime,
+        resolveTime,
         amount.toFixed(),
         question.fee
       );
 
       await tx.wait();
+
+      const questionId = await MarketContract.generateQuestionId(account, ipfs);
+
+      addLiveQuestion({
+        ...question,
+        questionId: new BigNumber(questionId.toString()).toFixed(),
+        funding: amount.toFixed(),
+        meta: ipfs,
+        resolveTime,
+      });
+
+      onCloseModal();
     } catch (error) {
+      showError(error.message);
       console.error("Submit error: ", error.message);
     }
 
@@ -310,15 +331,23 @@ function Stake() {
                     <p className="text-white text-lg p-2 pt-0">
                       Enter ResolveTime
                     </p>
-                    <TextField
+                    <DateTimePicker
+                      renderInput={(props) => <TextField {...props} />}
+                      value={question.resolveTime}
+                      onChange={(newValue) => {
+                        setQuestion((v) => ({ ...v, resolveTime: newValue }));
+                      }}
+                    />
+                    {/* <TextField
                       id="question-resolve"
                       variant="outlined"
                       className="w-full"
                       required
                       name="resolveTime"
+                      inputFormat="MM/dd/yyyy"
                       value={question.resolveTime}
                       onChange={handleChange}
-                    />
+                    /> */}
                     {/* <TextareaAutosize
                       name="resolveTime"
                       value={question.resolveTime}

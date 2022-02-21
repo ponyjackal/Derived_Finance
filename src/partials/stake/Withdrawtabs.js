@@ -14,6 +14,7 @@ import BigNumber from "bignumber.js";
 
 import { useChain } from "../../context/chain";
 import { useFinance } from "../../context/finance";
+import { useDisclaimer } from "../../context/disclaimer";
 import { useTransaction } from "../../context/transaction";
 import {
   toShort18,
@@ -48,6 +49,7 @@ const Withdrawtabs = () => {
     fetchBalances,
   } = useFinance();
   const { addTransaction } = useTransaction();
+  const { showError } = useDisclaimer();
 
   const strBalances = useMemo(() => {
     if (!balances || !transferableDVDX)
@@ -175,6 +177,7 @@ const Withdrawtabs = () => {
       setMintAmount("");
     } catch (error) {
       console.error("USDx Mint Error: ", error.message);
+      showError(error.message);
     }
 
     setLoading(false);
@@ -201,6 +204,7 @@ const Withdrawtabs = () => {
       setBurnAmount("");
     } catch (error) {
       console.error("USDx Burn Error: ", error.message);
+      showError(error.message);
     }
 
     setLoading(false);
