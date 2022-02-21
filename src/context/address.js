@@ -10,7 +10,7 @@ export const contractAddresses = {
   // Main ERC20
   dvdx: {
     56: "",
-    97: "0x040a9e03917F66F62fb2050C0423fe39f741b974",
+    97: "0x35571c9d13876A44C16e8014f6aA68Dc7f1d49B5",
   },
   // Asset ERC20
   usdx: {
