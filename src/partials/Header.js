@@ -1,5 +1,5 @@
 import React from "react";
-import SearchModal from "./header/SearchModal";
+// import SearchModal from "./header/SearchModal";
 // import Notifications from "./header/Notifications";
 import UserMenu from "./header/UserMenu";
 
@@ -33,7 +33,7 @@ function Header({ sidebarOpen, setSidebarOpen }) {
           {/* Header: Right side */}
           <div className="flex items-center justify-between w-full">
             <div className="flex items-center flex-row">
-              <SearchModal />
+              {/* <SearchModal /> */}
             </div>
             <div className="flex items-center flex-row">
               {/* <FullscreenOutlinedIcon
