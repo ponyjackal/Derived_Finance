@@ -50,6 +50,7 @@ export const FETCH_ONGOING_QUESTIOINS = (limit = 10, page = 0) => {
       short
       lpVolume
       tradeVolume
+      meta
     }
   }
 `);

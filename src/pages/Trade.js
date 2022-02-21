@@ -15,8 +15,8 @@ function Trade() {
   const { DVDXContract } = useChain();
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [fromToken, setFromToken] = useState("btc");
-  const [toToken, setToToken] = useState("usdx");
+  const [fromToken, setFromToken] = useState("usdx");
+  const [toToken, setToToken] = useState("btc");
   const [fromAmount, setFromAmount] = useState("");
   const [toAmount, setToAmount] = useState("");
 
@@ -39,13 +39,19 @@ function Trade() {
 
       const valueBN = toLong18(value);
       const effectiveValue = await DVDXContract.effectiveValue(
-        stringToHex(MAPPING_TOKENS[fromToken], 4),
+        stringToHex(MAPPING_TOKENS[fromToken]),
         valueBN.toFixed(),
-        stringToHex(MAPPING_TOKENS[toToken], 4)
+        stringToHex(MAPPING_TOKENS[toToken])
       );
       const small = toShort18(effectiveValue.toString());
       setToAmount(small);
     }
+  };
+
+  const handleExchangeCurrency = () => {
+    const from = fromToken;
+    setFromToken(toToken);
+    setToToken(from);
   };
 
   return (
@@ -69,6 +75,7 @@ function Trade() {
                 onChangeFromToken={handleChangeFromToken}
                 onChangeToToken={handleChangeToToken}
                 onChangeFromAmount={handleChangeFromAmount}
+                onExchangeCurrency={handleExchangeCurrency}
               />
               <ExchangeChart fromToken={fromToken} toToken={toToken} />
               {/* <Chartselect/> */}

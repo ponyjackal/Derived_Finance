@@ -4,7 +4,7 @@ import { useWeb3React } from "@web3-react/core";
 import {
   getUSDXTokenContract,
   getDVDXTokenContract,
-  getDerivedTokenContract,
+  // getDerivedTokenContract,
   getMarketContract,
   getFeePoolContract,
   getDepotContract,
@@ -23,7 +23,7 @@ export const ChainProvider = ({ children }) => {
   const [USDXContract, setUSDXContract] = useState(null);
   const [DVDXContract, setDVDXContract] = useState(null);
   const [MarketContract, setMarketContract] = useState(null);
-  const [DerivedTokenContract, setDerivedTokenContract] = useState(null);
+  // const [DerivedTokenContract, setDerivedTokenContract] = useState(null);
   const [FeePoolContract, setFeePoolContract] = useState(null);
   const [DepotContract, setDepotContract] = useState(null);
   const [ExchangeRateContract, setExchangeRateContract] = useState(null);
@@ -40,8 +40,8 @@ export const ChainProvider = ({ children }) => {
       const market = getMarketContract(chainId, library);
       setMarketContract(market);
 
-      const derivedToken = getDerivedTokenContract(chainId, library);
-      setDerivedTokenContract(derivedToken);
+      // const derivedToken = getDerivedTokenContract(chainId, library);
+      // setDerivedTokenContract(derivedToken);
 
       const pool = getFeePoolContract(chainId, library);
       setFeePoolContract(pool);
@@ -54,7 +54,10 @@ export const ChainProvider = ({ children }) => {
 
       const synthContracts = {};
       for (const token of AVAILALBE_TOKENS) {
-        synthContracts[token.key] = getSynthContract(contractAddresses[token.key][chainId], library);
+        synthContracts[token.key] = getSynthContract(
+          contractAddresses[token.key][chainId],
+          library
+        );
       }
 
       setSynthContracts(synthContracts);
@@ -62,7 +65,7 @@ export const ChainProvider = ({ children }) => {
       setUSDXContract(null);
       setDVDXContract(null);
       setMarketContract(null);
-      setDerivedTokenContract(null);
+      // setDerivedTokenContract(null);
       setFeePoolContract(null);
       setDepotContract(null);
       setExchangeRateContract(null);
@@ -75,7 +78,7 @@ export const ChainProvider = ({ children }) => {
         USDXContract,
         DVDXContract,
         MarketContract,
-        DerivedTokenContract,
+        // DerivedTokenContract,
         FeePoolContract,
         DepotContract,
         ExchangeRateContract,

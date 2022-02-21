@@ -30,3 +30,20 @@
 .css-7b8pr9-MuiPaper-root{
   padding:5px !important;
 }
+
+.customOverlay {
+  background: rgba(247, 247, 247, 0.247) !important;
+}
+
+.customModal {
+  background: #273A46 !important;
+  max-width: 600px !important;
+  width: 100% !important;
+  border-radius: 10px !important;
+}
+
+div[disabled] {
+  pointer-events: none;
+  cursor: not-allowed !important;
+  opacity: 0.5;
+}

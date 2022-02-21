@@ -8,6 +8,7 @@ import ArrowCircleDownOutlinedIcon from "@mui/icons-material/ArrowCircleDownOutl
 import WifiProtectedSetupOutlinedIcon from "@mui/icons-material/WifiProtectedSetupOutlined";
 // import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import Button from "@mui/material/Button";
+import Skeleton from "@mui/material/Skeleton";
 import { useWeb3React } from "@web3-react/core";
 
 import { AVAILALBE_TOKENS, MAPPING_TOKENS } from "../../utils/Tokens";
@@ -26,12 +27,13 @@ const TradeBox = ({
   onChangeFromToken,
   onChangeToToken,
   onChangeFromAmount,
+  onExchangeCurrency,
 }) => {
   const [loading, setLoading] = useState(false);
 
   const { account } = useWeb3React();
   const { DVDXContract } = useChain();
-  const { balances, synthBalances } = useFinance();
+  const { balances, synthBalances, loadingBalances } = useFinance();
 
   const fromTokenBalance = useMemo(() => {
     if (fromToken === "usdx") {
@@ -101,7 +103,11 @@ const TradeBox = ({
       <div className="flex justify-between">
         <div className="text-lg text-white m-3">From</div>
         <div className="text-md text-gray-500 m-3 underline">
-          Balance : {fromTokenBalance}
+          {loadingBalances ? (
+            <Skeleton width={100} height={35} />
+          ) : (
+            `Balance : ${fromTokenBalance}`
+          )}
         </div>
       </div>
       <div className=" flex">
@@ -159,7 +165,11 @@ const TradeBox = ({
       <div className="flex justify-between">
         <div className="text-lg text-white m-3">To</div>
         <div className="text-md text-gray-500 m-3 underline">
-          Balance : {toTokenBalance}
+          {loadingBalances ? (
+            <Skeleton width={100} height={35} />
+          ) : (
+            `Balance : ${toTokenBalance}`
+          )}
         </div>
       </div>
       <div className=" flex">
@@ -208,10 +218,9 @@ const TradeBox = ({
         </Box>
       </div>
       <div className="flex justify-center">
-        <div className="text-gray-500 my-5 flex justify-center text-center">
-          <p></p>
+        <Button onClick={onExchangeCurrency}>
           <WifiProtectedSetupOutlinedIcon className="text-white ml-4" />
-        </div>
+        </Button>
       </div>
       <div className=" flex justify-center w-full">
         <div className=" flex justify-center text-center w-full m-4">

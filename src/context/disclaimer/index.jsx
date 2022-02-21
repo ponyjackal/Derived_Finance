@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect } from "react";
+import React, { createContext, useState, useEffect, useContext } from "react";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import Button from "@mui/material/Button";
@@ -18,11 +18,25 @@ const style = {
 
 const DisclaimerContext = createContext({});
 
+export const useDisclaimer = () => useContext(DisclaimerContext);
+
 export const DisclaimerProvider = ({ children }) => {
   const [open, setOpen] = useState(false);
+  const [showError, setShowError] = useState(false);
+  const [error, setError] = useState("");
 
   const handleClose = () => {
     setOpen(false);
+  };
+
+  const handleShowError = (msg) => {
+    setShowError(true);
+    setError(msg);
+  };
+
+  const handleHideError = () => {
+    setShowError(false);
+    setError("");
   };
 
   useEffect(() => {
@@ -30,7 +44,12 @@ export const DisclaimerProvider = ({ children }) => {
   }, []);
 
   return (
-    <DisclaimerContext.Provider value={{}}>
+    <DisclaimerContext.Provider
+      value={{
+        showDisclaimer: () => setOpen(true),
+        showError: handleShowError,
+      }}
+    >
       {children}
       <Modal
         open={open}
@@ -77,6 +96,28 @@ export const DisclaimerProvider = ({ children }) => {
               OK
             </Button>
           </div>
+        </Box>
+      </Modal>
+
+      <Modal
+        open={showError}
+        onClose={handleHideError}
+        aria-labelledby="error-modal-title"
+        aria-describedby="error-modal-description"
+      >
+        <Box sx={style}>
+          <Typography
+            id="error-modal-description"
+            sx={{ mt: 2, textAlign: "justify" }}
+          >
+            Error
+          </Typography>
+          <Typography
+            id="error-modal-description"
+            sx={{ mt: 2, textAlign: "justify" }}
+          >
+            {error}
+          </Typography>
         </Box>
       </Modal>
     </DisclaimerContext.Provider>

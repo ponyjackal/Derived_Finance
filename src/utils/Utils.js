@@ -1,7 +1,7 @@
 import BigNumber from "bignumber.js";
 import dayjs from "dayjs";
-
 import resolveConfig from "tailwindcss/resolveConfig";
+
 import tailwindConfigFile from "../css/tailwind.config";
 
 export const tailwindConfig = () => {
@@ -90,4 +90,8 @@ export const toTimer = (time) => {
 
 export const smaller = (num1, num2) => {
   return new BigNumber(num1).lt(new BigNumber(num2)) ? num1 : num2;
+};
+
+export const generateUnixTimestamp = (time) => {
+  return new Date(time).getTime() / 1000;
 };

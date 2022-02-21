@@ -11,6 +11,7 @@ import Exchange from "./pages/Exchange";
 // import Farming from "./pages/Farming";
 import Binaryoptionsinside from "./pages/Binaryoptionsinside";
 import Admin from "./pages/Admin";
+import NotFound from "./pages/404";
 
 import "./App.css";
 import "./css/style.scss";
@@ -53,6 +54,9 @@ function App() {
       </Route> */}
       <Route exact path="/Binaryoptionsinside/:questionId">
         <Binaryoptionsinside />
+      </Route>
+      <Route path="*">
+        <NotFound />
       </Route>
     </Switch>
   );
