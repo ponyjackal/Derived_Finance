@@ -93,5 +93,5 @@ export const smaller = (num1, num2) => {
 };
 
 export const generateUnixTimestamp = (time) => {
-  return new Date(time) / 1000;
+  return new Date(time).getTime() / 1000;
 };

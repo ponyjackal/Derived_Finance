@@ -1,4 +1,6 @@
 import { Web3ReactProvider } from "@web3-react/core";
+import AdapterDateFns from "@mui/lab/AdapterDateFns";
+import LocalizationProvider from "@mui/lab/LocalizationProvider";
 
 import { ConnectorProvider } from "./context/connector";
 import { MarketProvider } from "./context/market";
@@ -16,7 +18,11 @@ const Providers = ({ children }) => {
           <FinanceProvider>
             <MarketProvider>
               <TransactionProvider>
-                <DisclaimerProvider>{children}</DisclaimerProvider>
+                <DisclaimerProvider>
+                  <LocalizationProvider dateAdapter={AdapterDateFns}>
+                    {children}
+                  </LocalizationProvider>
+                </DisclaimerProvider>
               </TransactionProvider>
             </MarketProvider>
           </FinanceProvider>
