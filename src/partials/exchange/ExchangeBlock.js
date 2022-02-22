@@ -12,21 +12,29 @@ import { toLong18, toShort18 } from "../../utils/Contract";
 
 const ExchangeBlock = () => {
   const { DepotContract } = useChain();
-  const { balances, loadingBalances, fetchBalances } = useFinance();
+  const { debts, balances, loadingBalances, fetchBalances } = useFinance();
   const [loading, setLoading] = useState(false);
   const [value, setValue] = useState("");
   const [DVDXValue, setDVDXValue] = useState("0.0000");
 
   const strBalances = useMemo(() => {
-    if (!balances)
+    if (!balances || !debts)
+      return {
+        usdx: new BigNumber(0).toFixed(5),
+      };
+
+    const usdx = toShort18(balances.usdx);
+    const usdxDebt = toShort18(debts.usdx);
+
+    if (usdxDebt.gte(usdx))
       return {
         usdx: new BigNumber(0).toFixed(5),
       };
 
     return {
-      usdx: toShort18(balances.usdx).toFixed(5),
+      usdx: usdx.minus(usdxDebt).toFixed(5),
     };
-  }, [balances]);
+  }, [balances, debts]);
 
   const isDisabled = (value, limit) => {
     return (
