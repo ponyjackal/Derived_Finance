@@ -123,6 +123,24 @@ function Stake() {
     setSubmitting(false);
   };
 
+  const onHandleResolve = async (questionId, answerIndex) => {
+    setSubmitting(true);
+
+    try {
+      const tx = await MarketContract.resolveQuestion(
+        questionId,
+        answerIndex
+      );
+
+      await tx.wait();
+    } catch (error) {
+      console.error('Resolve question error: ', error.message);
+      showError(error.message);
+    }
+
+    setSubmitting(false);
+  };
+
   return (
     <div className="flex h-screen overflow-hidden bg-primary">
       {/* Sidebar */}
@@ -432,22 +450,22 @@ function Stake() {
               </TabList>
               <TabPanel>
                 {liveQuestions &&
-                  liveQuestions.map((question, index) => (
+                  liveQuestions.map((quz, index) => (
                     <Questions
-                      key={question.id}
+                      {...quz}
+                      key={quz.id}
                       index={index + 1}
-                      {...question}
+                      submitting={submitting}
+                      onResolve={(answerIndex) =>
+                        onHandleResolve(quz.questionId, answerIndex)
+                      }
                     />
                   ))}
               </TabPanel>
               <TabPanel>
                 {expiredQuestions &&
-                  expiredQuestions.map((question, index) => (
-                    <Questions
-                      key={question.id}
-                      index={index + 1}
-                      {...question}
-                    />
+                  expiredQuestions.map((quz, index) => (
+                    <Questions key={quz.id} index={index + 1} {...quz} />
                   ))}
               </TabPanel>
             </Tabs>
