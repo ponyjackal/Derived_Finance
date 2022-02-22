@@ -351,26 +351,32 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
           </div>
         </div>
 
-        <div className="pt-3 2xl:hidden justify-center mt-5 flex flex-col lg:opacity-0 lg:sidebar-expanded:opacity-100 ">
+        <div className="pt-3 justify-center mt-5 flex flex-col lg:opacity-0 lg:sidebar-expanded:opacity-100 ">
           <button className="bg-primary shadow-2xl text-white font-regular py-2 rounded my-3 font-heading text-sm hover:drop-shadow-lg text-base">
             <a
               href="https://www.coingecko.com/en/coins/derived"
               target="_blank"
               rel="noreferrer"
+              className="flex justify-center"
             >
               <AdminPanelSettingsOutlinedIcon className="text-headings mr-2" />{" "}
-              DVDX Price
+              <span className="hidden sm:block">DVDX Price</span>
             </a>
           </button>
           <button className="bg-primary shadow-2xl text-white font-regular py-2 px-4 rounded my-3 font-heading text-sm hover:drop-shadow-lg text-base">
-            <a href="#">
+            <a
+              href="#"
+              target="_blank"
+              rel="noreferrer"
+              className="flex justify-center"
+            >
               <AddCircleOutlineOutlinedIcon className="text-headings mr-2" />{" "}
-              Sign Up for updates
+              <span className="hidden sm:block">Sign Up for updates</span>
             </a>
           </button>
         </div>
 
-        <div className="pt-3 2xl:hidden justify-center mt-5 flex flex-col lg:opacity-0 lg:sidebar-expanded:opacity-100 ">
+        <div className="pt-3 justify-center mt-5 flex flex-col lg:opacity-0 lg:sidebar-expanded:opacity-100 ">
           <Box sx={{ flexGrow: 1 }}>
             <Grid container spacing={1}>
               <Grid container item spacing={3}>
@@ -380,21 +386,24 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
           </Box>
         </div>
 
-        <div className="pt-3 2xl:hidden justify-center mt-5 flex flex-col lg:opacity-0 lg:sidebar-expanded:opacity-100 ">
+        <div className="pt-3 justify-center mt-5 flex flex-col lg:opacity-0 lg:sidebar-expanded:opacity-100 ">
           <button className="bg-primary shadow-2xl text-white font-regular py-2 rounded my-3 font-heading text-sm hover:drop-shadow-lg">
-            <a href="#" className="text-headings my-2 font-heading text-base">
+            <a
+              href="#"
+              className="text-headings my-2 font-heading text-base flex justify-center"
+            >
               <LockIcon className="mx-3" />
-              Privacy Policy
+              <span className="hidden sm:block">Privacy Policy</span>
             </a>
           </button>
           <button className="bg-primary shadow-2xl text-white font-regular py-2 px-4 rounded my-3 font-heading text-sm hover:drop-shadow-lg">
             <a
               href="#"
-              className="text-headings my-2 font-heading text-base"
+              className="text-headings my-2 font-heading text-base flex justify-center"
               onClick={showDisclaimer}
             >
               <PanToolOutlinedIcon className="mx-3" />
-              Disclaimer
+              <span className="hidden sm:block">Disclaimer</span>
             </a>
           </button>
         </div>
