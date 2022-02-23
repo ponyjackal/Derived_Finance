@@ -1,3 +1,4 @@
+/* eslint-disable no-script-url */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useState, useEffect, useRef } from "react";
 import { NavLink, useLocation, Link } from "react-router-dom";
@@ -118,6 +119,8 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
   const [sidebarExpanded, setSidebarExpanded] = useState(
     storedSidebarExpanded === null ? false : storedSidebarExpanded === "true"
   );
+
+  const handleShowPrivacy = () => {};
 
   // close on click outside
   useEffect(() => {
@@ -389,8 +392,9 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
         <div className="pt-3 justify-center mt-5 flex flex-col lg:opacity-0 lg:sidebar-expanded:opacity-100 ">
           <button className="bg-primary shadow-2xl text-white font-regular py-2 rounded my-3 font-heading text-sm hover:drop-shadow-lg">
             <a
-              href="#"
+              href="javascript:;"
               className="text-headings my-2 font-heading text-base flex justify-center"
+              onClick={handleShowPrivacy}
             >
               <LockIcon className="mx-3" />
               <span className="hidden sm:block">Privacy Policy</span>
@@ -398,7 +402,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
           </button>
           <button className="bg-primary shadow-2xl text-white font-regular py-2 px-4 rounded my-3 font-heading text-sm hover:drop-shadow-lg">
             <a
-              href="#"
+              href="javascript:;"
               className="text-headings my-2 font-heading text-base flex justify-center"
               onClick={showDisclaimer}
             >
