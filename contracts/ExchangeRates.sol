@@ -70,7 +70,7 @@ contract ExchangeRates is ChainlinkClient, SelfDestructible {
     }
 
     bytes32 public oracleJobId;
-    uint256 constant private ORACLE_PAYMENT = 1 * 10 ** 18; // solium-disable-line zeppelin/no-arithmetic-operations
+    uint256 constant private ORACLE_PAYMENT = 1 * 10 ** 17; // solium-disable-line zeppelin/no-arithmetic-operations
     mapping(bytes32 => Request) private requests;
     uint256 constant ORACLE_PRECISION = 1000000000000000000;
     // ------------------
@@ -505,38 +505,89 @@ contract ExchangeRates is ChainlinkClient, SelfDestructible {
      * @notice Initiatiate a price request via chainlink. Provide both the
      * bytes4 currencyKey (for DVDX) and the string representation (for Chainlink)
      */
+    // function requestCryptoPrice(bytes4 currencyKey, string memory asset)
+    // public
+    // onlyOwner
+    // {
+    //     Chainlink.Request memory req = buildChainlinkRequest(oracleJobId, address(this), this.fulfill.selector);
+    //     req.add("sym", asset);
+    //     req.add("convert", "USD");
+    //     string[] memory path = new string[](5);
+    //     path[0] = "data";
+    //     path[1] = asset;
+    //     path[2] = "quote";
+    //     path[3] = "USD";
+    //     path[4] = "price";
+    //     req.addStringArray("copyPath", path);
+    //     req.addInt("times", int256(ORACLE_PRECISION));
+
+    //     requests[sendChainlinkRequest(req, ORACLE_PAYMENT)] = Request(block.timestamp, currencyKey);
+    // }
     function requestCryptoPrice(bytes4 currencyKey, string memory asset)
     public
     onlyOwner
+    returns (bytes32 requestId) 
     {
+        // Chainlink.Request memory req = buildChainlinkRequest(oracleJobId, address(this), this.fulfill.selector);
+        // req.add("sym", asset);
+        // req.add("convert", "USD");
+        // string[] memory path = new string[](5);
+        // path[0] = "data";
+        // path[1] = asset;
+        // path[2] = "quote";
+        // path[3] = "USD";
+        // path[4] = "price";
+        // req.addStringArray("copyPath", path);
+        // req.addInt("times", int256(ORACLE_PRECISION));
+
+        // requests[sendChainlinkRequest(req, ORACLE_PAYMENT)] = Request(block.timestamp, currencyKey);
+
         Chainlink.Request memory req = buildChainlinkRequest(oracleJobId, address(this), this.fulfill.selector);
-        req.add("sym", asset);
-        req.add("convert", "USD");
-        string[] memory path = new string[](5);
-        path[0] = "data";
-        path[1] = asset;
-        path[2] = "quote";
-        path[3] = "USD";
-        path[4] = "price";
-        req.addStringArray("copyPath", path);
+        // Set the URL to perform the GET request on
+        req.add("get", "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd");
+        // req.add("ids", asset);
+        // req.add("vs_currencies", "USD");
+     
+        // Set the path to find the desired data in the API response, where the response format is:
+     
+        // string[] memory path = new string[](2);
+        // path[0] = asset;
+        // path[1] = "USD";
+        // req.addStringArray("copyPath", path);
+        req.add("path", "bitcoin.usd");
         req.addInt("times", int256(ORACLE_PRECISION));
 
-        requests[sendChainlinkRequest(req, ORACLE_PAYMENT)] = Request(block.timestamp, currencyKey);
+        // requests[sendChainlinkRequest(req, ORACLE_PAYMENT)] = Request(block.timestamp, currencyKey);
+         return sendChainlinkRequest(req, ORACLE_PAYMENT);
     }
 
+
+    // function fulfill(bytes32 _requestId, uint256 _price)
+    //   public
+    //   validateTimestamp(_requestId)
+    //   recordChainlinkFulfillment(_requestId)
+    // {
+    //     bytes4 currencyKey = requests[_requestId].currencyKey;
+    //     uint timestamp = requests[_requestId].timestamp;
+    //     bytes4[] memory ccy = new bytes4[](1);
+    //     ccy[0] = currencyKey;
+    //     uint[] memory newRates = new uint[](1);
+    //     newRates[0] = _price;
+    //     internalUpdateRates(ccy, newRates, timestamp);
+    //     delete requests[_requestId];
+    // }
     function fulfill(bytes32 _requestId, uint256 _price)
       public
       validateTimestamp(_requestId)
       recordChainlinkFulfillment(_requestId)
     {
-        bytes4 currencyKey = requests[_requestId].currencyKey;
+        bytes4 currencyKey = "dBTC";
         uint timestamp = requests[_requestId].timestamp;
         bytes4[] memory ccy = new bytes4[](1);
         ccy[0] = currencyKey;
         uint[] memory newRates = new uint[](1);
         newRates[0] = _price;
         internalUpdateRates(ccy, newRates, timestamp);
-        delete requests[_requestId];
     }
 
     function getChainlinkToken() public view returns (address) {

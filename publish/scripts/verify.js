@@ -41,7 +41,7 @@ async function main() {
   } catch (err) {
     console.log(err);
   }
-  // // ----------------
+  // ----------------
   // Exchange Rates
   // ----------------
   try {
@@ -50,12 +50,7 @@ async function main() {
       constructorArguments: [
         owner,
         oracle,
-        [
-          ethers.utils.hexZeroPad(
-            ethers.utils.hexlify(ethers.utils.toUtf8Bytes("DVD")),
-            4
-          ),
-        ],
+        [ethers.utils.hexDataSlice(ethers.utils.formatBytes32String("DVDX"), 0, 4)],
         [ethers.utils.parseEther("0.2")],
         CHAINLINK[network].linkToken,
         CHAINLINK[network].oracle,

@@ -4,8 +4,8 @@ require("dotenv").config();
 const CHAINLINK = {
   bscTest: {
     linkToken: "0x84b9b910527ad5c03a9ca831909e21e236ea7b06",
-    oracle: "0x19f7f3bF88CB208B0C422CC2b8E2bd23ee461DD1",
-    jobId: "0xabfe1a2a7a674e078b09ff4dc0d8fda6", // Get Bytes32 JobID for Binance Smart Chain Testnet
+    oracle: "0x46cC5EbBe7DA04b45C0e40c061eD2beD20ca7755",
+    jobId: "0x60803b12c6de4443a99a6078aa59ef79", // Get Uint256 JobID for Binance Smart Chain Testnet
   },
   localhost: {
     linkToken: "0x84b9B910527Ad5C03A9Ca831909E21e236EA7b06",
