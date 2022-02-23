@@ -18,23 +18,21 @@ const ExchangeBlock = () => {
   const [DVDXValue, setDVDXValue] = useState("0.0000");
 
   const strBalances = useMemo(() => {
-    if (!balances || !debts)
-      return {
-        usdx: new BigNumber(0).toFixed(5),
-      };
-
-    const usdx = toShort18(balances.usdx);
-    const usdxDebt = toShort18(debts.usdx);
-
-    if (usdxDebt.gte(usdx))
+    if (!balances)
       return {
         usdx: new BigNumber(0).toFixed(5),
       };
 
     return {
-      usdx: usdx.minus(usdxDebt).toFixed(5),
+      usdx: toShort18(balances.usdx).toFixed(5),
     };
-  }, [balances, debts]);
+  }, [balances]);
+
+  const hasDebts = useMemo(() => {
+    if (!debts) return false;
+
+    return !new BigNumber(debts.usdx).isZero();
+  }, [debts]);
 
   const isDisabled = (value, limit) => {
     return (
@@ -91,6 +89,11 @@ const ExchangeBlock = () => {
         <h1 className="text-white text-xl font-bold font-heading">
           Exchange USDx to DVDX
         </h1>
+        {hasDebts && (
+          <p className="text-white text-l font-bold text-center">
+            Due to having debt, you can't exchange
+          </p>
+        )}
         <div className="w-full">
           <div className="flex items-center justify-between">
             <h1 className="text-white text-2xl font-bold p-3">Amount</h1>
@@ -104,7 +107,7 @@ const ExchangeBlock = () => {
                 marginRight: "25%",
               }}
               onClick={handleExchangeMax}
-              disabled={loading || loadingBalances}
+              disabled={loading || loadingBalances || hasDebts}
             >
               Max Amount
             </Button>
@@ -124,6 +127,7 @@ const ExchangeBlock = () => {
                 variant="outlined"
                 placeholder="0.0000"
                 className="bg-primary rounded-sm text-white w-full"
+                disabled={hasDebts}
                 value={value}
                 onChange={handleChange}
               />

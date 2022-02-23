@@ -9,7 +9,7 @@ import { useFinance } from "../../context/finance";
 import { toShort18 } from "../../utils/Contract";
 
 const BalanceBlocks = () => {
-  const { balances, debts, loadingBalances } = useFinance();
+  const { balances, debts, transferableDVDX, loadingBalances } = useFinance();
 
   const strBalances = useMemo(() => {
     if (!balances)
@@ -33,24 +33,11 @@ const BalanceBlocks = () => {
     };
   }, [debts]);
 
-  const availableBalances = useMemo(() => {
-    if (!balances || !debts)
-      return {
-        usdx: new BigNumber(0).toFixed(5),
-      };
+  const strDVDX = useMemo(() => {
+    if (!transferableDVDX) return "0.0000";
 
-    const usdx = toShort18(balances.usdx);
-    const usdxDebt = toShort18(debts.usdx);
-
-    if (usdxDebt.gte(usdx))
-      return {
-        usdx: new BigNumber(0).toFixed(5),
-      };
-
-    return {
-      usdx: usdx.minus(usdxDebt).toFixed(5),
-    };
-  }, [balances, debts]);
+    return toShort18(transferableDVDX.toString()).toFixed(4);
+  }, [transferableDVDX]);
 
   return (
     <div className="w-full">
@@ -59,7 +46,7 @@ const BalanceBlocks = () => {
           <div className="flex flex-col w-full">
             <div className="flex justify-between mb-8">
               <p className="text-gray-300 font-heading text-xl font-bold subpixel-antialiased group-hover:text-secondary">
-                Available USDx
+                Amount of DVDX
               </p>
               <p
                 className="text-gray-300 text-body text-lg font-body font-bold subpixel-antialiased group-hover:text-secondary"
@@ -72,7 +59,7 @@ const BalanceBlocks = () => {
               {loadingBalances ? (
                 <Skeleton width={200} height={50} />
               ) : (
-                <>{availableBalances.usdx} USDx</>
+                <>{strDVDX} DVDX</>
               )}
             </p>
           </div>
