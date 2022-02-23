@@ -9,6 +9,9 @@ import WifiProtectedSetupOutlinedIcon from "@mui/icons-material/WifiProtectedSet
 // import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import Button from "@mui/material/Button";
 import Skeleton from "@mui/material/Skeleton";
+import OutlinedInput from "@mui/material/OutlinedInput";
+import InputAdornment from "@mui/material/InputAdornment";
+import IconButton from "@mui/material/IconButton";
 import { useWeb3React } from "@web3-react/core";
 
 import { AVAILALBE_TOKENS, MAPPING_TOKENS } from "../../utils/Tokens";
@@ -27,6 +30,7 @@ const TradeBox = ({
   onChangeFromToken,
   onChangeToToken,
   onChangeFromAmount,
+  onChangeMaxFromAmount,
   onExchangeCurrency,
 }) => {
   const [loading, setLoading] = useState(false);
@@ -98,6 +102,10 @@ const TradeBox = ({
     setLoading(false);
   };
 
+  const handleChangeMax = () => {
+    onChangeMaxFromAmount(fromTokenBalance);
+  };
+
   return (
     <div className="row col-span-full sm:col-span-6  bg-secondary rounded-md ">
       <div className="flex justify-between">
@@ -143,9 +151,9 @@ const TradeBox = ({
           }}
           noValidate
           autoComplete="off"
-          className="w-full"
+          className="w-full pr-4"
         >
-          <TextField
+          {/* <TextField
             id="outlined-basic"
             variant="outlined"
             placeholder="0.00"
@@ -153,6 +161,32 @@ const TradeBox = ({
             className="bg-primary rounded-sm text-white w-full"
             value={fromAmount}
             onChange={onChangeFromAmount}
+          /> */}
+          <OutlinedInput
+            id="outlined-basic"
+            type="number"
+            variant="outlined"
+            placeholder="0.00"
+            required
+            focused
+            className="bg-primary rounded-sm text-white w-full"
+            value={fromAmount}
+            onChange={onChangeFromAmount}
+            style={{
+              color: "white",
+              width: "100%",
+              borderRadius: "5px",
+            }}
+            endAdornment={
+              <InputAdornment position="end">
+                <IconButton
+                  style={{ fontSize: "14px", color: "white" }}
+                  onClick={handleChangeMax}
+                >
+                  MAX
+                </IconButton>
+              </InputAdornment>
+            }
           />
         </Box>
       </div>
