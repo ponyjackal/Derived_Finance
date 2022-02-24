@@ -11,7 +11,10 @@ import { useFinance } from "../../context/finance";
 import { toLong18, toShort18 } from "../../utils/Contract";
 
 const ExchangeBlock = () => {
-  const { DepotContract } = useChain();
+  const {
+    DepotContract,
+    // USDXContract,
+  } = useChain();
   const { debts, balances, loadingBalances, fetchBalances } = useFinance();
   const [loading, setLoading] = useState(false);
   const [value, setValue] = useState("");
@@ -52,6 +55,13 @@ const ExchangeBlock = () => {
 
     try {
       const valueBN = toLong18(value);
+      // const approve = await USDXContract.approve(
+      //   DepotContract.address,
+      //   valueBN.toFixed()
+      // );
+
+      // await approve.wait();
+
       const tx = await DepotContract.exchangeSynthsForSynthetix(
         valueBN.toFixed()
       );
