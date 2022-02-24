@@ -1,9 +1,9 @@
 const hre = require("hardhat");
 const ethers = require("ethers");
-require("dotenv").config();
+
+require("dotenv").config({ path: path.resolve(`${__dirname}/../../.env.${process.env.NODE_ENV}`), override: true});
 
 const contracts = require("../deployed/bsctest/contracts");
-
 const {
   CHAINLINK,
   ZERO_ADDRESS,

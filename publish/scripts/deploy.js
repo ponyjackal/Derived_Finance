@@ -5,7 +5,8 @@
 // Runtime Environment's members available in the global scope.
 const hre = require("hardhat");
 const ethers = require("ethers");
-require("dotenv").config({ path: `.env.${process.env.NODE_ENV}` });
+
+require("dotenv").config({ path: path.resolve(`${__dirname}/../../.env.${process.env.NODE_ENV}`), override: true});
 
 const {
   CHAINLINK,

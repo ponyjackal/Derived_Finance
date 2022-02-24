@@ -2,7 +2,7 @@ const ethers = require("ethers");
 require("dotenv").config();
 
 const CHAINLINK = {
-  bscTest: {
+  bsctest: {
     linkToken: "0x84b9b910527ad5c03a9ca831909e21e236ea7b06",
     oracle: "0x46cC5EbBe7DA04b45C0e40c061eD2beD20ca7755",
     jobId: "0x60803b12c6de4443a99a6078aa59ef79", // Get Uint256 JobID for Binance Smart Chain Testnet
