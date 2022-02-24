@@ -1,3 +1,4 @@
+/* eslint-disable no-script-url */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useState, useEffect, useRef } from "react";
 import { NavLink, useLocation, Link } from "react-router-dom";
@@ -41,7 +42,7 @@ function SocialButton() {
     <React.Fragment>
       <Grid item xs={4}>
         <Item>
-          <a href="">
+          <a href="https://derived.fi/" target="_blank" rel="noreferrer">
             <LanguageOutlinedIcon />
           </a>
         </Item>
@@ -84,15 +85,21 @@ function SocialButton() {
       </Grid>
       <Grid item xs={4}>
         <Item className="flex justify-center">
-          <svg
-            fill="#86C440"
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 50 50"
-            className="h-6 w-7"
+          <a
+            href="https://medium.com/@DerivedFinance"
+            target="_blank"
+            rel="noreferrer"
           >
-            {" "}
-            <path d="M 3 6 L 7 11.091797 L 7 35.285156 L 1 43 L 15 43 L 9 35.285156 L 9 13.75 L 22 43 L 21.998047 43.013672 L 34 13.544922 L 34 39 L 30 43 L 47 43 L 43 39 L 42.972656 10.503906 L 46.863281 6.0136719 L 34.845703 6.0136719 L 25.605469 28.744141 L 15.496094 6 L 3 6 z" />
-          </svg>
+            <svg
+              fill="#86C440"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 50 50"
+              className="h-6 w-7"
+            >
+              {" "}
+              <path d="M 3 6 L 7 11.091797 L 7 35.285156 L 1 43 L 15 43 L 9 35.285156 L 9 13.75 L 22 43 L 21.998047 43.013672 L 34 13.544922 L 34 39 L 30 43 L 47 43 L 43 39 L 42.972656 10.503906 L 46.863281 6.0136719 L 34.845703 6.0136719 L 25.605469 28.744141 L 15.496094 6 L 3 6 z" />
+            </svg>
+          </a>
         </Item>
       </Grid>
     </React.Fragment>
@@ -112,6 +119,8 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
   const [sidebarExpanded, setSidebarExpanded] = useState(
     storedSidebarExpanded === null ? false : storedSidebarExpanded === "true"
   );
+
+  const handleShowPrivacy = () => {};
 
   // close on click outside
   useEffect(() => {
@@ -345,26 +354,32 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
           </div>
         </div>
 
-        <div className="pt-3 2xl:hidden justify-center mt-5 flex flex-col lg:opacity-0 lg:sidebar-expanded:opacity-100 ">
+        <div className="pt-3 justify-center mt-5 flex flex-col lg:opacity-0 lg:sidebar-expanded:opacity-100 ">
           <button className="bg-primary shadow-2xl text-white font-regular py-2 rounded my-3 font-heading text-sm hover:drop-shadow-lg text-base">
             <a
               href="https://www.coingecko.com/en/coins/derived"
               target="_blank"
               rel="noreferrer"
+              className="flex justify-center"
             >
               <AdminPanelSettingsOutlinedIcon className="text-headings mr-2" />{" "}
-              DVDX Price
+              <span className="hidden sm:block">DVDX Price</span>
             </a>
           </button>
           <button className="bg-primary shadow-2xl text-white font-regular py-2 px-4 rounded my-3 font-heading text-sm hover:drop-shadow-lg text-base">
-            <a href="#">
+            <a
+              href="#"
+              target="_blank"
+              rel="noreferrer"
+              className="flex justify-center"
+            >
               <AddCircleOutlineOutlinedIcon className="text-headings mr-2" />{" "}
-              Sign Up for updates
+              <span className="hidden sm:block">Sign Up for updates</span>
             </a>
           </button>
         </div>
 
-        <div className="pt-3 2xl:hidden justify-center mt-5 flex flex-col lg:opacity-0 lg:sidebar-expanded:opacity-100 ">
+        <div className="pt-3 justify-center mt-5 flex flex-col lg:opacity-0 lg:sidebar-expanded:opacity-100 ">
           <Box sx={{ flexGrow: 1 }}>
             <Grid container spacing={1}>
               <Grid container item spacing={3}>
@@ -374,21 +389,25 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
           </Box>
         </div>
 
-        <div className="pt-3 2xl:hidden justify-center mt-5 flex flex-col lg:opacity-0 lg:sidebar-expanded:opacity-100 ">
+        <div className="pt-3 justify-center mt-5 flex flex-col lg:opacity-0 lg:sidebar-expanded:opacity-100 ">
           <button className="bg-primary shadow-2xl text-white font-regular py-2 rounded my-3 font-heading text-sm hover:drop-shadow-lg">
-            <a href="#" className="text-headings my-2 font-heading text-base">
+            <a
+              href="javascript:;"
+              className="text-headings my-2 font-heading text-base flex justify-center"
+              onClick={handleShowPrivacy}
+            >
               <LockIcon className="mx-3" />
-              Privacy Policy
+              <span className="hidden sm:block">Privacy Policy</span>
             </a>
           </button>
           <button className="bg-primary shadow-2xl text-white font-regular py-2 px-4 rounded my-3 font-heading text-sm hover:drop-shadow-lg">
             <a
-              href="#"
-              className="text-headings my-2 font-heading text-base"
+              href="javascript:;"
+              className="text-headings my-2 font-heading text-base flex justify-center"
               onClick={showDisclaimer}
             >
               <PanToolOutlinedIcon className="mx-3" />
-              Disclaimer
+              <span className="hidden sm:block">Disclaimer</span>
             </a>
           </button>
         </div>

@@ -20,12 +20,28 @@ function Trade() {
   const [fromAmount, setFromAmount] = useState("");
   const [toAmount, setToAmount] = useState("");
 
+  const handleUpdateToAmount = async (value) => {
+    const valueBN = toLong18(value);
+    const effectiveValue = await DVDXContract.effectiveValue(
+      stringToHex(MAPPING_TOKENS[fromToken]),
+      valueBN.toFixed(),
+      stringToHex(MAPPING_TOKENS[toToken])
+    );
+    const small = toShort18(effectiveValue.toString());
+    setToAmount(small);
+  };
+
   const handleChangeFromToken = (event) => {
     setFromToken(event.target.value);
   };
 
   const handleChangeToToken = (event) => {
     setToToken(event.target.value);
+  };
+
+  const handleChangeMaxFromAmount = (value) => {
+    setFromAmount(value);
+    handleUpdateToAmount(value);
   };
 
   const handleChangeFromAmount = async (event) => {
@@ -36,15 +52,7 @@ function Trade() {
     );
     if (floatRegExp.test(value.toString()) || value === "") {
       setFromAmount(value);
-
-      const valueBN = toLong18(value);
-      const effectiveValue = await DVDXContract.effectiveValue(
-        stringToHex(MAPPING_TOKENS[fromToken]),
-        valueBN.toFixed(),
-        stringToHex(MAPPING_TOKENS[toToken])
-      );
-      const small = toShort18(effectiveValue.toString());
-      setToAmount(small);
+      handleUpdateToAmount(value);
     }
   };
 
@@ -75,6 +83,7 @@ function Trade() {
                 onChangeFromToken={handleChangeFromToken}
                 onChangeToToken={handleChangeToToken}
                 onChangeFromAmount={handleChangeFromAmount}
+                onChangeMaxFromAmount={handleChangeMaxFromAmount}
                 onExchangeCurrency={handleExchangeCurrency}
               />
               <ExchangeChart fromToken={fromToken} toToken={toToken} />

@@ -40,7 +40,16 @@ export const DisclaimerProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    setOpen(true);
+    const initialize = () => {
+      const showDisclaimer = localStorage.getItem("show-disclaimer");
+
+      if (!showDisclaimer) {
+        localStorage.setItem("show-disclaimer", true);
+        setOpen(true);
+      }
+    };
+
+    initialize();
   }, []);
 
   return (
