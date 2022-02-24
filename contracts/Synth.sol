@@ -106,25 +106,25 @@ contract Synth is ExternStateToken {
         return _internalTransfer(messageSender, to, amountReceived, empty);
     }
 
-    // /**
-    //  * @notice Override ERC223 transfer function in order to
-    //  * subtract the transaction fee and send it to the fee pool
-    //  * for DVDXholders to claim. */
-    // function transfer(address to, uint value, bytes memory data)
-    //     public
-    //     optionalProxy
-    //     notFeeAddress(messageSender)
-    //     returns (bool)
-    // {
-    //     uint amountReceived = feePool.amountReceivedFromTransfer(value);
-    //     uint fee = value - amountReceived;
+    /**
+     * @notice Override ERC223 transfer function in order to
+     * subtract the transaction fee and send it to the fee pool
+     * for DVDXholders to claim. */
+    function transfer(address to, uint value, bytes memory data)
+        public
+        optionalProxy
+        notFeeAddress(messageSender)
+        returns (bool)
+    {
+        uint amountReceived = feePool.amountReceivedFromTransfer(value);
+        uint fee = value - amountReceived;
 
-    //     // Send the fee off to the fee pool, which we don't want to charge an additional fee on
-    //     synthetix.synthInitiatedFeePayment(messageSender, currencyKey, fee);
+        // Send the fee off to the fee pool, which we don't want to charge an additional fee on
+        synthetix.synthInitiatedFeePayment(messageSender, currencyKey, fee);
 
-    //     // And send their result off to the destination address
-    //     return _internalTransfer(messageSender, to, amountReceived, data);
-    // }
+        // And send their result off to the destination address
+        return _internalTransfer(messageSender, to, amountReceived, data);
+    }
 
     /**
      * @notice Override ERC20 transferFrom function in order to
