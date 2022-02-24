@@ -2245,6 +2245,7 @@ async function main() {
 
   console.log("exchange USDx for DVDx in address2: ",await depot.connect(addr2).exchangeSynthsForSynthetix(ethers.utils.parseEther("1000")));
 
+  console.log("address 2 Synthetix balance: ", await synthetix.balanceOf(addr2.address))
 }
 
 // We recommend this pattern to be able to use async/await everywhere
