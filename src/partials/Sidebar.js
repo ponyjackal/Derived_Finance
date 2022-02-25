@@ -354,7 +354,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
           </div>
         </div>
 
-        <div className="pt-3 justify-center mt-5 flex flex-col lg:opacity-0 lg:sidebar-expanded:opacity-100 ">
+        <div className="pt-3 justify-center mt-5 flex flex-col">
           <button className="bg-primary shadow-2xl text-white font-regular py-2 rounded my-3 font-heading text-sm hover:drop-shadow-lg text-base">
             <a
               href="https://www.coingecko.com/en/coins/derived"
@@ -363,7 +363,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
               className="flex justify-center"
             >
               <AdminPanelSettingsOutlinedIcon className="text-headings mr-2" />{" "}
-              <span className="hidden sm:block">DVDX Price</span>
+              DVDX Price
             </a>
           </button>
           <button className="bg-primary shadow-2xl text-white font-regular py-2 px-4 rounded my-3 font-heading text-sm hover:drop-shadow-lg text-base">
@@ -374,12 +374,12 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
               className="flex justify-center"
             >
               <AddCircleOutlineOutlinedIcon className="text-headings mr-2" />{" "}
-              <span className="hidden sm:block">Sign Up for updates</span>
+              Sign Up for updates
             </a>
           </button>
         </div>
 
-        <div className="pt-3 justify-center mt-5 flex flex-col lg:opacity-0 lg:sidebar-expanded:opacity-100 ">
+        <div className="pt-3 justify-center mt-5 flex flex-col">
           <Box sx={{ flexGrow: 1 }}>
             <Grid container spacing={1}>
               <Grid container item spacing={3}>
@@ -389,7 +389,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
           </Box>
         </div>
 
-        <div className="pt-3 justify-center mt-5 flex flex-col lg:opacity-0 lg:sidebar-expanded:opacity-100 ">
+        <div className="pt-3 justify-center mt-5 flex flex-col">
           <button className="bg-primary shadow-2xl text-white font-regular py-2 rounded my-3 font-heading text-sm hover:drop-shadow-lg">
             <a
               href="javascript:;"
@@ -397,7 +397,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
               onClick={handleShowPrivacy}
             >
               <LockIcon className="mx-3" />
-              <span className="hidden sm:block">Privacy Policy</span>
+              Privacy Policy
             </a>
           </button>
           <button className="bg-primary shadow-2xl text-white font-regular py-2 px-4 rounded my-3 font-heading text-sm hover:drop-shadow-lg">
@@ -407,7 +407,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
               onClick={showDisclaimer}
             >
               <PanToolOutlinedIcon className="mx-3" />
-              <span className="hidden sm:block">Disclaimer</span>
+              Disclaimer
             </a>
           </button>
         </div>
