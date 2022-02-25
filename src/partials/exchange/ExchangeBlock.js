@@ -24,7 +24,7 @@ const ExchangeBlock = () => {
       };
 
     return {
-      usdx: toShort18(balances.usdx).toFixed(5),
+      usdx: toShort18(balances.usdx).toFixed(5, 1),
     };
   }, [balances]);
 

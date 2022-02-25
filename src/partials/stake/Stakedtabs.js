@@ -16,7 +16,8 @@ const Stakedtabs = () => {
     if (!balances || !balances.dvdx) return "0.0000";
 
     return toShort18(balances.dvdx.minus(transferableDVDX).toFixed()).toFixed(
-      4
+      4,
+      1
     );
   }, [balances, transferableDVDX]);
 
