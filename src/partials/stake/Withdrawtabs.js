@@ -59,8 +59,8 @@ const Withdrawtabs = () => {
       };
 
     return {
-      dvdx: toShort18(transferableDVDX).toFixed(4),
-      usdx: toShort18(balances.usdx).toFixed(4),
+      dvdx: toShort18(transferableDVDX).toFixed(4, 1),
+      usdx: toShort18(balances.usdx).toFixed(4, 1),
     };
   }, [balances, transferableDVDX]);
 
@@ -71,7 +71,7 @@ const Withdrawtabs = () => {
       };
 
     return {
-      usdx: toShort18(debts.usdx).toFixed(5),
+      usdx: toShort18(debts.usdx).toFixed(5, 1),
     };
   }, [debts]);
 

@@ -16,7 +16,7 @@ const Valueblocks = () => {
       };
 
     return {
-      usdx: toShort18(balances.usdx).toFixed(5),
+      usdx: toShort18(balances.usdx).toFixed(5, 1),
     };
   }, [balances]);
 
@@ -27,7 +27,7 @@ const Valueblocks = () => {
       };
 
     return {
-      usdx: toShort18(debts.usdx).toFixed(5),
+      usdx: toShort18(debts.usdx).toFixed(5, 1),
     };
   }, [debts]);
 
@@ -35,7 +35,8 @@ const Valueblocks = () => {
     if (!balances || !balances.dvdx) return "0.0000";
 
     return toShort18(balances.dvdx.minus(transferableDVDX).toFixed()).toFixed(
-      4
+      4,
+      1
     );
   }, [balances, transferableDVDX]);
 
