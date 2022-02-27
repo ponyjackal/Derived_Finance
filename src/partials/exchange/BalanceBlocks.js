@@ -18,7 +18,7 @@ const BalanceBlocks = () => {
       };
 
     return {
-      usdx: toShort18(balances.usdx).toFixed(5),
+      usdx: toShort18(balances.usdx).toFixed(5, 1),
     };
   }, [balances]);
 
@@ -29,7 +29,7 @@ const BalanceBlocks = () => {
       };
 
     return {
-      usdx: toShort18(debts.usdx).toFixed(5),
+      usdx: toShort18(debts.usdx).toFixed(5, 1),
     };
   }, [debts]);
 
