@@ -1,6 +1,6 @@
 /* eslint-disable no-script-url */
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import { NavLink, useLocation, Link } from "react-router-dom";
 import DashboardOutlinedIcon from "@mui/icons-material/DashboardOutlined";
 import CompareArrowsOutlinedIcon from "@mui/icons-material/CompareArrowsOutlined";
@@ -36,6 +36,8 @@ const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: "#18252D",
   cursor: "pointer",
 }));
+
+const MOBILE_WIDTH = 1536;
 
 function SocialButton({ sidebarExpanded }) {
   return (
@@ -119,8 +121,11 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
   const [sidebarExpanded, setSidebarExpanded] = useState(
     storedSidebarExpanded === null ? false : storedSidebarExpanded === "true"
   );
+  const [showSidebar, setShowSidebar] = useState(false);
 
   const handleShowPrivacy = () => {};
+
+  const isSidebarExpanded = useMemo(() => showSidebar | sidebarExpanded, [showSidebar, sidebarExpanded]);
 
   // close on click outside
   useEffect(() => {
@@ -156,6 +161,19 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
       document.querySelector("body").classList.remove("sidebar-expanded");
     }
   }, [sidebarExpanded]);
+
+  useEffect(() => {
+    const handleResizeWindow = () => {
+      setShowSidebar(window.document.documentElement.clientWidth > MOBILE_WIDTH);
+    };
+
+    window.addEventListener('resize', handleResizeWindow);
+    handleResizeWindow();
+
+    return () => {
+      window.removeEventListener('resize', handleResizeWindow);
+    };
+  }, []);
 
   return (
     <div>
@@ -364,10 +382,10 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
             >
               <AdminPanelSettingsOutlinedIcon
                 className={
-                  sidebarExpanded ? "text-headings mr-2" : "text-headings"
+                  isSidebarExpanded ? "text-headings mr-2" : "text-headings"
                 }
               />{" "}
-              {sidebarExpanded && "DVDX Price"}
+              {isSidebarExpanded ? "DVDX Price" : ""}
             </a>
           </button>
           <button className="bg-primary shadow-2xl text-white font-regular py-2 px-4 rounded my-3 font-heading text-sm hover:drop-shadow-lg text-base">
@@ -379,10 +397,10 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
             >
               <AddCircleOutlineOutlinedIcon
                 className={
-                  sidebarExpanded ? "text-headings mr-2" : "text-headings"
+                  isSidebarExpanded ? "text-headings mr-2" : "text-headings"
                 }
               />{" "}
-              {sidebarExpanded && "Sign Up for updates"}
+              {isSidebarExpanded ? "Sign Up for updates" : ""}
             </a>
           </button>
         </div>
@@ -393,7 +411,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
               <Grid container item spacing={3}>
                 <SocialButton
                   className="bg-primary hover:drop-shadow-lg"
-                  sidebarExpanded={sidebarExpanded}
+                  sidebarExpanded={isSidebarExpanded}
                 />
               </Grid>
             </Grid>
@@ -407,8 +425,8 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
               className="text-headings my-2 font-heading text-base flex justify-center"
               onClick={handleShowPrivacy}
             >
-              <LockIcon className={sidebarExpanded ? "mr-3" : ""} />
-              {sidebarExpanded && "Privacy Policy"}
+              <LockIcon className={isSidebarExpanded ? "mr-3" : ""} />
+              {isSidebarExpanded ? "Privacy Policy" : ""}
             </a>
           </button>
           <button className="bg-primary shadow-2xl text-white font-regular py-2 px-4 rounded my-3 font-heading text-sm hover:drop-shadow-lg">
@@ -417,8 +435,8 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
               className="text-headings my-2 font-heading text-base flex justify-center"
               onClick={showDisclaimer}
             >
-              <PanToolOutlinedIcon className={sidebarExpanded ? "mr-3" : ""} />
-              {sidebarExpanded && "Disclaimer"}
+              <PanToolOutlinedIcon className={isSidebarExpanded ? "mr-3" : ""} />
+              {isSidebarExpanded ? "Disclaimer" : ""}
             </a>
           </button>
         </div>
