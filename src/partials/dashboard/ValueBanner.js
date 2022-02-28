@@ -13,13 +13,13 @@ const ValueBanner = () => {
   const amount = useMemo(() => {
     if (!balances)
       return {
-        dvdx: "0.00000",
-        usdx: "0.00000",
+        dvdx: "0",
+        usdx: "0",
       };
 
     return {
-      dvdx: toShort18(balances.dvdx).toFixed(5),
-      usdx: toShort18(balances.usdx).toFixed(5),
+      dvdx: toShort18(balances.dvdx).toFixed(0),
+      usdx: toShort18(balances.usdx).toFixed(0),
     };
   }, [balances]);
 
@@ -27,7 +27,10 @@ const ValueBanner = () => {
     <div className="w-full">
       <div className="grid grid-cols-1 gap-4 md:grid-cols-4 transition-all">
         <div className="w-full flex flex-row bg-secondary items-center justify-between mr-1 p-3 pl-5 rounded-lg hover:bg-headings group ">
-          <div className="flex flex-col">
+          <div
+            className="flex flex-col"
+            style={{ maxWidth: "calc(100% - 60px)" }}
+          >
             <p className="text-gray-300 text-sm font-heading font-bold subpixel-antialiased group-hover:text-secondary">
               DVDX Token Staked
             </p>
@@ -41,11 +44,14 @@ const ValueBanner = () => {
           </div>
           <AutorenewOutlinedIcon
             className="text-white"
-            style={{ height: "60px", width: "60px", marginLeft: "20px" }}
+            style={{ height: "60px", width: "60px" }}
           />
         </div>
         <div className="w-full flex flex-row bg-secondary items-center justify-between p-3 pl-5 mr-1 rounded-lg hover:bg-headings group">
-          <div className="flex flex-col">
+          <div
+            className="flex flex-col"
+            style={{ maxWidth: "calc(100% - 60px)" }}
+          >
             <p className="text-gray-300 text-sm font-heading font-bold subpixel-antialiased group-hover:text-secondary">
               DVDX Amount
             </p>
@@ -59,11 +65,14 @@ const ValueBanner = () => {
           </div>
           <DesktopWindowsOutlinedIcon
             className="text-white"
-            style={{ height: "60px", width: "60px", marginLeft: "42px" }}
+            style={{ height: "60px", width: "60px" }}
           />
         </div>
         <div className="w-full flex flex-row bg-secondary items-center justify-between p-3 pl-5 mr-1 rounded-lg hover:bg-headings group">
-          <div className="flex flex-col">
+          <div
+            className="flex flex-col"
+            style={{ maxWidth: "calc(100% - 60px)" }}
+          >
             <p className="text-gray-300 text-sm font-heading font-bold subpixel-antialiased group-hover:text-secondary">
               Staked Value
             </p>
@@ -77,11 +86,14 @@ const ValueBanner = () => {
           </div>
           <SecurityOutlinedIcon
             className="text-white"
-            style={{ height: "60px", width: "60px", marginLeft: "42px" }}
+            style={{ height: "60px", width: "60px" }}
           />
         </div>
         <div className="w-full flex flex-row bg-secondary items-center justify-between p-3 pl-5 mr-1 rounded-lg hover:bg-headings group">
-          <div className="flex flex-col">
+          <div
+            className="flex flex-col"
+            style={{ maxWidth: "calc(100% - 60px)" }}
+          >
             <p className="text-gray-300 text-sm font-heading font-bold subpixel-antialiased group-hover:text-secondary">
               Outstanding Debt
             </p>
@@ -95,7 +107,7 @@ const ValueBanner = () => {
           </div>
           <StackedBarChartOutlinedIcon
             className="text-white"
-            style={{ height: "60px", width: "60px", marginLeft: "20px" }}
+            style={{ height: "60px", width: "60px" }}
           />
         </div>
       </div>
