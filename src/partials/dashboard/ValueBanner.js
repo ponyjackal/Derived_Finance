@@ -18,8 +18,8 @@ const ValueBanner = () => {
       };
 
     return {
-      dvdx: toShort18(balances.dvdx).toFixed(),
-      usdx: toShort18(balances.usdx).toFixed(),
+      dvdx: toShort18(balances.dvdx).toFixed(0),
+      usdx: toShort18(balances.usdx).toFixed(0),
     };
   }, [balances]);
 
