@@ -13,8 +13,8 @@ const ValueBanner = () => {
   const amount = useMemo(() => {
     if (!balances)
       return {
-        dvdx: "0",
-        usdx: "0",
+        dvdx: "0.00000",
+        usdx: "0.00000",
       };
 
     return {
