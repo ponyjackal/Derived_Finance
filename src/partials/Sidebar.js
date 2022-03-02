@@ -1,6 +1,6 @@
 /* eslint-disable no-script-url */
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import { NavLink, useLocation, Link } from "react-router-dom";
 import DashboardOutlinedIcon from "@mui/icons-material/DashboardOutlined";
 import CompareArrowsOutlinedIcon from "@mui/icons-material/CompareArrowsOutlined";
@@ -37,24 +37,26 @@ const Item = styled(Paper)(({ theme }) => ({
   cursor: "pointer",
 }));
 
-function SocialButton() {
+const MOBILE_WIDTH = 1536;
+
+function SocialButton({ sidebarExpanded }) {
   return (
     <React.Fragment>
-      <Grid item xs={4}>
+      <Grid item sm={sidebarExpanded ? 4 : 12}>
         <Item>
           <a href="https://derived.fi/" target="_blank" rel="noreferrer">
             <LanguageOutlinedIcon />
           </a>
         </Item>
       </Grid>
-      <Grid item xs={4}>
+      <Grid item sm={sidebarExpanded ? 4 : 12}>
         <Item>
           <a href="https://t.me/derivedFi" target="_blank" rel="noreferrer">
             <TelegramIcon />
           </a>
         </Item>
       </Grid>
-      <Grid item xs={4}>
+      <Grid item sm={sidebarExpanded ? 4 : 12}>
         <Item>
           <a
             href="https://twitter.com/DerivedFinance"
@@ -65,7 +67,7 @@ function SocialButton() {
           </a>
         </Item>
       </Grid>
-      <Grid item xs={4}>
+      <Grid item sm={sidebarExpanded ? 4 : 12}>
         <Item>
           <a
             href="https://github.com/DerivedFinance"
@@ -76,14 +78,14 @@ function SocialButton() {
           </a>
         </Item>
       </Grid>
-      <Grid item xs={4}>
+      <Grid item sm={sidebarExpanded ? 4 : 12}>
         <Item>
           <a href="">
             <DescriptionOutlinedIcon />
           </a>
         </Item>
       </Grid>
-      <Grid item xs={4}>
+      <Grid item sm={sidebarExpanded ? 4 : 12}>
         <Item className="flex justify-center">
           <a
             href="https://medium.com/@DerivedFinance"
@@ -119,8 +121,11 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
   const [sidebarExpanded, setSidebarExpanded] = useState(
     storedSidebarExpanded === null ? false : storedSidebarExpanded === "true"
   );
+  const [showSidebar, setShowSidebar] = useState(false);
 
   const handleShowPrivacy = () => {};
+
+  const isSidebarExpanded = useMemo(() => showSidebar | sidebarExpanded, [showSidebar, sidebarExpanded]);
 
   // close on click outside
   useEffect(() => {
@@ -156,6 +161,19 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
       document.querySelector("body").classList.remove("sidebar-expanded");
     }
   }, [sidebarExpanded]);
+
+  useEffect(() => {
+    const handleResizeWindow = () => {
+      setShowSidebar(window.document.documentElement.clientWidth > MOBILE_WIDTH);
+    };
+
+    window.addEventListener('resize', handleResizeWindow);
+    handleResizeWindow();
+
+    return () => {
+      window.removeEventListener('resize', handleResizeWindow);
+    };
+  }, []);
 
   return (
     <div>
@@ -362,8 +380,12 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
               rel="noreferrer"
               className="flex justify-center"
             >
-              <AdminPanelSettingsOutlinedIcon className="text-headings mr-2" />{" "}
-              DVDX Price
+              <AdminPanelSettingsOutlinedIcon
+                className={
+                  isSidebarExpanded ? "text-headings mr-2" : "text-headings"
+                }
+              />{" "}
+              {isSidebarExpanded ? "DVDX Price" : ""}
             </a>
           </button>
           <button className="bg-primary shadow-2xl text-white font-regular py-2 px-4 rounded my-3 font-heading text-sm hover:drop-shadow-lg text-base">
@@ -373,8 +395,12 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
               rel="noreferrer"
               className="flex justify-center"
             >
-              <AddCircleOutlineOutlinedIcon className="text-headings mr-2" />{" "}
-              Sign Up for updates
+              <AddCircleOutlineOutlinedIcon
+                className={
+                  isSidebarExpanded ? "text-headings mr-2" : "text-headings"
+                }
+              />{" "}
+              {isSidebarExpanded ? "Sign Up for updates" : ""}
             </a>
           </button>
         </div>
@@ -383,7 +409,10 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
           <Box sx={{ flexGrow: 1 }}>
             <Grid container spacing={1}>
               <Grid container item spacing={3}>
-                <SocialButton className="bg-primary hover:drop-shadow-lg" />
+                <SocialButton
+                  className="bg-primary hover:drop-shadow-lg"
+                  sidebarExpanded={isSidebarExpanded}
+                />
               </Grid>
             </Grid>
           </Box>
@@ -396,8 +425,8 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
               className="text-headings my-2 font-heading text-base flex justify-center"
               onClick={handleShowPrivacy}
             >
-              <LockIcon className="mx-3" />
-              Privacy Policy
+              <LockIcon className={isSidebarExpanded ? "mr-3" : ""} />
+              {isSidebarExpanded ? "Privacy Policy" : ""}
             </a>
           </button>
           <button className="bg-primary shadow-2xl text-white font-regular py-2 px-4 rounded my-3 font-heading text-sm hover:drop-shadow-lg">
@@ -406,8 +435,8 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
               className="text-headings my-2 font-heading text-base flex justify-center"
               onClick={showDisclaimer}
             >
-              <PanToolOutlinedIcon className="mx-3" />
-              Disclaimer
+              <PanToolOutlinedIcon className={isSidebarExpanded ? "mr-3" : ""} />
+              {isSidebarExpanded ? "Disclaimer" : ""}
             </a>
           </button>
         </div>
