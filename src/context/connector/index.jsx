@@ -35,7 +35,7 @@ export const ConnectorProvider = ({ children }) => {
       }
 
       localStorage.setItem(CONNECTOR_LOCAL_KEY, name);
-      activate(connector);
+      await activate(connector);
     } catch (error) {
       console.error("Wallet connecting error: ", error.message);
     }
