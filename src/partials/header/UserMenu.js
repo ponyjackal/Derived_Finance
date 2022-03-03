@@ -26,7 +26,12 @@ function UserMenu() {
   // close on click outside
   useEffect(() => {
     const clickHandler = ({ target }) => {
-      if (!dropdownOpen || (dropdown.current && dropdown.current.contains(target)) || (trigger.current && trigger.current.contains(target))) return;
+      if (
+        !dropdownOpen ||
+        (dropdown.current && dropdown.current.contains(target)) ||
+        (trigger.current && trigger.current.contains(target))
+      )
+        return;
       setDropdownOpen(false);
     };
     document.addEventListener("click", clickHandler);
@@ -67,7 +72,13 @@ function UserMenu() {
       {visible || active ? <Connectedtabs /> : null}
       {/* <Connectedtabs /> */}
       <div className="relative inline-flex">
-        <button ref={trigger} className="inline-flex justify-center items-center group" aria-haspopup="true" onClick={handleConnectWallet} aria-expanded={dropdownOpen}>
+        <button
+          ref={trigger}
+          className="inline-flex justify-center items-center group"
+          aria-haspopup="true"
+          onClick={handleConnectWallet}
+          aria-expanded={dropdownOpen}
+        >
           <div className="flex items-center truncate">
             <span className="truncate ml-2 text-sm text-white font-medium bg-headings mx-10 p-2 rounded-lg h-10">
               {(account && toShortAddress(account, 5)) || "Connect wallet"}
@@ -86,9 +97,16 @@ function UserMenu() {
             leaveStart="opacity-100"
             leaveEnd="opacity-0"
           >
-            <div ref={dropdown} onFocus={() => setDropdownOpen(true)} onBlur={() => setDropdownOpen(false)}>
+            <div
+              ref={dropdown}
+              onFocus={() => setDropdownOpen(true)}
+              onBlur={() => setDropdownOpen(false)}
+            >
               <ul>
-                <li className="flex text-white font-bold text-lg items-center bg-secondary m-3 p-2 rounded-lg h-14 cursor-pointer" onClick={() => connectWallet("injected")}>
+                <li
+                  className="flex text-white font-bold text-lg items-center bg-secondary m-3 p-2 rounded-lg h-14 cursor-pointer"
+                  onClick={() => connectWallet("injected")}
+                >
                   <img src={Meta} className="w-10 mr-5" alt="" />
                   Metamask
                 </li>
@@ -99,7 +117,10 @@ function UserMenu() {
                   <img src={Binance} className="w-10 mr-5" alt="" />
                   Binance Chain Wallet
                 </li> */}
-                <li className="flex text-white font-bold text-lg items-center bg-secondary m-3 p-2 rounded-lg h-14 cursor-pointer" onClick={() => connectWallet("injected")}>
+                <li
+                  className="flex text-white font-bold text-lg items-center bg-secondary m-3 p-2 rounded-lg h-14 cursor-pointer"
+                  onClick={() => connectWallet("injected")}
+                >
                   <img src={Wallet} className="w-10 mr-5" alt="" />
                   Wallet Connect
                 </li>
