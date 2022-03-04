@@ -4,12 +4,15 @@ import DesktopWindowsOutlinedIcon from "@mui/icons-material/DesktopWindowsOutlin
 import SecurityOutlinedIcon from "@mui/icons-material/SecurityOutlined";
 import StackedBarChartOutlinedIcon from "@mui/icons-material/StackedBarChartOutlined";
 import Skeleton from "@mui/material/Skeleton";
+import { BigNumber } from "bignumber.js";
 
 import { useFinance } from "../../context/finance";
 import { toShort18 } from "../../utils/Contract";
 
 const ValueBanner = () => {
-  const { loadingBalances, balances } = useFinance();
+  const { loadingBalances, balances, debts, transferableDVDX, dvdxPrice } =
+    useFinance();
+
   const amount = useMemo(() => {
     if (!balances)
       return {
@@ -18,10 +21,37 @@ const ValueBanner = () => {
       };
 
     return {
-      dvdx: toShort18(balances.dvdx).toFixed(0),
-      usdx: toShort18(balances.usdx).toFixed(0),
+      dvdx: toShort18(balances.dvdx).toFixed(4),
+      usdx: toShort18(balances.usdx).toFixed(4),
     };
   }, [balances]);
+
+  const strDebts = useMemo(() => {
+    if (!debts)
+      return {
+        usdx: new BigNumber(0).toFixed(4),
+      };
+
+    return {
+      usdx: toShort18(debts.usdx).toFixed(4),
+    };
+  }, [debts]);
+
+  const stakedDVDX = useMemo(() => {
+    if (!balances || !balances.dvdx) return "0.0000";
+
+    return toShort18(balances.dvdx.minus(transferableDVDX).toFixed()).toFixed(
+      4
+    );
+  }, [balances, transferableDVDX]);
+
+  const strTransferable = useMemo(() => {
+    if (!transferableDVDX) return "0.0000";
+
+    return toShort18(transferableDVDX.toFixed())
+      .multipliedBy(new BigNumber(dvdxPrice))
+      .toFixed(4);
+  }, [dvdxPrice, transferableDVDX]);
 
   return (
     <div className="w-full">
@@ -38,7 +68,7 @@ const ValueBanner = () => {
               {loadingBalances ? (
                 <Skeleton width={100} height={50} />
               ) : (
-                `0.00000 USD`
+                `${stakedDVDX} DVDX`
               )}
             </h5>
           </div>
@@ -53,13 +83,13 @@ const ValueBanner = () => {
             style={{ maxWidth: "calc(100% - 60px)" }}
           >
             <p className="text-gray-300 text-sm font-heading font-bold subpixel-antialiased group-hover:text-secondary">
-              DVDX Amount
+              USDx Amount
             </p>
             <h5 className="text-white text-lg font-body font-bold subpixel-antialiased">
               {loadingBalances ? (
                 <Skeleton width={100} height={50} />
               ) : (
-                `${amount.dvdx} DVDX`
+                `${amount.usdx} USDx`
               )}
             </h5>
           </div>
@@ -80,7 +110,7 @@ const ValueBanner = () => {
               {loadingBalances ? (
                 <Skeleton width={100} height={50} />
               ) : (
-                `0.00000 USD`
+                `${strTransferable} USD`
               )}
             </h5>
           </div>
@@ -101,7 +131,7 @@ const ValueBanner = () => {
               {loadingBalances ? (
                 <Skeleton width={100} height={50} />
               ) : (
-                `0.00000 USD`
+                `${strDebts.usdx} USD`
               )}
             </h5>
           </div>
