@@ -1,7 +1,7 @@
 export const contractAddresses = {
   market: {
     56: "",
-    97: "0x2c674080bbee2717C9B2C41CeA183e1D8D596a02",
+    97: "0xF90321f065781A65679554C792E323d10841EE60",
   },
   derivedToken: {
     56: "",
