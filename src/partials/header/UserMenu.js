@@ -5,12 +5,8 @@ import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 
 import Transition from "../../utils/Transition";
 import Meta from "../../images/meta-mask.png";
-// import Binance from "../../images/binance.png";
 import Wallet from "../../images/wallet-connect.png";
-// import Portis from "../../images/portis.png";
 import Connectedtabs from "./Connectedtabs";
-// import Binance from "../../images/binance.png";
-// import Portis from "../../images/portis.png";
 
 import { useConnector } from "../../context/connector";
 import { ConnectorNames, Connectors } from "../../utils/Connectors";
@@ -106,10 +102,10 @@ function UserMenu() {
                   <img src={Binance} className="w-10 mr-5" alt="" />
                   Binance Chain Wallet
                 </li> */}
-                <li className="flex text-white font-bold text-lg items-center bg-secondary m-3 p-2 rounded-lg h-14 cursor-pointer" onClick={() => connectWallet("injected")}>
+                {/* <li className="flex text-white font-bold text-lg items-center bg-secondary m-3 p-2 rounded-lg h-14 cursor-pointer" onClick={() => connectWallet("injected")}>
                   <img src={Wallet} className="w-10 mr-5" alt="" />
                   Wallet Connect
-                </li>
+                </li> */}
                 {/* <li className="flex text-white font-bold text-lg items-center bg-secondary m-3 p-2 rounded-lg h-14 cursor-pointer" onClick={() => connectWallet("injected")}>
                   <img src={Portis} className="w-10 mr-5" alt="" />
                   Portis
