@@ -1,7 +1,10 @@
 import { Web3Provider } from "@ethersproject/providers";
 import { InjectedConnector } from "@web3-react/injected-connector";
+import { WalletConnectConnector } from "@web3-react/walletconnect-connector";
 
 import { toHexString } from "./Utils";
+
+export const POLLING_INTERVAL = 12000;
 
 export const CHAIN_IDS = {
   BSC: 56,
@@ -24,15 +27,19 @@ export const injected = new InjectedConnector({
   supportedChainIds,
 });
 
+export const walletconnect = new WalletConnectConnector({
+  supportedChainIds,
+});
+
 export const ConnectorNames = {
   injected: "injected",
+  walletconnect: "walletconnect",
 };
 
 export const Connectors = {
   injected,
+  walletconnect,
 };
-
-export const POLLING_INTERVAL = 12000;
 
 export const getLibrary = (provider) => {
   const library = new Web3Provider(provider);
