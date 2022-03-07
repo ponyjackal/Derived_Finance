@@ -40,7 +40,7 @@ const Buysell = ({
   const [buyError, setBuyError] = useState(null);
   const [sellError, setSellError] = useState(null);
 
-  const { MarketContract, DerivedTokenContract } = useChain();
+  const { MarketContract, USDXContract } = useChain();
   const { account } = useWeb3React();
 
   const averagePrice = useMemo(() => {
@@ -67,7 +67,7 @@ const Buysell = ({
       new BigNumber(value).isZero() ||
       new BigNumber(value).isGreaterThan(limit) ||
       !MarketContract ||
-      !DerivedTokenContract ||
+      !USDXContract ||
       pendingTransaction
     );
   };
@@ -96,7 +96,7 @@ const Buysell = ({
 
     try {
       const order = toLong18(buyAmount);
-      const balance = await DerivedTokenContract.balanceOf(account);
+      const balance = await USDXContract.balanceOf(account);
       const balanceBN = new BigNumber(balance.toString());
 
       if (balanceBN.lt(order)) {
@@ -104,14 +104,14 @@ const Buysell = ({
       } else {
         setBuyError("");
 
-        const allowance = await DerivedTokenContract.allowance(
+        const allowance = await USDXContract.allowance(
           account,
           MarketContract.address
         );
         const allowanceBN = new BigNumber(allowance.toString());
 
         if (allowanceBN.lt(order)) {
-          const tx = await DerivedTokenContract.approve(
+          const tx = await USDXContract.approve(
             MarketContract.address,
             order.toFixed()
           );
