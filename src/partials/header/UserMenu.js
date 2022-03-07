@@ -93,23 +93,8 @@ function UserMenu() {
 
                 <li className="flex text-white font-bold text-lg items-center bg-secondary m-3 p-2 rounded-lg h-14 cursor-pointer" onClick={() => connectWallet("injected")}>
                   <img src={Wallet} className="w-10 mr-5" alt="" />
-                  Wallet Connect
+                  WalletConnect
                 </li>
-                {/* <li
-                  className="flex text-white font-bold text-lg items-center bg-secondary m-3 p-2 rounded-lg h-14 cursor-pointer"
-                  onClick={() => connectWallet("injected")}
-                >
-                  <img src={Binance} className="w-10 mr-5" alt="" />
-                  Binance Chain Wallet
-                </li> */}
-                {/* <li className="flex text-white font-bold text-lg items-center bg-secondary m-3 p-2 rounded-lg h-14 cursor-pointer" onClick={() => connectWallet("injected")}>
-                  <img src={Wallet} className="w-10 mr-5" alt="" />
-                  Wallet Connect
-                </li> */}
-                {/* <li className="flex text-white font-bold text-lg items-center bg-secondary m-3 p-2 rounded-lg h-14 cursor-pointer" onClick={() => connectWallet("injected")}>
-                  <img src={Portis} className="w-10 mr-5" alt="" />
-                  Portis
-                </li> */}
               </ul>
             </div>
           </Transition>
