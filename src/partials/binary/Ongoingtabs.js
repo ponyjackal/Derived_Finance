@@ -1,33 +1,40 @@
-import { useMemo } from 'react';
+import { useMemo } from "react";
 import { Tabs, TabList, Tab, TabPanel } from "react-tabs";
 import "react-tabs/style/react-tabs.css";
-import CircularProgress from '@mui/material/CircularProgress';
+import CircularProgress from "@mui/material/CircularProgress";
 
 import Singlebinaryblock from "./Singlebinaryblock";
 import { useMarket } from "../../context/market";
 
 const Ongoingtabs = ({ category, sortBy }) => {
-  const { liveQuestions, expiredQuestions, loading: loadingMarketData } = useMarket();
+  const {
+    liveQuestions,
+    expiredQuestions,
+    loading: loadingMarketData,
+  } = useMarket();
 
-  const ongingQuestions = useMemo(() => {
-    return liveQuestions.filter((question) => {
-      if (!category) return question;
-      return question.category === category;
-    }).sort((quzA, quzB) => {
-      if (sortBy === 'asc') return (+quzA.resolveTime) - (+quzB.resolveTime);
-      return (+quzB.resolveTime) - (+quzA.resolveTime);
-    });
-  }, [liveQuestions, category, sortBy]);
+  const filterQuestion = (questions) =>
+    questions
+      .filter((question) => {
+        if (!category) return question;
+        return question.category === category;
+      })
+      .sort((quzA, quzB) => {
+        if (sortBy === "asc") return +quzA.resolveTime - +quzB.resolveTime;
+        return +quzB.resolveTime - +quzA.resolveTime;
+      });
 
-  const resolvedQuestions = useMemo(() => {
-    return expiredQuestions.filter((question) => {
-      if (!category) return question;
-      return question.category === category;
-    }).sort((quzA, quzB) => {
-      if (sortBy === 'asc') return (+quzA.resolveTime) - (+quzB.resolveTime);
-      return (+quzB.resolveTime) - (+quzA.resolveTime);
-    });
-  }, [expiredQuestions, category, sortBy]);
+  const ongingQuestions = useMemo(
+    () => filterQuestion(liveQuestions),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [liveQuestions, category, sortBy]
+  );
+
+  const resolvedQuestions = useMemo(
+    () => filterQuestion(expiredQuestions),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [expiredQuestions, category, sortBy]
+  );
 
   return (
     <Tabs style={{ padding: "10px 0px" }}>
@@ -44,7 +51,7 @@ const Ongoingtabs = ({ category, sortBy }) => {
           <>
             {ongingQuestions && ongingQuestions.length > 0 ? (
               <div className="grid md:grid-cols-3 grid-cols-1 gap-4">
-                {ongingQuestions.map(question => (
+                {ongingQuestions.map((question) => (
                   <Singlebinaryblock key={question.id} {...question} />
                 ))}
               </div>
@@ -63,7 +70,7 @@ const Ongoingtabs = ({ category, sortBy }) => {
           <>
             {resolvedQuestions && resolvedQuestions.length > 0 ? (
               <div className="grid md:grid-cols-3 grid-cols-1 gap-4">
-                {resolvedQuestions.map(question => (
+                {resolvedQuestions.map((question) => (
                   <Singlebinaryblock key={question.id} {...question} />
                 ))}
               </div>
@@ -75,6 +82,6 @@ const Ongoingtabs = ({ category, sortBy }) => {
       </TabPanel>
     </Tabs>
   );
-}
+};
 
 export default Ongoingtabs;
