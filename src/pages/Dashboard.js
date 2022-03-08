@@ -1,12 +1,17 @@
 import React, { useState } from "react";
+
 import Sidebar from "../partials/Sidebar";
 import Header from "../partials/Header";
 import LockedValue from "../partials/dashboard/LockedValue";
 import ValueBanner from "../partials/dashboard/ValueBanner";
 import Balances from "../partials/dashboard/Balances";
 import Footer from "../partials/Footer";
-import Accordion from "../partials/dashboard/Accordion";
-import meta from "../images/meta-mask.png"
+import Collapsable from "../partials/dashboard/Collapsable";
+import DeAssetBalance from "../partials/dashboard/DeAssetBalance";
+import Staking from "../partials/dashboard/Staking";
+import TransactionList from "../partials/dashboard/TransactionList";
+
+import meta from "../images/meta-mask.png";
 
 function Dashboard() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -42,116 +47,53 @@ function Dashboard() {
               <Balances />
             </div>
 
-            <div className="flex w-full items-center justify-between rounded-lg mb-8">
-              <Accordion>
-                <div
-                  label={
-                    <div className="flex items-center w-11/12">
-                      <div className="w-1/3">
-                        <div>
-                          <p className="text-headings  md:text-md text-xs">
-                            DeAssets Balances
-                          </p>
-                        </div>
-                        <div>
-                          <p className="text-white  md:text-md text-xs">
-                            Overview of your DeAsset Holdings
-                          </p>
-                        </div>
-                      </div>
-                      <div style={{ borderLeft: "1px solid #86C440" }}>
-                        <img className="ml-3 w-6" src={meta} alt=""/>
-                      </div>
-                    </div>
+            <div className="mb-8">
+              <div className="w-100">
+                <Collapsable
+                  label="DeAssets Balances"
+                  description="Overview of your DeAsset Holdings"
+                  content={<img className="ml-3 w-6" src={meta} alt="" />}
+                >
+                  <DeAssetBalance />
+                </Collapsable>
+                <Collapsable
+                  label="Staking"
+                  description="Overview of your staking information"
+                  content={
+                    <p className="ml-3 md:text-md text-xs">
+                      You can stake DVDX tokens to mint USDx and earn DVDX
+                      rewards as well
+                    </p>
+                  }
+                >
+                  <Staking />
+                </Collapsable>
+                {/* <Collapsable
+                  label="Short Positions"
+                  description="Overview of your short positions"
+                  content={
+                    <p className="ml-3 md:text-md text-xs">
+                      You can short-sell any DeAsset by collateralizing DVDX.
+                    </p>
                   }
                 >
                   <div>
                     <p>No Data Available</p>
                   </div>
-                </div>
-                <div
-                  label={
-                    <div className="flex items-center w-11/12">
-                      <div className="w-1/3">
-                        <div>
-                          <p className="text-headings  md:text-md text-xs">
-                            Staking
-                          </p>
-                        </div>
-                        <div>
-                          <p className="text-white  md:text-md text-xs">
-                            Overview of your staking information
-                          </p>
-                        </div>
-                      </div>
-                      <div style={{ borderLeft: "1px solid #86C440" }}>
-                        <p className="ml-3 md:text-md text-xs">
-                        You can stake DVDX tokens to mint USDx and earn DVDX rewards as well
-                        </p>
-                      </div>
-                    </div>
+                </Collapsable> */}
+                <Collapsable
+                  label="Transaction History"
+                  description="Record of all your transactions"
+                  content={
+                    <p className="ml-3 md:text-md text-xs">
+                      View all your transactions on Derived Finance Related to
+                      your amount.
+                    </p>
                   }
                 >
-                  <div>
-                    <p>No Data Available</p>
-                  </div>
-                </div>
-                <div
-                  label={
-                    <div className="flex items-center w-11/12">
-                      <div className="w-1/3">
-                        <div>
-                          <p className="text-headings  md:text-md text-xs">
-                            Short Positions
-                          </p>
-                        </div>
-                        <div>
-                          <p className="text-white  md:text-md text-xs">
-                            Overview of your short positions
-                          </p>
-                        </div>
-                      </div>
-                      <div style={{ borderLeft: "1px solid #86C440" }}>
-                        <p className="ml-3 md:text-md text-xs">
-                          You can short-sell any DeAsset by collateralizing DVDX.
-                        </p>
-                      </div>
-                    </div>
-                  }
-                >
-                  <div>
-                    <p>No Data Available</p>
-                  </div>
-                </div>
-                <div
-                  label={
-                    <div className="flex items-center w-11/12">
-                      <div className="w-1/3">
-                        <div>
-                          <p className="text-headings  md:text-md text-xs">
-                            Transaction History
-                          </p>
-                        </div>
-                        <div>
-                          <p className="text-white  md:text-md text-xs">
-                            Record of all your transactions{" "}
-                          </p>
-                        </div>
-                      </div>
-                      <div style={{ borderLeft: "1px solid #86C440" }}>
-                        <p className="ml-3 md:text-md text-xs">
-                          View all your transactions on Derived Finance Related
-                          to your amount.
-                        </p>
-                      </div>
-                    </div>
-                  }
-                >
-                  <div>
-                    <p>No Data Available</p>
-                  </div>
-                </div>
-              </Accordion>
+                  <TransactionList />
+                </Collapsable>
+              </div>
             </div>
           </div>
         </main>

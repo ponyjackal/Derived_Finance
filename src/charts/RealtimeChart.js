@@ -1,21 +1,31 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect } from "react";
 
 import {
-  Chart, LineController, LineElement, Filler, PointElement, LinearScale, TimeScale, Tooltip,
-} from 'chart.js';
-import 'chartjs-adapter-moment';
+  Chart,
+  LineController,
+  LineElement,
+  Filler,
+  PointElement,
+  LinearScale,
+  TimeScale,
+  Tooltip,
+} from "chart.js";
+import "chartjs-adapter-moment";
 
 // Import utilities
-import { tailwindConfig, formatValue } from '../utils/Utils';
+import { tailwindConfig, formatValue } from "../utils/Utils";
 
-Chart.register(LineController, LineElement, Filler, PointElement, LinearScale, TimeScale, Tooltip);
+Chart.register(
+  LineController,
+  LineElement,
+  Filler,
+  PointElement,
+  LinearScale,
+  TimeScale,
+  Tooltip
+);
 
-function RealtimeChart({
-  data,
-  width,
-  height
-}) {
-
+function RealtimeChart({ data, width, height }) {
   const canvas = useRef(null);
   const chartValue = useRef(null);
   const chartDeviation = useRef(null);
@@ -24,7 +34,7 @@ function RealtimeChart({
     const ctx = canvas.current;
     // eslint-disable-next-line no-unused-vars
     const chart = new Chart(ctx, {
-      type: 'line',
+      type: "line",
       data: data,
       options: {
         layout: {
@@ -43,13 +53,13 @@ function RealtimeChart({
             },
           },
           x: {
-            type: 'time',
+            type: "time",
             time: {
-              parser: 'hh:mm:ss',
-              unit: 'second',
-              tooltipFormat: 'MMM DD, H:mm:ss a',
+              parser: "hh:mm:ss",
+              unit: "second",
+              tooltipFormat: "MMM DD, H:mm:ss a",
               displayFormats: {
-                second: 'H:mm:ss',
+                second: "H:mm:ss",
               },
             },
             grid: {
@@ -68,7 +78,7 @@ function RealtimeChart({
           },
           tooltip: {
             titleFont: {
-              weight: '600',
+              weight: "600",
             },
             callbacks: {
               label: (context) => formatValue(context.parsed.y),
@@ -77,7 +87,7 @@ function RealtimeChart({
         },
         interaction: {
           intersect: false,
-          mode: 'nearest',
+          mode: "nearest",
         },
         animation: false,
         maintainAspectRatio: false,
@@ -90,24 +100,38 @@ function RealtimeChart({
 
   // Update header values
   useEffect(() => {
-    const currentValue = data.datasets[0].data[data.datasets[0].data.length - 1];
-    const previousValue = data.datasets[0].data[data.datasets[0].data.length - 2];
+    if (!data || !data.datasets.length || !data.datasets[0].data.length) return;
+
+    const currentValue =
+      data.datasets[0].data[data.datasets[0].data.length - 1];
+    const previousValue =
+      data.datasets[0].data[data.datasets[0].data.length - 2];
     const diff = ((currentValue - previousValue) / previousValue) * 100;
-    chartValue.current.innerHTML = data.datasets[0].data[data.datasets[0].data.length - 1];
+    chartValue.current.innerHTML =
+      data.datasets[0].data[data.datasets[0].data.length - 1];
     if (diff < 0) {
-      chartDeviation.current.style.backgroundColor = tailwindConfig().theme.colors.yellow[500];
+      chartDeviation.current.style.backgroundColor =
+        tailwindConfig().theme.colors.yellow[500];
     } else {
-      chartDeviation.current.style.backgroundColor = tailwindConfig().theme.colors.green[500];
+      chartDeviation.current.style.backgroundColor =
+        tailwindConfig().theme.colors.green[500];
     }
-    chartDeviation.current.innerHTML = `${diff > 0 ? '+' : ''}${diff.toFixed(2)}%`;
+    chartDeviation.current.innerHTML = `${diff > 0 ? "+" : ""}${diff.toFixed(
+      2
+    )}%`;
   }, [data]);
 
   return (
     <React.Fragment>
       <div className="px-5 py-3">
         <div className="flex items-start">
-          <div className="text-3xl font-bold text-gray-800 mr-2 tabular-nums">$<span ref={chartValue}>57.81</span></div>
-          <div ref={chartDeviation} className="text-sm font-semibold text-white px-1.5 rounded-full"></div>
+          <div className="text-3xl font-bold text-gray-800 mr-2 tabular-nums">
+            $<span ref={chartValue}>0.0000</span>
+          </div>
+          <div
+            ref={chartDeviation}
+            className="text-sm font-semibold text-white px-1.5 rounded-full"
+          ></div>
         </div>
       </div>
       <div className="flex-grow">

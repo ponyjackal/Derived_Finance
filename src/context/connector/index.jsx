@@ -23,19 +23,21 @@ export const ConnectorProvider = ({ children }) => {
    */
   const connect = async (name, connector) => {
     try {
-      const chainId = await window.ethereum.request({
-        method: "eth_chainId",
-      });
-
-      if (!supportedChainHexIds.includes(chainId)) {
-        await window.ethereum.request({
-          method: "wallet_switchEthereumChain",
-          params: [{ chainId: defaultChainHexId }],
+      if (name === "injected") {
+        const chainId = await window.ethereum.request({
+          method: "eth_chainId",
         });
+
+        if (!supportedChainHexIds.includes(chainId)) {
+          await window.ethereum.request({
+            method: "wallet_switchEthereumChain",
+            params: [{ chainId: defaultChainHexId }],
+          });
+        }
       }
 
       localStorage.setItem(CONNECTOR_LOCAL_KEY, name);
-      activate(connector);
+      await activate(connector);
     } catch (error) {
       console.error("Wallet connecting error: ", error.message);
     }
@@ -64,11 +66,15 @@ export const ConnectorProvider = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    const connector = localStorage.getItem("connector");
+    const connector = localStorage.getItem(CONNECTOR_LOCAL_KEY);
 
     switch (connector) {
       case ConnectorNames.injected:
-        connect("injected", Connectors.injected);
+        connect(ConnectorNames.injected, Connectors.injected);
+        break;
+
+      case ConnectorNames.walletconnect:
+        connect(ConnectorNames.walletconnect, Connectors.walletconnect);
         break;
 
       default:

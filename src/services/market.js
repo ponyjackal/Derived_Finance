@@ -1,6 +1,6 @@
 import { GraphQLClient } from 'graphql-request';
 
-import { FETCH_QUESTIONS, FETCH_ONGOING_QUESTIOINS, FETCH_EXPIRED_QUESTIONS, FETCH_QUESTION_DETAIL } from "./queries/market";
+import { FETCH_QUESTIONS, FETCH_ONGOING_QUESTIOINS, FETCH_EXPIRED_QUESTIONS, FETCH_QUESTION_DETAIL, FETCH_TRADES_BY_QUESTION } from "./queries/market";
 
 export const GRAPH_API = {
   56: "https://api.thegraph.com/subgraphs/name/bbshark99/derived-market-bsctest",
@@ -65,4 +65,20 @@ export const fetchQuestionDetail = async (chainId = 97, questionId) => {
   }
 
   return null;
+};
+
+export const fetchTradesByQuestion = async (chainId = 97, id) => {
+  const client = new GraphQLClient(GRAPH_API[chainId]);
+
+  let limit = 10, page = 0, data = [];
+  let res = await client.request(FETCH_TRADES_BY_QUESTION(id, limit, page));
+
+  while (res.trades.length > 0) {
+    data = data.concat(res.trades);
+    page++;
+
+    res = await client.request(FETCH_TRADES_BY_QUESTION(id, limit, page));
+  }
+
+  return data;
 };

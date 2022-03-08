@@ -10,19 +10,20 @@ export const FETCH_QUESTIONS = (limit = 10, page = 0) => {
       {
         id
         questionId
-        token
         maker
         resolver
-        title
+        meta
+        category
         createTime
         resolveTime
         funding
         fee
-        strikePrice
         status
         answer
         long
         short
+        lpVolume
+        tradeVolume
       }
     }
   `);
@@ -40,20 +41,18 @@ export const FETCH_ONGOING_QUESTIOINS = (limit = 10, page = 0) => {
     )
     {
       id
-      questionId
-      token
-      maker
-      resolver
       title
+      category
+      questionId
       createTime
       resolveTime
-      funding
-      fee
-      strikePrice
       status
       answer
       long
       short
+      lpVolume
+      tradeVolume
+      meta
     }
   }
 `);
@@ -71,20 +70,17 @@ export const FETCH_EXPIRED_QUESTIONS = (limit = 10, page = 0) => {
     )
     {
       id
-      questionId
-      token
-      maker
-      resolver
       title
+      category
+      questionId
       createTime
       resolveTime
-      funding
-      fee
-      strikePrice
       status
       answer
       long
       short
+      lpVolume
+      tradeVolume
     }
   }
 `);
@@ -101,20 +97,48 @@ export const FETCH_QUESTION_DETAIL = (questionId) => {
     {
       id
       questionId
-      token
       maker
       resolver
       title
+      meta
+      category
       createTime
       resolveTime
       funding
       fee
-      strikePrice
       status
       answer
       long
       short
+      lpVolume
+      tradeVolume
     }
   }
 `);
+};
+
+export const FETCH_TRADES_BY_QUESTION = (id, limit = 10, page = 0) => {
+  return gql(`
+    query transactions {
+      trades (
+        first: ${limit}
+        skip: ${page * limit}
+        orderBy: timestamp,
+        orderDirection: desc
+        where: {
+          question: "${id}"
+        }
+      ) {
+        id
+        long
+        short
+        timestamp
+        amount
+        transaction
+        trader
+        status
+        answer
+      }
+    }
+  `);
 };

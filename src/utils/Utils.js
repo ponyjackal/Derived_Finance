@@ -1,12 +1,13 @@
-import dayjs from 'dayjs';
+import BigNumber from "bignumber.js";
+import dayjs from "dayjs";
+import resolveConfig from "tailwindcss/resolveConfig";
 
-import resolveConfig from 'tailwindcss/resolveConfig';
-import tailwindConfigFile from '../css/tailwind.config';
+import tailwindConfigFile from "../css/tailwind.config";
 
 export const tailwindConfig = () => {
   // Tailwind config
-  return resolveConfig(tailwindConfigFile)
-}
+  return resolveConfig(tailwindConfigFile);
+};
 
 export const hexToRGB = (h) => {
   let r = 0;
@@ -24,20 +25,24 @@ export const hexToRGB = (h) => {
   return `${+r},${+g},${+b}`;
 };
 
-export const formatValue = (value) => Intl.NumberFormat('en-US', {
-  style: 'currency',
-  currency: 'USD',
-  maximumSignificantDigits: 3,
-  notation: 'compact',
-}).format(value);
+export const formatValue = (value) =>
+  Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+    maximumSignificantDigits: 3,
+    notation: "compact",
+  }).format(value);
 
 /**
  * Convert to short address
- * @param {String} str 
+ * @param {String} str
  * @returns {String}
  */
-export const toShortAddress = (str = '', num = 3) => {
-  return `${str.substring(0, num)}...${str.substring(str.length - num, str.length)}`;
+export const toShortAddress = (str = "", num = 3) => {
+  return `${str.substring(0, num)}...${str.substring(
+    str.length - num,
+    str.length
+  )}`;
 };
 
 export const toHexString = (num) => {
@@ -46,33 +51,29 @@ export const toHexString = (num) => {
 
 export const toFriendlyTimeFormat = (time) => {
   const d = new Date(time * 1000);
-  const day = dayjs(d).format('MMM DD, YY | hh:mm');
+  const day = dayjs(d).format("MMM DD, YY | hh:mm");
 
   return day;
 };
 
 export const toFriendlyTime = (time) => {
   const d = new Date(time * 1000);
-  const day = dayjs(d).format('MMM DD, YYYY');
+  const day = dayjs(d).format("MMM DD, YYYY");
 
   return day;
 };
 
 export const toTimer = (time) => {
-  const dividers = [
-    1000 * 60 * 60 * 24,
-    1000 * 60 * 60,
-    1000 * 60,
-    1000,
-  ];
+  const dividers = [1000 * 60 * 60 * 24, 1000 * 60 * 60, 1000 * 60, 1000];
 
-  let str = '', res = time;
+  let str = "",
+    res = time;
   for (const divier of dividers) {
     const r = res % divier;
     const t = (res - r) / divier;
 
     if (t !== 0) {
-      str += `${t > 9 ? t : '0' + t}:`;
+      str += `${t > 9 ? t : "0" + t}:`;
     } else {
       str += `00:`;
     }
@@ -85,4 +86,12 @@ export const toTimer = (time) => {
   }
 
   return "00:00:00:00";
+};
+
+export const smaller = (num1, num2) => {
+  return new BigNumber(num1).lt(new BigNumber(num2)) ? num1 : num2;
+};
+
+export const generateUnixTimestamp = (time) => {
+  return new Date(time).getTime() / 1000;
 };

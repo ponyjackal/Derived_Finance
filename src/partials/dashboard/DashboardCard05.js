@@ -16,7 +16,7 @@ function DashboardCard05() {
   const [counter, setCounter] = useState(0);
   const [increment, setIncrement] = useState(0);
   const [range, setRange] = useState(35);
-  
+
   // Dummy data to be looped
   const data = [
     57.81, 57.75, 55.48, 54.28, 53.14, 52.25, 51.04, 52.49, 55.49, 56.87,
@@ -60,7 +60,7 @@ function DashboardCard05() {
     }
     setSlicedLabels(([x, ...slicedLabels]) => [...slicedLabels, new Date()]);
     return () => setIncrement(0)
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [counter]);
 
   const chartData = {
@@ -89,7 +89,7 @@ function DashboardCard05() {
       </header>
       {/* Chart built with Chart.js 3 */}
       {/* Change the height attribute to adjust the chart height */}
-      <RealtimeChart data={chartData} width={595} height={200} className="text-white"/>
+      <RealtimeChart data={chartData} width={595} height={200} className="text-white" />
     </div>
   );
 }

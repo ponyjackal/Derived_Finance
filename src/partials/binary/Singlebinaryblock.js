@@ -9,7 +9,7 @@ import { toShort18 } from "../../utils/Contract";
 
 // const label = { inputProps: { "aria-label": "Checkbox demo" } };
 
-const Singlebinaryblock = ({ title, questionId, resolveTime, createTime, long, short }) => {
+const Singlebinaryblock = ({ title, questionId, category, resolveTime, createTime, long, short }) => {
   const [time, setTime] = useState("00:00:00:00");
   const [progress, setProgress] = useState(100);
 
@@ -43,7 +43,7 @@ const Singlebinaryblock = ({ title, questionId, resolveTime, createTime, long, s
   return (
     <div className="p-2 bg-secondary rounded-lg">
       <div className="flex items-center justify-between">
-        <Link to="/Binaryoptionsinside" className="flex items-center justify-between p-4">
+        <Link to={`/Binaryoptionsinside/${questionId}`} className="flex items-center justify-between p-4">
           {/* <img src={image} className="rounded-full w-12 p-1" alt="" /> */}
           <p className="text-white text-md">
             {title}
@@ -63,6 +63,10 @@ const Singlebinaryblock = ({ title, questionId, resolveTime, createTime, long, s
             <p className="text-white">{toShortAddress(questionId || '', 8)}</p>
           </div>
           <div className="flex items-center justify-between px-5 py-2">
+            <p className="text-gray-400">Category</p>
+            <p className="text-white uppercase">{category}</p>
+          </div>
+          <div className="flex items-center justify-between px-5 py-2">
             <p className="text-gray-400">Time Remaining</p>
             <p className="text-white">{time}</p>
           </div>
@@ -71,11 +75,11 @@ const Singlebinaryblock = ({ title, questionId, resolveTime, createTime, long, s
             <p className="text-white">{toFriendlyTimeFormat(+resolveTime || 0)}</p>
           </div>
           <div className="flex items-center justify-between px-5 py-2">
-            <p className="text-gray-400">Long</p>
+            <p className="text-gray-400">YES</p>
             <p className="text-white">${toShort18(new BigNumber(long || 0)).toFixed(2)}</p>
           </div>
           <div className="flex items-center justify-between px-5 py-2">
-            <p className="text-gray-400">Short</p>
+            <p className="text-gray-400">NO</p>
             <p className="text-white">${toShort18(new BigNumber(short || 0)).toFixed(2)}</p>
           </div>
         </div>
