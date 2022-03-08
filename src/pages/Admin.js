@@ -97,6 +97,7 @@ function Stake() {
         question.resolver,
         question.title,
         ipfs,
+        question.type,
         resolveTime,
         amount.toFixed(),
         question.fee
@@ -115,6 +116,8 @@ function Stake() {
       });
 
       onCloseModal();
+
+      setQuestion({});
     } catch (error) {
       showError(error.message);
       console.error("Submit error: ", error.message);

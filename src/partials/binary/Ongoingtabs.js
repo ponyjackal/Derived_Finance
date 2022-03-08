@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { Tabs, TabList, Tab, TabPanel } from "react-tabs";
 import "react-tabs/style/react-tabs.css";
 import CircularProgress from '@mui/material/CircularProgress';
@@ -5,8 +6,28 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Singlebinaryblock from "./Singlebinaryblock";
 import { useMarket } from "../../context/market";
 
-const Ongoingtabs = () => {
+const Ongoingtabs = ({ category, sortBy }) => {
   const { liveQuestions, expiredQuestions, loading: loadingMarketData } = useMarket();
+
+  const ongingQuestions = useMemo(() => {
+    return liveQuestions.filter((question) => {
+      if (!category) return question;
+      return question.category === category;
+    }).sort((quzA, quzB) => {
+      if (sortBy === 'asc') return (+quzA.resolveTime) - (+quzB.resolveTime);
+      return (+quzB.resolveTime) - (+quzA.resolveTime);
+    });
+  }, [liveQuestions, category, sortBy]);
+
+  const resolvedQuestions = useMemo(() => {
+    return expiredQuestions.filter((question) => {
+      if (!category) return question;
+      return question.category === category;
+    }).sort((quzA, quzB) => {
+      if (sortBy === 'asc') return (+quzA.resolveTime) - (+quzB.resolveTime);
+      return (+quzB.resolveTime) - (+quzA.resolveTime);
+    });
+  }, [expiredQuestions, category, sortBy]);
 
   return (
     <Tabs style={{ padding: "10px 0px" }}>
@@ -21,9 +42,9 @@ const Ongoingtabs = () => {
           </div>
         ) : (
           <>
-            {liveQuestions && liveQuestions.length > 0 ? (
+            {ongingQuestions && ongingQuestions.length > 0 ? (
               <div className="grid md:grid-cols-3 grid-cols-1 gap-4">
-                {liveQuestions.map(question => (
+                {ongingQuestions.map(question => (
                   <Singlebinaryblock key={question.id} {...question} />
                 ))}
               </div>
@@ -40,9 +61,9 @@ const Ongoingtabs = () => {
           </div>
         ) : (
           <>
-            {expiredQuestions && expiredQuestions.length > 0 ? (
+            {resolvedQuestions && resolvedQuestions.length > 0 ? (
               <div className="grid md:grid-cols-3 grid-cols-1 gap-4">
-                {expiredQuestions.map(question => (
+                {resolvedQuestions.map(question => (
                   <Singlebinaryblock key={question.id} {...question} />
                 ))}
               </div>

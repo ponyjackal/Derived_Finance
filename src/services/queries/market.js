@@ -13,6 +13,7 @@ export const FETCH_QUESTIONS = (limit = 10, page = 0) => {
         maker
         resolver
         meta
+        category
         createTime
         resolveTime
         funding
@@ -41,6 +42,7 @@ export const FETCH_ONGOING_QUESTIOINS = (limit = 10, page = 0) => {
     {
       id
       title
+      category
       questionId
       createTime
       resolveTime
@@ -69,6 +71,7 @@ export const FETCH_EXPIRED_QUESTIONS = (limit = 10, page = 0) => {
     {
       id
       title
+      category
       questionId
       createTime
       resolveTime
@@ -98,6 +101,7 @@ export const FETCH_QUESTION_DETAIL = (questionId) => {
       resolver
       title
       meta
+      category
       createTime
       resolveTime
       funding
