@@ -109,6 +109,7 @@ function Stake() {
 
       addLiveQuestion({
         ...question,
+        category: question.type,
         questionId: new BigNumber(questionId.toString()).toFixed(),
         funding: amount.toFixed(),
         meta: ipfs,
