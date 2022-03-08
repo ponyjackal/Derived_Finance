@@ -9,7 +9,7 @@ import { toShort18 } from "../../utils/Contract";
 
 // const label = { inputProps: { "aria-label": "Checkbox demo" } };
 
-const Singlebinaryblock = ({ title, questionId, resolveTime, createTime, long, short }) => {
+const Singlebinaryblock = ({ title, questionId, category, resolveTime, createTime, long, short }) => {
   const [time, setTime] = useState("00:00:00:00");
   const [progress, setProgress] = useState(100);
 
@@ -61,6 +61,10 @@ const Singlebinaryblock = ({ title, questionId, resolveTime, createTime, long, s
           <div className="flex items-center justify-between px-5 py-2">
             <p className="text-gray-400">Binary Option ID</p>
             <p className="text-white">{toShortAddress(questionId || '', 8)}</p>
+          </div>
+          <div className="flex items-center justify-between px-5 py-2">
+            <p className="text-gray-400">Category</p>
+            <p className="text-white uppercase">{category}</p>
           </div>
           <div className="flex items-center justify-between px-5 py-2">
             <p className="text-gray-400">Time Remaining</p>
