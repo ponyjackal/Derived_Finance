@@ -22,7 +22,7 @@ export const getPrices = async (ids, include_24hr_change = false) => {
     const resp = await httpClient.get(`/simple/price?ids=${ids}&vs_currencies=usd&include_24hr_change=${include_24hr_change}`);
     return resp.data;
   } catch (error) {
-    console.error('Getting price error: ', error.message);
+    console.error('Getting prices error: ', error.message);
   }
 };
 

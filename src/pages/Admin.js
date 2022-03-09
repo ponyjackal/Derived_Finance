@@ -23,6 +23,7 @@ import { useDisclaimer } from "../context/disclaimer";
 import { deployToIPFS } from "../utils/Ipfs";
 import { toLong18 } from "../utils/Contract";
 import { generateUnixTimestamp } from "../utils/Utils";
+import { AVAILALBE_TOKENS } from "../utils/Tokens";
 
 function Stake() {
   const { MarketContract, USDXContract } = useChain();
@@ -131,14 +132,11 @@ function Stake() {
     setSubmitting(true);
 
     try {
-      const tx = await MarketContract.resolveQuestion(
-        questionId,
-        answerIndex
-      );
+      const tx = await MarketContract.resolveQuestion(questionId, answerIndex);
 
       await tx.wait();
     } catch (error) {
-      console.error('Resolve question error: ', error.message);
+      console.error("Resolve question error: ", error.message);
       showError(error.message);
     }
 
@@ -253,8 +251,11 @@ function Stake() {
                       onChange={handleChange}
                       style={{ width: "100%" }}
                     >
-                      <MenuItem value="crypto">Crypto</MenuItem>
-                      <MenuItem value="life">Life</MenuItem>
+                      {AVAILALBE_TOKENS.map((token) => (
+                        <MenuItem key={token.key} value={token.coinId}>
+                          {token.label}
+                        </MenuItem>
+                      ))}
                     </Select>
                     {/* <TextareaAutosize
                       name="type"
@@ -275,15 +276,16 @@ function Stake() {
                       <p className="text-white text-lg p-2 pt-0">
                         Enter CoinId
                       </p>
-                      <TextField
-                        id="question-coin"
-                        variant="outlined"
-                        className="w-full"
-                        required
+                      <Select
                         name="coinId"
+                        required
                         value={question.coinId}
                         onChange={handleChange}
-                      />
+                        style={{ width: "100%" }}
+                      >
+                        <MenuItem value="crypto">Crypto</MenuItem>
+                        <MenuItem value="life">Life</MenuItem>
+                      </Select>
                       {/* <TextareaAutosize
                         name="coinId"
                         value={question.coinId}
