@@ -244,7 +244,7 @@ const BinaryInside = () => {
                         {loading ? (
                           <Skeleton width={100} height={30} />
                         ) : (
-                          <p className="text-black text-base font-body font-black">
+                          <p className="text-black text-base font-body font-black whitespace-nowrap">
                             {question.resolveTime}
                           </p>
                         )}
@@ -262,7 +262,7 @@ const BinaryInside = () => {
                         {loading ? (
                           <Skeleton width={100} height={30} />
                         ) : (
-                          <p className="text-black text-base font-body font-black">
+                          <p className="text-black text-base font-body font-black whitespace-nowrap">
                             <AttachMoneyOutlinedIcon />
                             {question.trade}
                           </p>
@@ -281,7 +281,7 @@ const BinaryInside = () => {
                         {loading ? (
                           <Skeleton width={100} height={30} />
                         ) : (
-                          <p className="text-black text-base font-body font-black">
+                          <p className="text-black text-base font-body font-black whitespace-nowrap">
                             <AttachMoneyOutlinedIcon />
                             {question.liquidity}
                           </p>
