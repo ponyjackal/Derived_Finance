@@ -132,11 +132,14 @@ function Stake() {
     setSubmitting(true);
 
     try {
-      const tx = await MarketContract.resolveQuestion(questionId, answerIndex);
+      const tx = await MarketContract.resolveQuestion(
+        questionId,
+        answerIndex
+      );
 
       await tx.wait();
     } catch (error) {
-      console.error("Resolve question error: ", error.message);
+      console.error('Resolve question error: ', error.message);
       showError(error.message);
     }
 
@@ -251,11 +254,8 @@ function Stake() {
                       onChange={handleChange}
                       style={{ width: "100%" }}
                     >
-                      {AVAILALBE_TOKENS.map((token) => (
-                        <MenuItem key={token.key} value={token.coinId}>
-                          {token.label}
-                        </MenuItem>
-                      ))}
+                      <MenuItem value="crypto">Crypto</MenuItem>
+                      <MenuItem value="life">Life</MenuItem>
                     </Select>
                     {/* <TextareaAutosize
                       name="type"
@@ -283,8 +283,11 @@ function Stake() {
                         onChange={handleChange}
                         style={{ width: "100%" }}
                       >
-                        <MenuItem value="crypto">Crypto</MenuItem>
-                        <MenuItem value="life">Life</MenuItem>
+                        {AVAILALBE_TOKENS.map((token) => (
+                          <MenuItem key={token.key} value={token.coinId}>
+                            {token.label}
+                          </MenuItem>
+                        ))}
                       </Select>
                       {/* <TextareaAutosize
                         name="coinId"
