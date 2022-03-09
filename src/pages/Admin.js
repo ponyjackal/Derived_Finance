@@ -23,6 +23,7 @@ import { useDisclaimer } from "../context/disclaimer";
 import { deployToIPFS } from "../utils/Ipfs";
 import { toLong18 } from "../utils/Contract";
 import { generateUnixTimestamp } from "../utils/Utils";
+import { AVAILALBE_TOKENS } from "../utils/Tokens";
 
 function Stake() {
   const { MarketContract, USDXContract } = useChain();
@@ -275,15 +276,19 @@ function Stake() {
                       <p className="text-white text-lg p-2 pt-0">
                         Enter CoinId
                       </p>
-                      <TextField
-                        id="question-coin"
-                        variant="outlined"
-                        className="w-full"
-                        required
+                      <Select
                         name="coinId"
+                        required
                         value={question.coinId}
                         onChange={handleChange}
-                      />
+                        style={{ width: "100%" }}
+                      >
+                        {AVAILALBE_TOKENS.map((token) => (
+                          <MenuItem key={token.key} value={token.coinId}>
+                            {token.label}
+                          </MenuItem>
+                        ))}
+                      </Select>
                       {/* <TextareaAutosize
                         name="coinId"
                         value={question.coinId}
