@@ -1,14 +1,14 @@
 import React from "react";
-import Checkbox from "@mui/material/Checkbox";
+// import Checkbox from "@mui/material/Checkbox";
 import Box from "@mui/material/Box";
 import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
-import StarBorderIcon from "@mui/icons-material/StarBorder";
+// import StarBorderIcon from "@mui/icons-material/StarBorder";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 // import MonetizationOnOutlinedIcon from "@mui/icons-material/MonetizationOnOutlined";
 
-const label = { inputProps: { "aria-label": "Checkbox demo" } };
+// const label = { inputProps: { "aria-label": "Checkbox demo" } };
 
 const Binarysecondtab = ({ category, sortBy, onChangeCategory, onChangeSortBy }) => {
   return (
@@ -59,7 +59,7 @@ const Binarysecondtab = ({ category, sortBy, onChangeCategory, onChangeSortBy })
           </Select>
         </FormControl>
       </Box>
-      <div className="flex items-center">
+      {/* <div className="flex items-center">
         <Checkbox {...label} />{" "}
         <p className="text-white text-lg">Show Resolved</p>
       </div>
@@ -71,7 +71,7 @@ const Binarysecondtab = ({ category, sortBy, onChangeCategory, onChangeSortBy })
           color="warning"
         />{" "}
         <p className="text-white text-lg">Show Resolved</p>
-      </div>
+      </div> */}
     </div>
   );
 };
