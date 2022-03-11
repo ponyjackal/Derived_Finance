@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+
 import Sidebar from "../partials/Sidebar";
 import Header from "../partials/Header";
 import LockedValue from "../partials/dashboard/LockedValue";
@@ -6,6 +7,10 @@ import ValueBanner from "../partials/dashboard/ValueBanner";
 import Balances from "../partials/dashboard/Balances";
 import Footer from "../partials/Footer";
 import Collapsable from "../partials/dashboard/Collapsable";
+import DeAssetBalance from "../partials/dashboard/DeAssetBalance";
+import Staking from "../partials/dashboard/Staking";
+import TransactionList from "../partials/dashboard/TransactionList";
+
 import meta from "../images/meta-mask.png";
 
 function Dashboard() {
@@ -49,9 +54,7 @@ function Dashboard() {
                   description="Overview of your DeAsset Holdings"
                   content={<img className="ml-3 w-6" src={meta} alt="" />}
                 >
-                  <div>
-                    <p>No Data Available</p>
-                  </div>
+                  <DeAssetBalance />
                 </Collapsable>
                 <Collapsable
                   label="Staking"
@@ -63,9 +66,7 @@ function Dashboard() {
                     </p>
                   }
                 >
-                  <div>
-                    <p>No Data Available</p>
-                  </div>
+                  <Staking />
                 </Collapsable>
                 <Collapsable
                   label="Short Positions"
@@ -90,9 +91,7 @@ function Dashboard() {
                     </p>
                   }
                 >
-                  <div>
-                    <p>No Data Available</p>
-                  </div>
+                  <TransactionList />
                 </Collapsable>
               </div>
             </div>

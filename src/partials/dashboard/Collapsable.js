@@ -106,7 +106,7 @@ const Collapsable = ({ label, description, content, children }) => {
               padding: "10px 20px",
               width: "100%",
               color: "white",
-              height: "110px",
+              minHeight: "110px",
               borderRadius: "10px",
               display: "grid",
               placeItems: "center",
