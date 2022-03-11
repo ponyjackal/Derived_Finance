@@ -80,7 +80,11 @@ function SocialButton({ sidebarExpanded }) {
       </Grid>
       <Grid item sm={sidebarExpanded ? 4 : 12}>
         <Item>
-          <a href="">
+          <a
+            href="https://github.com/DerivedFinance/Whitepaper"
+            target="_blank"
+            rel="noreferrer"
+          >
             <DescriptionOutlinedIcon />
           </a>
         </Item>
@@ -125,7 +129,10 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
 
   const handleShowPrivacy = () => {};
 
-  const isSidebarExpanded = useMemo(() => showSidebar | sidebarExpanded, [showSidebar, sidebarExpanded]);
+  const isSidebarExpanded = useMemo(
+    () => showSidebar | sidebarExpanded,
+    [showSidebar, sidebarExpanded]
+  );
 
   // close on click outside
   useEffect(() => {
@@ -164,14 +171,16 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
 
   useEffect(() => {
     const handleResizeWindow = () => {
-      setShowSidebar(window.document.documentElement.clientWidth > MOBILE_WIDTH);
+      setShowSidebar(
+        window.document.documentElement.clientWidth > MOBILE_WIDTH
+      );
     };
 
-    window.addEventListener('resize', handleResizeWindow);
+    window.addEventListener("resize", handleResizeWindow);
     handleResizeWindow();
 
     return () => {
-      window.removeEventListener('resize', handleResizeWindow);
+      window.removeEventListener("resize", handleResizeWindow);
     };
   }, []);
 
@@ -388,7 +397,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
               {isSidebarExpanded ? "DVDX Price" : ""}
             </a>
           </button>
-          <button className="bg-primary shadow-2xl text-white font-regular py-2 px-4 rounded my-3 font-heading text-sm hover:drop-shadow-lg text-base">
+          {/* <button className="bg-primary shadow-2xl text-white font-regular py-2 px-4 rounded my-3 font-heading text-sm hover:drop-shadow-lg text-base">
             <a
               href="#"
               target="_blank"
@@ -402,7 +411,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
               />{" "}
               {isSidebarExpanded ? "Sign Up for updates" : ""}
             </a>
-          </button>
+          </button> */}
         </div>
 
         <div className="pt-3 justify-center mt-5 flex flex-col">
@@ -419,7 +428,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
         </div>
 
         <div className="pt-3 justify-center mt-5 flex flex-col">
-          <button className="bg-primary shadow-2xl text-white font-regular py-2 rounded my-3 font-heading text-sm hover:drop-shadow-lg">
+          {/* <button className="bg-primary shadow-2xl text-white font-regular py-2 rounded my-3 font-heading text-sm hover:drop-shadow-lg">
             <a
               href="javascript:;"
               className="text-headings my-2 font-heading text-base flex justify-center"
@@ -428,14 +437,16 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
               <LockIcon className={isSidebarExpanded ? "mr-3" : ""} />
               {isSidebarExpanded ? "Privacy Policy" : ""}
             </a>
-          </button>
+          </button> */}
           <button className="bg-primary shadow-2xl text-white font-regular py-2 px-4 rounded my-3 font-heading text-sm hover:drop-shadow-lg">
             <a
               href="javascript:;"
               className="text-headings my-2 font-heading text-base flex justify-center"
               onClick={showDisclaimer}
             >
-              <PanToolOutlinedIcon className={isSidebarExpanded ? "mr-3" : ""} />
+              <PanToolOutlinedIcon
+                className={isSidebarExpanded ? "mr-3" : ""}
+              />
               {isSidebarExpanded ? "Disclaimer" : ""}
             </a>
           </button>
