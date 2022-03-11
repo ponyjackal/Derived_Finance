@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+import { BigNumber } from "bignumber.js";
 import Skeleton from "@mui/material/Skeleton";
 
 import { useFinance } from "../../context/finance";
@@ -12,7 +13,9 @@ const DeAssetBalance = () => {
     return AVAILALBE_TOKENS.reduce(
       (value, token) => ({
         ...value,
-        [token.key]: toShort18(synthBalances[token.key].toFixed()).toFixed(4),
+        [token.key]: toShort18(
+          (synthBalances[token.key] || new BigNumber(0)).toFixed()
+        ).toFixed(4),
       }),
       {}
     );
