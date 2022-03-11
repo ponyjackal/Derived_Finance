@@ -68,7 +68,7 @@ function Dashboard() {
                 >
                   <Staking />
                 </Collapsable>
-                <Collapsable
+                {/* <Collapsable
                   label="Short Positions"
                   description="Overview of your short positions"
                   content={
@@ -80,7 +80,7 @@ function Dashboard() {
                   <div>
                     <p>No Data Available</p>
                   </div>
-                </Collapsable>
+                </Collapsable> */}
                 <Collapsable
                   label="Transaction History"
                   description="Record of all your transactions"
