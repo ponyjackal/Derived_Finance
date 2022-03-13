@@ -127,7 +127,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
   );
   const [showSidebar, setShowSidebar] = useState(false);
 
-  const handleShowPrivacy = () => {};
+  // const handleShowPrivacy = () => {};
 
   const isSidebarExpanded = useMemo(
     () => showSidebar | sidebarExpanded,
