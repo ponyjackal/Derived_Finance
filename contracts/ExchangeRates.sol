@@ -57,6 +57,9 @@ contract ExchangeRates is ChainlinkClient, SelfDestructible {
     // How long will the contract assume the rate of any asset is correct
     uint public rateStalePeriod = 52 weeks;
 
+    // How long will the contract assume rate update is not needed 
+    uint public rateFreshPeriod = 1 hours;
+
     // Each participating currency in the XDR basket is represented as a currency key with
     // equal weighting.
     // There are 5 participating currencies, so we'll declare that clearly.
@@ -314,6 +317,18 @@ contract ExchangeRates is ChainlinkClient, SelfDestructible {
     {
         rateStalePeriod = _time;
         emit RateStalePeriodUpdated(rateStalePeriod);
+    }
+
+    /**
+     * @notice Set the fresh period on the updated rate variables
+     * @param _time The new rateFreshPeriod
+     */
+    function setRateFreshPeriod(uint _time)
+        external
+        onlyOwner
+    {
+        rateFreshPeriod = _time;
+        emit RateFreshPeriodUpdated(rateFreshPeriod);
     }
 
     /**
@@ -582,6 +597,7 @@ contract ExchangeRates is ChainlinkClient, SelfDestructible {
 
     event OracleUpdated(address newOracle);
     event RateStalePeriodUpdated(uint rateStalePeriod);
+    event RateFreshPeriodUpdated(uint rateFreshPeriod);
     event RatesUpdated(bytes4[] currencyKeys, uint[] newRates);
     event RateDeleted(bytes4 currencyKey);
     event InversePriceConfigured(bytes4 currencyKey, uint entryPoint, uint upperLimit, uint lowerLimit);
