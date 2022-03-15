@@ -45,6 +45,9 @@ contract ExchangeRates is ChainlinkClient, SelfDestructible {
     // Exchange rates stored by currency code, e.g. 'DVDX', or 'USDx'
     mapping(bytes4 => uint) public rates;
 
+    // Asset tag stored by currency code, e.g. 'DVDX', or 'USDx'
+    mapping(bytes4 => string) public assets;
+
     // Update times stored by currency code, e.g. 'DVDX', or 'USDx'
     mapping(bytes4 => uint) public lastRateUpdateTimes;
 
@@ -96,6 +99,7 @@ contract ExchangeRates is ChainlinkClient, SelfDestructible {
      * @param _dvdxOracle The address which is able to update rate information.
      * @param _currencyKeys The initial currency keys to store (in order).
      * @param _newRates The initial currency amounts for each currency (in order).
+     * @param _newAssets The initial currency asset tag for each currency (in order).
      */
     constructor(
         // SelfDestructible (Ownable)
@@ -105,6 +109,7 @@ contract ExchangeRates is ChainlinkClient, SelfDestructible {
         address _dvdxOracle,
         bytes4[] memory _currencyKeys,
         uint[] memory _newRates,
+        string[] memory _newAssets,
 
         // Chainlink requirementss
         address _chainlinkToken,
@@ -115,6 +120,7 @@ contract ExchangeRates is ChainlinkClient, SelfDestructible {
         SelfDestructible(_owner)
     {
         require(_currencyKeys.length == _newRates.length, "Currency key length and rate length must match.");
+        require(_currencyKeys.length == _newAssets.length, "Currency key length and asset length must match.");
 
         dvdxOracle = _dvdxOracle;
 
@@ -202,6 +208,35 @@ contract ExchangeRates is ChainlinkClient, SelfDestructible {
 
         // Now update our XDR rate.
         updateXDRRate(timeSent);
+
+        return true;
+    }
+
+    /**
+     * @notice Internal function which sets the assets stored in this contract
+     * @param currencyKeys The currency keys you wish to update the rates for (in order)
+     * @param newAssets The assets for each currency (in order)
+     *
+     */
+    function internalUpdateAssets(bytes4[] memory currencyKeys, string[] memory newAssets)
+        internal
+        returns(bool)
+    {
+        require(currencyKeys.length == newAssets.length, "Currency key array length must match assets array length.");
+
+        // Loop through each key and perform update.
+        for (uint i = 0; i < currencyKeys.length; i++) {
+            // Should not set any asset to zero ever, as no asset will ever be
+            // truely worthless and still valid. In this scenario, we should
+            // delete the asset and remove it from the system.
+            require(keccak256(abi.encodePacked(newAssets[i])) != keccak256(abi.encodePacked("")), "Zero is not a valid rate, please call deleteRate instead.");
+            require(currencyKeys[i] != "USDx", "Rate of USDx cannot be updated, it's always UNIT.");
+
+            // Ok, go ahead with the update.
+            assets[currencyKeys[i]] = newAssets[i];
+        }
+
+        emit AssetsUpdated(currencyKeys, newAssets);
 
         return true;
     }
@@ -524,6 +559,8 @@ contract ExchangeRates is ChainlinkClient, SelfDestructible {
     public
     onlyOwner
     {
+        require(block.timestamp >= (lastRateUpdateTimes[currencyKey] + rateFreshPeriod), "No need to update rates");
+
         Chainlink.Request memory req = buildChainlinkRequest(oracleJobId, address(this), this.fulfill.selector);
         string memory requestURL = string(abi.encodePacked("https://api.coingecko.com/api/v3/simple/price?ids=", asset, "&vs_currencies=usd"));
         req.add("get", requestURL);
@@ -599,6 +636,7 @@ contract ExchangeRates is ChainlinkClient, SelfDestructible {
     event RateStalePeriodUpdated(uint rateStalePeriod);
     event RateFreshPeriodUpdated(uint rateFreshPeriod);
     event RatesUpdated(bytes4[] currencyKeys, uint[] newRates);
+    event AssetsUpdated(bytes4[] currencyKeys, string[] newAssets);
     event RateDeleted(bytes4 currencyKey);
     event InversePriceConfigured(bytes4 currencyKey, uint entryPoint, uint upperLimit, uint lowerLimit);
     event InversePriceFrozen(bytes4 currencyKey);
