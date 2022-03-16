@@ -144,6 +144,7 @@ contract ExchangeRates is ChainlinkClient, SelfDestructible {
         ];
 
         internalUpdateRates(_currencyKeys, _newRates, block.timestamp);
+        internalUpdateAssets(_currencyKeys, _newAssets);
 
         // Setup Chainlink props
         setChainlinkToken(_chainlinkToken);
@@ -213,6 +214,19 @@ contract ExchangeRates is ChainlinkClient, SelfDestructible {
     }
 
     /**
+     * @notice Set the assets stored in this contract
+     * @param currencyKeys The currency keys you wish to update the rates for (in order)
+     * @param newAssets The assets for each currency (in order)
+     */
+    function updateAssets(bytes4[] memory currencyKeys, string[] memory newAssets)
+        external
+        onlyOwner
+        returns(bool)
+    {
+        return internalUpdateAssets(currencyKeys, newAssets);
+    }
+
+    /**
      * @notice Internal function which sets the assets stored in this contract
      * @param currencyKeys The currency keys you wish to update the rates for (in order)
      * @param newAssets The assets for each currency (in order)
@@ -230,7 +244,8 @@ contract ExchangeRates is ChainlinkClient, SelfDestructible {
             // truely worthless and still valid. In this scenario, we should
             // delete the asset and remove it from the system.
             require(keccak256(abi.encodePacked(newAssets[i])) != keccak256(abi.encodePacked("")), "Zero is not a valid rate, please call deleteRate instead.");
-            require(currencyKeys[i] != "USDx", "Rate of USDx cannot be updated, it's always UNIT.");
+            require(currencyKeys[i] != "USDx", "Asset of USDx cannot be updated, it's always UNIT.");
+            require(currencyKeys[i] != "XDR", "Asset of XDR cannot be updated, it's always UNIT.");
 
             // Ok, go ahead with the update.
             assets[currencyKeys[i]] = newAssets[i];

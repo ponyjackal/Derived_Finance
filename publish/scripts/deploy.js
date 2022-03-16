@@ -62,7 +62,8 @@ async function main() {
     owner,
     oracle, // DVDXOracle; TODO
     [ethers.utils.hexDataSlice(ethers.utils.formatBytes32String("DVDX"), 0, 4)],
-    [ethers.utils.parseEther("0.2")], // chainlink props
+    [ethers.utils.parseEther("0.00386548")], // chainlink props
+    ["derived"],
     CHAINLINK[network].linkToken,
     CHAINLINK[network].oracle,
     ethers.utils.hexZeroPad(CHAINLINK[network].jobId, 32)
@@ -262,7 +263,6 @@ async function main() {
   // ----------------
   // Synths
   // ----------------
-  // const currencyKeys = ["XDR", "sUSD", "sAUD", "sEUR", "sBTC", "iBTC"];
   const currencyKeys = ["XDR", "USDx", "dBTC", "dETH", "dBNB"];
   const synths = [];
 
@@ -342,13 +342,26 @@ async function main() {
           4
         )
       ),
-    // ["1", "0.5", "1.25", "0.1", "5000", "4000"].map((number) =>
-    //   ethers.utils.parseEther(number)
-    // ),
-    ["1", "37018", "2668", "369", "0.1"].map((number) =>
+    ["bitcoin", "ethereum", "binancecoin", "derived"].map((number) =>
       ethers.utils.parseEther(number)
     ),
     timestamp
+  );
+
+  await exchangeRates.updateAssets(
+    currencyKeys
+      .filter((currency) => currency !== "USDx" || "XDR")
+      .concat(["DVDX"])
+      .map((currency) =>
+        ethers.utils.hexDataSlice(
+          ethers.utils.formatBytes32String(currency),
+          0,
+          4
+        )
+      ),
+    ["1", "37018", "2668", "369", "0.00386548"].map((number) =>
+      ethers.utils.parseEther(number)
+    )
   );
 
   // --------------------
