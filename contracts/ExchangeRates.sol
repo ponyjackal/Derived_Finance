@@ -570,17 +570,17 @@ contract ExchangeRates is ChainlinkClient, SelfDestructible {
      * @notice Initiatiate a price request via chainlink. Provide both the
      * bytes4 currencyKey (for DVDX) and the string representation (for Chainlink)
      */
-    function requestCryptoPrice(bytes4 currencyKey, string memory asset)
+    function requestCryptoPrice(bytes4 currencyKey)
     public
     onlyOwner
     {
         require(block.timestamp >= (lastRateUpdateTimes[currencyKey] + rateFreshPeriod), "No need to update rates");
 
         Chainlink.Request memory req = buildChainlinkRequest(oracleJobId, address(this), this.fulfill.selector);
-        string memory requestURL = string(abi.encodePacked("https://api.coingecko.com/api/v3/simple/price?ids=", asset, "&vs_currencies=usd"));
+        string memory requestURL = string(abi.encodePacked("https://api.coingecko.com/api/v3/simple/price?ids=", assets[currencyKey], "&vs_currencies=usd"));
         req.add("get", requestURL);
 
-        string memory path = string(abi.encodePacked(asset, ".usd"));
+        string memory path = string(abi.encodePacked(assets[currencyKey], ".usd"));
         req.add("path", path);
         
         req.addInt("times", int256(ORACLE_PRECISION));
