@@ -342,7 +342,7 @@ async function main() {
           4
         )
       ),
-    ["bitcoin", "ethereum", "binancecoin", "derived"].map((number) =>
+    ["1", "37018", "2668", "369", "0.00386548"].map((number) =>
       ethers.utils.parseEther(number)
     ),
     timestamp
@@ -350,7 +350,7 @@ async function main() {
 
   await exchangeRates.updateAssets(
     currencyKeys
-      .filter((currency) => currency !== "USDx" || "XDR")
+      .filter((currency) => currency !== "USDx"  && currency !== "XDR")
       .concat(["DVDX"])
       .map((currency) =>
         ethers.utils.hexDataSlice(
@@ -359,9 +359,7 @@ async function main() {
           4
         )
       ),
-    ["1", "37018", "2668", "369", "0.00386548"].map((number) =>
-      ethers.utils.parseEther(number)
-    )
+    ["bitcoin", "ethereum", "binancecoin", "derived"]
   );
 
   // --------------------
