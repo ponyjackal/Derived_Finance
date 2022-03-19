@@ -1,18 +1,5 @@
 /*
------------------------------------------------------------------
-FILE INFORMATION
------------------------------------------------------------------
-
-file:       ExchangeRates.sol
-version:    1.0
-author:     Kevin Brown
-date:       2018-09-12
-
------------------------------------------------------------------
-MODULE DESCRIPTION
------------------------------------------------------------------
-
-A contract that any other contract in the Synthetix system can query
+A contract that any other contract in the DVDX system can query
 for the current market value of various assets, including
 crypto assets as well as various fiat assets.
 
@@ -20,8 +7,6 @@ This contract assumes that rate updates will completely update
 all rates to their current values. If a rate shock happens
 on a single asset, the oracle will still push updated rates
 for all other assets.
-
------------------------------------------------------------------
 */
 
 //SPDX-License-Identifier: Unlicense
@@ -301,7 +286,7 @@ contract ExchangeRates is ChainlinkClient, SelfDestructible {
     }
 
     /**
-     * @notice Update the Synthetix Drawing Rights exchange rate based on other rates already updated.
+     * @notice Update the DVDX Drawing Rights exchange rate based on other rates already updated.
      */
     function updateXDRRate(uint timeSent)
         internal

@@ -1,21 +1,6 @@
 /*
------------------------------------------------------------------
-FILE INFORMATION
------------------------------------------------------------------
-
-file:       State.sol
-version:    1.1
-author:     Dominic Romanowski
-            Anton Jurisevic
-
-date:       2018-05-15
-
------------------------------------------------------------------
-MODULE DESCRIPTION
------------------------------------------------------------------
-
 This contract is used side by side with external state token
-contracts, such as Synthetix and Synth.
+contracts, such as DVDX and Synth.
 It provides an easy way to upgrade contract logic while
 maintaining all user balances and allowances. This is designed
 to make the changeover as easy as possible, since mappings

@@ -1,27 +1,10 @@
 /*
-
------------------------------------------------------------------
-FILE INFORMATION
------------------------------------------------------------------
-
-file:       SafeDecimalMath.sol
-version:    2.0
-author:     Kevin Brown
-            Gavin Conway
-date:       2018-10-18
-
------------------------------------------------------------------
-MODULE DESCRIPTION
------------------------------------------------------------------
-
 A library providing safe mathematical operations for division and
 multiplication with the capability to round or truncate the results
 to the nearest increment. Operations can return a standard precision
 or high precision decimal. High precision decimals are useful for
 example when attempting to calculate percentages or fractions
 accurately.
-
------------------------------------------------------------------
 */
 
 //SPDX-License-Identifier: Unlicense

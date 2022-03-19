@@ -1,19 +1,5 @@
 /*
------------------------------------------------------------------
-FILE INFORMATION
------------------------------------------------------------------
-
-file:       SupplySchedule.sol
-version:    1.0
-author:     Jackson Chan
-            Clinton Ennis
-date:       2019-03-01
-
------------------------------------------------------------------
-MODULE DESCRIPTION
------------------------------------------------------------------
-
-Supply Schedule contract. DVDXis a transferable ERC20 token.
+Supply Schedule contract. DVDX is a transferable ERC20 token.
 
 User's get staking rewards as part of the incentives of
 +------+-------------+--------------+----------+
@@ -36,7 +22,7 @@ pragma solidity ^0.8.0;
 
 import "./SafeDecimalMath.sol";
 import "./Owned.sol";
-import "./Synthetix.sol";
+import "./DVDX.sol";
 
 /**
  * @title SupplySchedule contract
@@ -66,7 +52,7 @@ contract SupplySchedule is Owned {
     // time supply last minted
     uint public lastMintEvent;
 
-    Synthetix public synthetix;
+    DVDX public dvdx;
 
     uint constant SECONDS_IN_YEAR = 60 * 60 * 24 * 365;
 
@@ -99,11 +85,11 @@ contract SupplySchedule is Owned {
     }
 
     // ========== SETTERS ========== */
-    function setSynthetix(Synthetix _synthetix)
+    function setDVDX(DVDX _dvdx)
         external
         onlyOwner
     {
-        synthetix = _synthetix;
+        dvdx = _dvdx;
         // emit event
     }
 
@@ -205,7 +191,7 @@ contract SupplySchedule is Owned {
     // ========== MUTATIVE FUNCTIONS ==========
     function updateMintValues()
         external
-        onlySynthetix
+        onlyDVDX
         returns (bool)
     {
         // Will fail if the time is outside of schedules
@@ -237,8 +223,8 @@ contract SupplySchedule is Owned {
 
     // ========== MODIFIERS ==========
 
-    modifier onlySynthetix() {
-        require(msg.sender == address(synthetix), "Only the synthetix contract can perform this action");
+    modifier onlyDVDX() {
+        require(msg.sender == address(dvdx), "Only the dvdx contract can perform this action");
         _;
     }
 

@@ -1,19 +1,5 @@
 /*
------------------------------------------------------------------
-FILE INFORMATION
------------------------------------------------------------------
-
-file:       Synthetix.sol
-version:    2.0
-author:     Kevin Brown
-            Gavin Conway
-date:       2018-09-14
-
------------------------------------------------------------------
-MODULE DESCRIPTION
------------------------------------------------------------------
-
-Synthetix token contract. DVDXis a transferable ERC20 token,
+Derived Finance token contract. DVDX is a transferable ERC20 token,
 and also give its holders the following privileges.
 An owner of DVDX has the right to issue synths in all synth flavours.
 
@@ -25,7 +11,7 @@ the next period.
 
 == Average Balance Calculations ==
 
-The fee entitlement of a synthetix holder is proportional to their average
+The fee entitlement of a DVDX holder is proportional to their average
 issued synth balance over the last fee period. This is computed by
 measuring the area under the graph of a user's issued synth balance over
 time, and then when a new fee period begins, dividing through by the
@@ -33,9 +19,9 @@ duration of the fee period.
 
 We need only update values when the balances of an account is modified.
 This occurs when issuing or burning for issued synth balances,
-and when transferring for synthetix balances. This is for efficiency,
+and when transferring for DVDX balances. This is for efficiency,
 and adds an implicit friction to interacting with DVDX.
-A synthetix holder pays for his own recomputation whenever he wants to change
+A DVDX holder pays for his own recomputation whenever he wants to change
 his position, which saves the foundation having to maintain a pot dedicated
 to resourcing this.
 
@@ -56,17 +42,17 @@ we must:
   - Update the last transfer time to n
 
 So if this graph represents the entire current fee period,
-the average DVDXheld so far is ((t-f)*s + (n-t)*p) / (n-f).
+the average DVDX held so far is ((t-f)*s + (n-t)*p) / (n-f).
 The complementary computations must be performed for both sender and
 recipient.
 
-Note that a transfer keeps global supply of DVDXinvariant.
+Note that a transfer keeps global supply of DVDX invariant.
 The sum of all balances is constant, and unmodified by any transfer.
 So the sum of all balances multiplied by the duration of a fee period is also
 constant, and this is equivalent to the sum of the area of every user's
 time/balance graph. Dividing through by that duration yields back the total
-synthetix supply. So, at the end of a fee period, we really do yield a user's
-average share in the synthetix supply over that period.
+DVDX supply. So, at the end of a fee period, we really do yield a user's
+average share in the DVDX supply over that period.
 
 A slight wrinkle is introduced if we consider the time r when the fee period
 rolls over. Then the previous fee period k-1 is before r, and the current fee
@@ -89,28 +75,28 @@ previous period will be finalised at the time of their first transfer during the
 current fee period, or when they query or withdraw their fee entitlement.
 
 In the implementation, the duration of different fee periods may be slightly irregular,
-as the check that they have rolled over occurs only when state-changing synthetix
+as the check that they have rolled over occurs only when state-changing DVDX
 operations are performed.
 
 == Issuance and Burning ==
 
-In this version of the synthetix contract, synths can only be issued by
-those that have been nominated by the synthetix foundation. Synths are assumed
+In this version of the DVDX contract, synths can only be issued by
+those that have been nominated by the DVDX foundation. Synths are assumed
 to be valued at $1, as they are a stable unit of account.
 
-All synths issued require a proportional value of DVDXto be locked,
+All synths issued require a proportional value of DVDX to be locked,
 where the proportion is governed by the current issuance ratio. This
-means for every $1 of DVDXlocked up, $(issuanceRatio) synths can be issued.
-i.e. to issue 100 synths, 100/issuanceRatio dollars of DVDXneed to be locked up.
+means for every $1 of DVDX locked up, $(issuanceRatio) synths can be issued.
+i.e. to issue 100 synths, 100/issuanceRatio dollars of DVDX need to be locked up.
 
 To determine the value of some amount of DVDX(S), an oracle is used to push
 the price of DVDX(P_S) in dollars to the contract. The value of S
 would then be: S * P_S.
 
-Any DVDXthat are locked up by this issuance process cannot be transferred.
+Any DVDX that are locked up by this issuance process cannot be transferred.
 The amount that is locked floats based on the price of DVDX. If the price
-of DVDXmoves up, less DVDXare locked, so they can be issued against,
-or transferred freely. If the price of DVDXmoves down, more DVDXare locked,
+of DVDX moves up, less DVDX are locked, so they can be issued against,
+or transferred freely. If the price of DVDX moves down, more DVDX are locked,
 even going above the initial wallet balance.
 
 -----------------------------------------------------------------
@@ -124,17 +110,17 @@ import "./ExternStateToken.sol";
 import "./TokenState.sol";
 import "./SupplySchedule.sol";
 import "./ExchangeRates.sol";
-import "./SynthetixState.sol";
+import "./DVDXState.sol";
 import "./Synth.sol";
-import "./ISynthetixEscrow.sol";
+import "./IDVDXEscrow.sol";
 import "./IFeePool.sol";
 
 /**
- * @title Synthetix ERC20 contract.
- * @notice The Synthetix contracts not only facilitates transfers, exchanges, and tracks balances,
- * but it also computes the quantity of fees each synthetix holder is entitled to.
+ * @title DVDX ERC20 contract.
+ * @notice The DVDX contracts not only facilitates transfers, exchanges, and tracks balances,
+ * but it also computes the quantity of fees each DVDX holder is entitled to.
  */
-contract Synthetix is ExternStateToken {
+contract DVDX is ExternStateToken {
     using SafeDecimalMath for uint;
     // ========== STATE VARIABLES ==========
 
@@ -143,10 +129,10 @@ contract Synthetix is ExternStateToken {
     mapping(bytes4 => Synth) public synths;
 
     IFeePool public feePool;
-    ISynthetixEscrow public escrow;
-    ISynthetixEscrow public rewardEscrow;
+    IDVDXEscrow public escrow;
+    IDVDXEscrow public rewardEscrow;
     ExchangeRates public exchangeRates;
-    SynthetixState public synthetixState;
+    DVDXState public dvdxState;
     SupplySchedule public supplySchedule;
 
     string constant TOKEN_NAME = "Derived Finance Token";
@@ -160,13 +146,13 @@ contract Synthetix is ExternStateToken {
      * If the provided address is 0x0, then a fresh one will be constructed with the contract owning all tokens.
      * @param _owner The owner of this contract.
      */
-    constructor(address _proxy, TokenState _tokenState, SynthetixState _synthetixState,
+    constructor(address _proxy, TokenState _tokenState, DVDXState _dvdxState,
         address _owner, ExchangeRates _exchangeRates, IFeePool _feePool, SupplySchedule _supplySchedule,
-        ISynthetixEscrow _rewardEscrow, ISynthetixEscrow _escrow, uint _totalSupply
+        IDVDXEscrow _rewardEscrow, IDVDXEscrow _escrow, uint _totalSupply
     )
         ExternStateToken(_proxy, _tokenState, TOKEN_NAME, TOKEN_SYMBOL, _totalSupply, DECIMALS, _owner)
     {
-        synthetixState = _synthetixState;
+        dvdxState = _dvdxState;
         exchangeRates = _exchangeRates;
         feePool = _feePool;
         supplySchedule = _supplySchedule;
@@ -190,7 +176,7 @@ contract Synthetix is ExternStateToken {
     }
 
     /**
-     * @notice Add an associated Synth contract to the Synthetix system
+     * @notice Add an associated Synth contract to the DVDX system
      * @dev Only the contract owner may call this.
      */
     function addSynth(Synth synth)
@@ -206,7 +192,7 @@ contract Synthetix is ExternStateToken {
     }
 
     /**
-     * @notice Remove an associated Synth contract from the Synthetix system
+     * @notice Remove an associated Synth contract from the DVDX system
      * @dev Only the contract owner may call this.
      */
     function removeSynth(bytes4 currencyKey)
@@ -350,7 +336,7 @@ contract Synthetix is ExternStateToken {
         returns (bool)
     {
         // Ensure they're not trying to exceed their locked amount
-        require(value <= transferableSynthetix(messageSender), "Insufficient balance");
+        require(value <= transferableDVDX(messageSender), "Insufficient balance");
 
         // Perform the transfer: if there is a problem an exception will be thrown in this call.
         _transfer_byProxy(messageSender, to, value, data);
@@ -381,7 +367,7 @@ contract Synthetix is ExternStateToken {
         returns (bool)
     {
         // Ensure they're not trying to exceed their locked amount
-        require(value <= transferableSynthetix(from), "Insufficient balance");
+        require(value <= transferableDVDX(from), "Insufficient balance");
 
         // Perform the transfer: if there is a problem,
         // an exception will be thrown in this call.
@@ -517,7 +503,7 @@ contract Synthetix is ExternStateToken {
         returns (bool)
     {
         require(destinationAddress != address(0), "Zero destination");
-        require(destinationAddress != address(this), "Synthetix is invalid destination");
+        require(destinationAddress != address(this), "DVDX is invalid destination");
         require(destinationAddress != address(proxy), "Proxy is invalid destination");
         require(address(synths[sourceCurrencyKey]) != address(0), "Source Synth does not exist");
         require(address(synths[destinationCurrencyKey]) != address(0), "Destination Synth does not exist");
@@ -563,8 +549,8 @@ contract Synthetix is ExternStateToken {
     }
 
     /**
-     * @notice Function that registers new synth as they are isseud. Calculate delta to append to synthetixState.
-     * @dev Only internal calls from synthetix address.
+     * @notice Function that registers new synth as they are isseud. Calculate delta to append to dvdxState.
+     * @dev Only internal calls from dvdx address.
      * @param currencyKey The currency to register synths in, for example USDx or sAUD
      * @param amount The amount of synths to register with a base of UNIT
      */
@@ -599,27 +585,27 @@ contract Synthetix is ExternStateToken {
         }
 
         // Are they a new issuer? If so, record them.
-        if (!synthetixState.hasIssued(messageSender)) {
-            synthetixState.incrementTotalIssuerCount();
+        if (!dvdxState.hasIssued(messageSender)) {
+            dvdxState.incrementTotalIssuerCount();
         }
 
         // Save the debt entry parameters
-        synthetixState.setCurrentIssuanceData(messageSender, debtPercentage);
+        dvdxState.setCurrentIssuanceData(messageSender, debtPercentage);
 
         // And if we're the first, push 1 as there was no effect to any other holders, otherwise push
         // the change for the rest of the debt holders. The debt ledger holds high precision integers.
-        if (synthetixState.debtLedgerLength() > 0) {
-            synthetixState.appendDebtLedgerValue(
-                synthetixState.lastDebtLedgerEntry().multiplyDecimalRoundPrecise(delta)
+        if (dvdxState.debtLedgerLength() > 0) {
+            dvdxState.appendDebtLedgerValue(
+                dvdxState.lastDebtLedgerEntry().multiplyDecimalRoundPrecise(delta)
             );
         } else {
-            synthetixState.appendDebtLedgerValue(SafeDecimalMath.preciseUnit());
+            dvdxState.appendDebtLedgerValue(SafeDecimalMath.preciseUnit());
         }
     }
 
     /**
      * @notice Issue synths against the sender's DVDX.
-     * @dev Issuance is only allowed if the synthetix price isn't stale. Amount should be larger than 0.
+     * @dev Issuance is only allowed if the dvdx price isn't stale. Amount should be larger than 0.
      * @param currencyKey The currency you wish to issue synths in, for example USDx or sAUD
      * @param amount The amount of synths you wish to issue with a base of UNIT
      */
@@ -643,7 +629,7 @@ contract Synthetix is ExternStateToken {
 
     /**
      * @notice Issue the maximum amount of Synths possible against the sender's DVDX.
-     * @dev Issuance is only allowed if the synthetix price isn't stale.
+     * @dev Issuance is only allowed if the dvdx price isn't stale.
      * @param currencyKey The currency you wish to issue synths in, for example USDx or sAUD
      */
     function issueMaxSynths(bytes4 currencyKey)
@@ -702,7 +688,7 @@ contract Synthetix is ExternStateToken {
     {
         uint initialDebtOwnership;
         uint debtEntryIndex;
-        (initialDebtOwnership, debtEntryIndex) = synthetixState.issuanceData(messageSender);
+        (initialDebtOwnership, debtEntryIndex) = dvdxState.issuanceData(messageSender);
 
         feePool.appendAccountIssuanceRecord(
             messageSender,
@@ -748,27 +734,27 @@ contract Synthetix is ExternStateToken {
 
         // Are they exiting the system, or are they just decreasing their debt position?
         if (debtToRemove == existingDebt) {
-            synthetixState.setCurrentIssuanceData(messageSender, 0);
-            synthetixState.decrementTotalIssuerCount();
+            dvdxState.setCurrentIssuanceData(messageSender, 0);
+            dvdxState.decrementTotalIssuerCount();
         } else {
             // What percentage of the debt will they be left with?
             uint newDebt = existingDebt - debtToRemove;
             uint newDebtPercentage = newDebt.divideDecimalRoundPrecise(newTotalDebtIssued);
 
             // Store the debt percentage and debt ledger as high precision integers
-            synthetixState.setCurrentIssuanceData(messageSender, newDebtPercentage);
+            dvdxState.setCurrentIssuanceData(messageSender, newDebtPercentage);
         }
 
         // Update our cumulative ledger. This is also a high precision integer.
-        synthetixState.appendDebtLedgerValue(
-            synthetixState.lastDebtLedgerEntry().multiplyDecimalRoundPrecise(delta)
+        dvdxState.appendDebtLedgerValue(
+            dvdxState.lastDebtLedgerEntry().multiplyDecimalRoundPrecise(delta)
         );
     }
 
     // ========== Issuance/Burning ==========
 
     /**
-     * @notice The maximum synths an issuer can issue against their total synthetix quantity, priced in XDRs.
+     * @notice The maximum synths an issuer can issue against their total dvdx quantity, priced in XDRs.
      * This ignores any already issued synths, and is purely giving you the maximimum amount the user can issue.
      */
     function maxIssuableSynths(address issuer, bytes4 currencyKey)
@@ -777,18 +763,18 @@ contract Synthetix is ExternStateToken {
         // We don't need to check stale rates here as effectiveValue will do it for us.
         returns (uint)
     {
-        // What is the value of their DVDXbalance in the destination currency?
+        // What is the value of their DVDX balance in the destination currency?
         uint destinationValue = effectiveValue("DVDX", collateral(issuer), currencyKey);
 
         // They're allowed to issue up to issuanceRatio of that value
-        return destinationValue.multiplyDecimal(synthetixState.issuanceRatio());
+        return destinationValue.multiplyDecimal(dvdxState.issuanceRatio());
     }
 
     /**
      * @notice The current collateralisation ratio for a user. Collateralisation ratio varies over time
-     * as the value of the underlying Synthetix asset changes, e.g. if a user issues their maximum available
-     * synths when they hold $10 worth of Synthetix, they will have issued $2 worth of synths. If the value
-     * of Synthetix changes, the ratio returned by this function will adjust accordlingly. Users are
+     * as the value of the underlying DVDX asset changes, e.g. if a user issues their maximum available
+     * synths when they hold $10 worth of DVDX, they will have issued $2 worth of synths. If the value
+     * of DVDX changes, the ratio returned by this function will adjust accordlingly. Users are
      * incentivised to maintain a collateralisation ratio as close to the issuance ratio as possible by
      * altering the amount of fees they're able to claim from the system.
      */
@@ -797,15 +783,15 @@ contract Synthetix is ExternStateToken {
         view
         returns (uint)
     {
-        uint totalOwnedSynthetix = collateral(issuer);
-        if (totalOwnedSynthetix == 0) return 0;
+        uint totalOwnedDVDX = collateral(issuer);
+        if (totalOwnedDVDX == 0) return 0;
 
         uint debtBalance = debtBalanceOf(issuer, "DVDX");
-        return debtBalance.divideDecimalRound(totalOwnedSynthetix);
+        return debtBalance.divideDecimalRound(totalOwnedDVDX);
     }
 
     /**
-     * @notice If a user issues synths backed by DVDXin their wallet, the DVDXbecome locked. This function
+     * @notice If a user issues synths backed by DVDX in their wallet, the DVDX become locked. This function
      * will tell you how many synths a user has to give back to the system in order to unlock their original
      * debt position. This is priced in whichever synth is passed in as a currency key, e.g. you can price
      * the debt in USDx, XDR, or any other synth you wish.
@@ -819,15 +805,15 @@ contract Synthetix is ExternStateToken {
         // What was their initial debt ownership?
         uint initialDebtOwnership;
         uint debtEntryIndex;
-        (initialDebtOwnership, debtEntryIndex) = synthetixState.issuanceData(issuer);
+        (initialDebtOwnership, debtEntryIndex) = dvdxState.issuanceData(issuer);
 
         // If it's zero, they haven't issued, and they have no debt.
         if (initialDebtOwnership == 0) return 0;
 
         // Figure out the global debt percentage delta from when they entered the system.
         // This is a high precision integer.
-        uint currentDebtOwnership = synthetixState.lastDebtLedgerEntry()
-            .divideDecimalRoundPrecise(synthetixState.debtLedger(debtEntryIndex))
+        uint currentDebtOwnership = dvdxState.lastDebtLedgerEntry()
+            .divideDecimalRoundPrecise(dvdxState.debtLedger(debtEntryIndex))
             .multiplyDecimalRoundPrecise(initialDebtOwnership);
 
         // What's the total value of the system in their requested currency?
@@ -841,7 +827,7 @@ contract Synthetix is ExternStateToken {
     }
 
     /**
-     * @notice The remaining synths an issuer can issue against their total synthetix balance.
+     * @notice The remaining synths an issuer can issue against their total dvdx balance.
      * @param issuer The account that intends to issue
      * @param currencyKey The currency to price issuable value in
      */
@@ -862,7 +848,7 @@ contract Synthetix is ExternStateToken {
     }
 
     /**
-     * @notice The total DVDXowned by this account, both escrowed and unescrowed,
+     * @notice The total DVDX owned by this account, both escrowed and unescrowed,
      * against which synths can be issued.
      * This includes those already being used as collateral (locked), and those
      * available for further issuance (unlocked).
@@ -886,33 +872,33 @@ contract Synthetix is ExternStateToken {
     }
 
     /**
-     * @notice The number of DVDXthat are free to be transferred by an account.
-     * @dev When issuing, escrowed DVDXare locked first, then non-escrowed
-     * DVDXare locked last, but escrowed DVDXare not transferable, so they are not included
+     * @notice The number of DVDX that are free to be transferred by an account.
+     * @dev When issuing, escrowed DVDX are locked first, then non-escrowed
+     * DVDX are locked last, but escrowed DVDX are not transferable, so they are not included
      * in this calculation.
      */
-    function transferableSynthetix(address account)
+    function transferableDVDX(address account)
         public
         view
         rateNotStale("DVDX")
         returns (uint)
     {
-        // How many DVDXdo they have, excluding escrow?
+        // How many DVDX do they have, excluding escrow?
         // Note: We're excluding escrow here because we're interested in their transferable amount
-        // and escrowed DVDXare not transferable.
+        // and escrowed DVDX are not transferable.
         uint balance = tokenState.balanceOf(account);
 
         // How many of those will be locked by the amount they've issued?
-        // Assuming issuance ratio is 20%, then issuing 20 DVDXof value would require
-        // 100 DVDXto be locked in their wallet to maintain their collateralisation ratio
-        // The locked synthetix value can exceed their balance.
-        uint lockedSynthetixValue = debtBalanceOf(account, "DVDX").divideDecimalRound(synthetixState.issuanceRatio());
+        // Assuming issuance ratio is 20%, then issuing 20 DVDX of value would require
+        // 100 DVDX to be locked in their wallet to maintain their collateralisation ratio
+        // The locked dvdx value can exceed their balance.
+        uint lockedDVDXValue = debtBalanceOf(account, "DVDX").divideDecimalRound(dvdxState.issuanceRatio());
 
-        // If we exceed the balance, no DVDXare transferable, otherwise the difference is.
-        if (lockedSynthetixValue >= balance) {
+        // If we exceed the balance, no DVDX are transferable, otherwise the difference is.
+        if (lockedDVDXValue >= balance) {
             return 0;
         } else {
-            return balance - lockedSynthetixValue;
+            return balance - lockedDVDXValue;
         }
     }
 
@@ -927,7 +913,7 @@ contract Synthetix is ExternStateToken {
 
         supplySchedule.updateMintValues();
 
-        // Set minted DVDXbalance to RewardEscrow's balance
+        // Set minted DVDX balance to RewardEscrow's balance
         // Minus the minterReward and set balance of minter to add reward
         uint minterReward = supplySchedule.minterReward();
 

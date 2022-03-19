@@ -1,31 +1,16 @@
 /*
------------------------------------------------------------------
-FILE INFORMATION
------------------------------------------------------------------
-
-file:       Synth.sol
-version:    2.0
-author:     Kevin Brown
-date:       2018-09-13
-
------------------------------------------------------------------
-MODULE DESCRIPTION
------------------------------------------------------------------
-
-Synthetix-backed stablecoin contract.
+DerivedFi-backed stablecoin contract.
 
 This contract issues synths, which are tokens that mirror various
 flavours of fiat currency.
 
-Synths are issuable by Synthetix Network Token (DVDX) holders who
+Synths are issuable by Derived Finance Network Token (DVDX) holders who
 have to lock up some value of their DVDXto issue S * Cmax synths.
 Where Cmax issome value less than 1.
 
 A configurable fee is charged on synth transfers and deposited
-into a common pot, which Synthetix holders may withdraw from once
+into a common pot, which DVDX holders may withdraw from once
 per fee period.
-
------------------------------------------------------------------
 */
 
 //SPDX-License-Identifier: Unlicense
@@ -33,46 +18,46 @@ pragma solidity ^0.8.0;
 
 import "./ExternStateToken.sol";
 import "./IFeePool.sol";
-import "./Synthetix.sol";
+import "./DVDX.sol";
 
 contract Synth is ExternStateToken {
 
     /* ========== STATE VARIABLES ========== */
 
     IFeePool public feePool;
-    Synthetix public synthetix;
+    DVDX public dvdx;
 
-    // Currency key which identifies this Synth to the Synthetix system
+    // Currency key which identifies this Synth to the DVDX system
     bytes4 public currencyKey;
 
     uint8 constant DECIMALS = 18;
 
     /* ========== CONSTRUCTOR ========== */
 
-    constructor(address _proxy, TokenState _tokenState, Synthetix _synthetix, IFeePool _feePool,
+    constructor(address _proxy, TokenState _tokenState, DVDX _dvdx, IFeePool _feePool,
         string memory _tokenName, string memory _tokenSymbol, address _owner, bytes4 _currencyKey
     )
         ExternStateToken(_proxy, _tokenState, _tokenName, _tokenSymbol, 0, DECIMALS, _owner)
     {
         require(_proxy != address(0), "_proxy cannot be 0");
-        require(address(_synthetix) != address(0), "_synthetix cannot be 0");
+        require(address(_dvdx) != address(0), "_dvdx cannot be 0");
         require(address(_feePool) != address(0), "_feePool cannot be 0");
         require(_owner != address(0), "_owner cannot be 0");
-        require(_synthetix.synths(_currencyKey) == Synth(address(0)), "Currency key is already in use");
+        require(_dvdx.synths(_currencyKey) == Synth(address(0)), "Currency key is already in use");
 
         feePool = _feePool;
-        synthetix = _synthetix;
+        dvdx = _dvdx;
         currencyKey = _currencyKey;
     }
 
     /* ========== SETTERS ========== */
 
-    function setSynthetix(Synthetix _synthetix)
+    function setDVDX(DVDX _dvdx)
         external
         optionalProxy_onlyOwner
     {
-        synthetix = _synthetix;
-        emitSynthetixUpdated(address(_synthetix));
+        dvdx = _dvdx;
+        emitDVDXUpdated(address(_dvdx));
     }
 
     function setFeePool(IFeePool _feePool)
@@ -99,7 +84,7 @@ contract Synth is ExternStateToken {
         uint fee = value - amountReceived;
 
         // Send the fee off to the fee pool.
-        synthetix.synthInitiatedFeePayment(messageSender, currencyKey, fee);
+        dvdx.synthInitiatedFeePayment(messageSender, currencyKey, fee);
 
         // And send their result off to the destination address
         bytes memory empty;
@@ -120,7 +105,7 @@ contract Synth is ExternStateToken {
         uint fee = value - amountReceived;
 
         // Send the fee off to the fee pool, which we don't want to charge an additional fee on
-        synthetix.synthInitiatedFeePayment(messageSender, currencyKey, fee);
+        dvdx.synthInitiatedFeePayment(messageSender, currencyKey, fee);
 
         // And send their result off to the destination address
         return _internalTransfer(messageSender, to, amountReceived, data);
@@ -145,7 +130,7 @@ contract Synth is ExternStateToken {
         tokenState.setAllowance(from, messageSender, tokenState.allowance(from, messageSender) - value);
 
         // Send the fee off to the fee pool.
-        synthetix.synthInitiatedFeePayment(from, currencyKey, fee);
+        dvdx.synthInitiatedFeePayment(from, currencyKey, fee);
 
         bytes memory empty;
         return _internalTransfer(from, to, amountReceived, empty);
@@ -170,7 +155,7 @@ contract Synth is ExternStateToken {
         tokenState.setAllowance(from, messageSender, tokenState.allowance(from, messageSender) - value);
 
         // Send the fee off to the fee pool, which we don't want to charge an additional fee on
-        synthetix.synthInitiatedFeePayment(from, currencyKey, fee);
+        dvdx.synthInitiatedFeePayment(from, currencyKey, fee);
 
         return _internalTransfer(from, to, amountReceived, data);
     }
@@ -186,7 +171,7 @@ contract Synth is ExternStateToken {
         uint fee = feePool.transferFeeIncurred(value);
 
         // Send the fee off to the fee pool, which we don't want to charge an additional fee on
-        synthetix.synthInitiatedFeePayment(messageSender, currencyKey, fee);
+        dvdx.synthInitiatedFeePayment(messageSender, currencyKey, fee);
 
         // And send their transfer amount off to the destination address
         bytes memory empty;
@@ -204,7 +189,7 @@ contract Synth is ExternStateToken {
         uint fee = feePool.transferFeeIncurred(value);
 
         // Send the fee off to the fee pool, which we don't want to charge an additional fee on
-        synthetix.synthInitiatedFeePayment(messageSender, currencyKey, fee);
+        dvdx.synthInitiatedFeePayment(messageSender, currencyKey, fee);
 
         // And send their transfer amount off to the destination address
         return _internalTransfer(messageSender, to, value, data);
@@ -225,7 +210,7 @@ contract Synth is ExternStateToken {
         tokenState.setAllowance(from, messageSender, tokenState.allowance(from, messageSender) - value + fee);
 
         // Send the fee off to the fee pool, which we don't want to charge an additional fee on
-        synthetix.synthInitiatedFeePayment(from, currencyKey, fee);
+        dvdx.synthInitiatedFeePayment(from, currencyKey, fee);
 
         bytes memory empty;
         return _internalTransfer(from, to, value, empty);
@@ -246,7 +231,7 @@ contract Synth is ExternStateToken {
         tokenState.setAllowance(from, messageSender, tokenState.allowance(from, messageSender) - value + fee);
 
         // Send the fee off to the fee pool, which we don't want to charge an additional fee on
-        synthetix.synthInitiatedFeePayment(from, currencyKey, fee);
+        dvdx.synthInitiatedFeePayment(from, currencyKey, fee);
 
         return _internalTransfer(from, to, value, data);
     }
@@ -257,21 +242,21 @@ contract Synth is ExternStateToken {
         override
         returns (bool)
     {
-        bytes4 preferredCurrencyKey = synthetix.synthetixState().preferredCurrency(to);
+        bytes4 preferredCurrencyKey = dvdx.dvdxState().preferredCurrency(to);
 
         // Do they have a preferred currency that's not us? If so we need to exchange
         if (preferredCurrencyKey != 0 && preferredCurrencyKey != currencyKey) {
-            return synthetix.synthInitiatedExchange(from, currencyKey, value, preferredCurrencyKey, to);
+            return dvdx.synthInitiatedExchange(from, currencyKey, value, preferredCurrencyKey, to);
         } else {
             // Otherwise we just transfer
             return super._internalTransfer(from, to, value, data);
         }
     }
 
-    // Allow synthetix to issue a certain number of synths from an account.
+    // Allow dvdx to issue a certain number of synths from an account.
     function issue(address account, uint amount)
         external
-        onlySynthetixOrFeePool
+        onlyDVDXOrFeePool
     {
         tokenState.setBalanceOf(account, tokenState.balanceOf(account) + amount);
         totalSupply = totalSupply + amount;
@@ -279,10 +264,10 @@ contract Synth is ExternStateToken {
         emitIssued(account, amount);
     }
 
-    // Allow synthetix or another synth contract to burn a certain number of synths from an account.
+    // Allow dvdx or another synth contract to burn a certain number of synths from an account.
     function burn(address account, uint amount)
         external
-        onlySynthetixOrFeePool
+        onlyDVDXOrFeePool
     {
         tokenState.setBalanceOf(account, tokenState.balanceOf(account) - amount);
         totalSupply = totalSupply - amount;
@@ -298,11 +283,11 @@ contract Synth is ExternStateToken {
         totalSupply = amount;
     }
 
-    // Allow synthetix to trigger a token fallback call from our synths so users get notified on
+    // Allow dvdx to trigger a token fallback call from our synths so users get notified on
     // exchange as well as transfer
     function triggerTokenFallbackIfNeeded(address sender, address recipient, uint amount)
         external
-        onlySynthetixOrFeePool
+        onlyDVDXOrFeePool
     {
         bytes memory empty;
         callTokenFallbackIfNeeded(sender, recipient, amount, empty);
@@ -310,11 +295,11 @@ contract Synth is ExternStateToken {
 
     /* ========== MODIFIERS ========== */
 
-    modifier onlySynthetixOrFeePool() {
-        bool isSynthetix = msg.sender == address(synthetix);
+    modifier onlyDVDXOrFeePool() {
+        bool isDVDX = msg.sender == address(dvdx);
         bool isFeePool = msg.sender == address(feePool);
 
-        require(isSynthetix || isFeePool, "Only the Synthetix or FeePool contracts can perform this action");
+        require(isDVDX || isFeePool, "Only the DVDX or FeePool contracts can perform this action");
         _;
     }
 
@@ -325,10 +310,10 @@ contract Synth is ExternStateToken {
 
     /* ========== EVENTS ========== */
 
-    event SynthetixUpdated(address newSynthetix);
-    bytes32 constant SYNTHETIXUPDATED_SIG = keccak256("SynthetixUpdated(address)");
-    function emitSynthetixUpdated(address newSynthetix) internal {
-        proxy._emit(abi.encode(newSynthetix), 1, SYNTHETIXUPDATED_SIG, 0, 0, 0);
+    event DVDXUpdated(address newDVDX);
+    bytes32 constant DVDXUPDATED_SIG = keccak256("DVDXUpdated(address)");
+    function emitDVDXUpdated(address newDVDX) internal {
+        proxy._emit(abi.encode(newDVDX), 1, DVDXUPDATED_SIG, 0, 0, 0);
     }
 
     event FeePoolUpdated(address newFeePool);

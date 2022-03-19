@@ -1,34 +1,16 @@
 /*
------------------------------------------------------------------
-FILE INFORMATION
------------------------------------------------------------------
-
-file:       SynthetixEscrow.sol
-version:    1.1
-author:     Anton Jurisevic
-            Dominic Romanowski
-            Mike Spain
-
-date:       2018-05-29
-
------------------------------------------------------------------
-MODULE DESCRIPTION
------------------------------------------------------------------
-
 This contract allows the foundation to apply unique vesting
-schedules to synthetix funds sold at various discounts in the token
-sale. SynthetixEscrow gives users the ability to inspect their
+schedules to dvdx funds sold at various discounts in the token
+sale. DVDXEscrow gives users the ability to inspect their
 vested funds, their quantities and vesting dates, and to withdraw
 the fees that accrue on those funds.
 
 The fees are handled by withdrawing the entire fee allocation
 for all DVDXinside the escrow contract, and then allowing
 the contract itself to subdivide that pool up proportionally within
-itself. Every time the fee period rolls over in the main Synthetix
-contract, the SynthetixEscrow fee pool is remitted back into the
+itself. Every time the fee period rolls over in the main DVDX
+contract, the DVDXEscrow fee pool is remitted back into the
 main fee pool to be redistributed in the next fee period.
-
------------------------------------------------------------------
 */
 
 //SPDX-License-Identifier: Unlicense
@@ -37,27 +19,27 @@ pragma solidity ^0.8.0;
 
 import "./SafeDecimalMath.sol";
 import "./Owned.sol";
-import "./ISynthetix.sol";
+import "./IDVDX.sol";
 import "./LimitedSetup.sol";
 
 /**
  * @title A contract to hold escrowed DVDXand free them at given schedules.
  */
-contract SynthetixEscrow is Owned, LimitedSetup(8 weeks) {
+contract DVDXEscrow is Owned, LimitedSetup(8 weeks) {
 
     using SafeMath for uint;
 
-    /* The corresponding Synthetix contract. */
-    ISynthetix public synthetix;
+    /* The corresponding DVDX contract. */
+    IDVDX public dvdx;
 
     /* Lists of (timestamp, quantity) pairs per account, sorted in ascending time order.
      * These are the times at which each given quantity of DVDXvests. */
     mapping(address => uint[2][]) public vestingSchedules;
 
-    /* An account's total vested synthetix balance to save recomputing this for fee extraction purposes. */
+    /* An account's total vested dvdx balance to save recomputing this for fee extraction purposes. */
     mapping(address => uint) public totalVestedAccountBalance;
 
-    /* The total remaining vested balance, for verifying the actual synthetix balance of this contract against. */
+    /* The total remaining vested balance, for verifying the actual dvdx balance of this contract against. */
     uint public totalVestedBalance;
 
     uint constant TIME_INDEX = 0;
@@ -69,21 +51,21 @@ contract SynthetixEscrow is Owned, LimitedSetup(8 weeks) {
 
     /* ========== CONSTRUCTOR ========== */
 
-    constructor(address _owner, ISynthetix _synthetix)
+    constructor(address _owner, IDVDX _dvdx)
         Owned(_owner)
     {
-        synthetix = _synthetix;
+        dvdx = _dvdx;
     }
 
 
     /* ========== SETTERS ========== */
 
-    function setSynthetix(ISynthetix _synthetix)
+    function setDVDX(IDVDX _dvdx)
         external
         onlyOwner
     {
-        synthetix = _synthetix;
-        emit SynthetixUpdated(address(_synthetix));
+        dvdx = _dvdx;
+        emit DVDXUpdated(address(_dvdx));
     }
 
 
@@ -113,7 +95,7 @@ contract SynthetixEscrow is Owned, LimitedSetup(8 weeks) {
 
     /**
      * @notice Get a particular schedule entry for an account.
-     * @return A pair of uints: (timestamp, synthetix quantity).
+     * @return A pair of uints: (timestamp, dvdx quantity).
      */
     function getVestingScheduleEntry(address account, uint index)
         public
@@ -164,7 +146,7 @@ contract SynthetixEscrow is Owned, LimitedSetup(8 weeks) {
 
     /**
      * @notice Obtain the next schedule entry that will vest for a given user.
-     * @return A pair of uints: (timestamp, synthetix quantity). */
+     * @return A pair of uints: (timestamp, dvdx quantity). */
     function getNextVestingEntry(address account)
         public
         view
@@ -203,15 +185,15 @@ contract SynthetixEscrow is Owned, LimitedSetup(8 weeks) {
     /* ========== MUTATIVE FUNCTIONS ========== */
 
     /**
-     * @notice Withdraws a quantity of DVDXback to the synthetix contract.
+     * @notice Withdraws a quantity of DVDXback to the dvdx contract.
      * @dev This may only be called by the owner during the contract's setup period.
      */
-    function withdrawSynthetix(uint quantity)
+    function withdrawDVDX(uint quantity)
         external
         onlyOwner
         onlyDuringSetup
     {
-        synthetix.transfer(address(synthetix), quantity);
+        dvdx.transfer(address(dvdx), quantity);
     }
 
     /**
@@ -230,7 +212,7 @@ contract SynthetixEscrow is Owned, LimitedSetup(8 weeks) {
     /**
      * @notice Add a new vesting entry at a given time and quantity to an account's schedule.
      * @dev A call to this should be accompanied by either enough balance already available
-     * in this contract, or a corresponding call to synthetix.endow(), to ensure that when
+     * in this contract, or a corresponding call to dvdx.endow(), to ensure that when
      * the funds are withdrawn, there is enough balance, as well as correctly calculating
      * the fees.
      * This may only be called by the owner during the contract's setup period.
@@ -251,7 +233,7 @@ contract SynthetixEscrow is Owned, LimitedSetup(8 weeks) {
 
         /* There must be enough balance in the contract to provide for the vesting entry. */
         totalVestedBalance = totalVestedBalance.add(quantity);
-        require(totalVestedBalance <= synthetix.balanceOf(address(this)), "Must be enough balance in the contract to provide for the vesting entry");
+        require(totalVestedBalance <= dvdx.balanceOf(address(this)), "Must be enough balance in the contract to provide for the vesting entry");
 
         /* Disallow arbitrarily long vesting schedules in light of the gas limit. */
         uint scheduleLength = vestingSchedules[account].length;
@@ -313,7 +295,7 @@ contract SynthetixEscrow is Owned, LimitedSetup(8 weeks) {
         if (total != 0) {
             totalVestedBalance = totalVestedBalance.sub(total);
             totalVestedAccountBalance[msg.sender] = totalVestedAccountBalance[msg.sender].sub(total);
-            synthetix.transfer(msg.sender, total);
+            dvdx.transfer(msg.sender, total);
             emit Vested(msg.sender, block.timestamp, total);
         }
     }
@@ -321,7 +303,7 @@ contract SynthetixEscrow is Owned, LimitedSetup(8 weeks) {
 
     /* ========== EVENTS ========== */
 
-    event SynthetixUpdated(address newSynthetix);
+    event DVDXUpdated(address newDVDX);
 
     event Vested(address indexed beneficiary, uint time, uint value);
 }

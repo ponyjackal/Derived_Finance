@@ -1,18 +1,4 @@
 /*
------------------------------------------------------------------
-FILE INFORMATION
------------------------------------------------------------------
-
-file:       DelegateApprovals.sol
-version:    1.0
-author:     Jackson Chan
-checked:    Clinton Ennis
-date:       2019-05-01
-
------------------------------------------------------------------
-MODULE DESCRIPTION
------------------------------------------------------------------
-
 The approval state contract is designed to allow a wallet to
 authorise another address to perform actions, on a contract,
 on their behalf. This could be an automated service
@@ -27,8 +13,6 @@ removing from the approvals list for auditability.
 
 This contract inherits state for upgradeability / associated
 contract.
-
------------------------------------------------------------------
 */
 //SPDX-License-Identifier: Unlicense
 pragma solidity ^0.8.0;

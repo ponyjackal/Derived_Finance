@@ -1,25 +1,9 @@
 /*
------------------------------------------------------------------
-FILE INFORMATION
------------------------------------------------------------------
-
-file:       FeePoolState.sol
-version:    1.0
-author:     Clinton Ennis
-            Jackson Chan
-date:       2019-04-05
-
------------------------------------------------------------------
-MODULE DESCRIPTION
------------------------------------------------------------------
-
 The FeePoolState simply stores the accounts issuance ratio for
 each fee period in the FeePool.
 
 This is use to caclulate the correct allocation of fees/rewards
 owed to minters of the stablecoin total supply
-
------------------------------------------------------------------
 */
 
 //SPDX-License-Identifier: Unlicense
@@ -119,9 +103,9 @@ contract FeePoolState is SelfDestructible, LimitedSetup {
      * @notice Logs an accounts issuance data in the current fee period which is then stored historically
      * @param account Message.Senders account address
      * @param debtRatio Debt percentage this account has locked after minting or burning their synth
-     * @param debtEntryIndex The index in the global debt ledger. synthetix.synthetixState().issuanceData(account)
+     * @param debtEntryIndex The index in the global debt ledger. dvdx.dvdxState().issuanceData(account)
      * @param currentPeriodStartDebtIndex The startingDebtIndex of the current fee period
-     * @dev onlyFeePool to call me on synthetix.issue() & synthetix.burn() calls to store the locked DVDX
+     * @dev onlyFeePool to call me on dvdx.issue() & dvdx.burn() calls to store the locked DVDX
      * per fee period so we know to allocate the correct proportions of fees and rewards per period
       accountIssuanceLedger[account][0] has the latest locked amount for the current period. This can be update as many time
       accountIssuanceLedger[account][1-3] has the last locked amount for a previous period they minted or burned
@@ -155,7 +139,7 @@ contract FeePoolState is SelfDestructible, LimitedSetup {
     }
 
     /**
-     * @notice Import issuer data from synthetixState.issuerData on FeePeriodClose() block #
+     * @notice Import issuer data from dvdxState.issuerData on FeePeriodClose() block #
      * @dev Only callable by the contract owner, and only for 6 weeks after deployment.
      * @param accounts Array of issuing addresses
      * @param ratios Array of debt ratios

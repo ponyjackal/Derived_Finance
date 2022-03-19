@@ -1,22 +1,9 @@
 /*
------------------------------------------------------------------
-FILE INFORMATION
------------------------------------------------------------------
-
-file:       FeePool.sol
-version:    1.0
-author:     Kevin Brown
-date:       2018-10-15
-
------------------------------------------------------------------
-MODULE DESCRIPTION
------------------------------------------------------------------
-
 The FeePool is a place for users to interact with the fees that
-have been generated from the Synthetix system if they've helped
+have been generated from the DVDX system if they've helped
 to create the economy.
 
-Users stake Synthetix to create Synths. As Synth users transact,
+Users stake DVDX to create Synths. As Synth users transact,
 a small fee is deducted from exchange transactions, which collects
 in the fee pool. Fees are immediately converted to XDRs, a type
 of reserve currency similar to SDRs used by the IMF:
@@ -31,8 +18,6 @@ which are not withdrawn are redistributed to the whole pool,
 enabling these non-claimed fees to go back to the rest of the commmunity.
 
 Fees can be withdrawn in any synth currency.
-
------------------------------------------------------------------
 */
 
 //SPDX-License-Identifier: Unlicense
@@ -41,9 +26,9 @@ pragma solidity ^0.8.0;
 import "./Proxyable.sol";
 import "./SelfDestructible.sol";
 import "./SafeDecimalMath.sol";
-import "./Synthetix.sol";
-import "./ISynthetixEscrow.sol";
-import "./ISynthetixState.sol";
+import "./DVDX.sol";
+import "./IDVDXEscrow.sol";
+import "./IDVDXState.sol";
 import "./Synth.sol";
 import "./FeePoolState.sol";
 import "./FeePoolEternalStorage.sol";
@@ -54,9 +39,9 @@ contract FeePool is Proxyable, SelfDestructible, LimitedSetup {
     using SafeMath for uint;
     using SafeDecimalMath for uint;
 
-    Synthetix public synthetix;
-    ISynthetixState public synthetixState;
-    ISynthetixEscrow public rewardEscrow;
+    DVDX public dvdx;
+    IDVDXState public dvdxState;
+    IDVDXEscrow public rewardEscrow;
     FeePoolEternalStorage public feePoolEternalStorage;
 
     // A percentage fee charged on each transfer.
@@ -121,11 +106,11 @@ contract FeePool is Proxyable, SelfDestructible, LimitedSetup {
     constructor(
         address _proxy,
         address _owner,
-        Synthetix _synthetix,
+        DVDX _dvdx,
         FeePoolState _feePoolState,
         FeePoolEternalStorage _feePoolEternalStorage,
-        ISynthetixState _synthetixState,
-        ISynthetixEscrow _rewardEscrow,
+        IDVDXState _dvdxState,
+        IDVDXEscrow _rewardEscrow,
         address _feeAuthority,
         uint _transferFeeRate,
         uint _exchangeFeeRate)
@@ -137,11 +122,11 @@ contract FeePool is Proxyable, SelfDestructible, LimitedSetup {
         require(_transferFeeRate <= MAX_TRANSFER_FEE_RATE, "Constructed transfer fee rate should respect the maximum fee rate");
         require(_exchangeFeeRate <= MAX_EXCHANGE_FEE_RATE, "Constructed exchange fee rate should respect the maximum fee rate");
 
-        synthetix = _synthetix;
+        dvdx = _dvdx;
         feePoolState = _feePoolState;
         feePoolEternalStorage = _feePoolEternalStorage;
         rewardEscrow = _rewardEscrow;
-        synthetixState = _synthetixState;
+        dvdxState = _dvdxState;
         feeAuthority = _feeAuthority;
         transferFeeRate = _transferFeeRate;
         exchangeFeeRate = _exchangeFeeRate;
@@ -155,13 +140,13 @@ contract FeePool is Proxyable, SelfDestructible, LimitedSetup {
      * @notice Logs an accounts issuance data per fee period
      * @param account Message.Senders account address
      * @param debtRatio Debt percentage this account has locked after minting or burning their synth
-     * @param debtEntryIndex The index in the global debt ledger. synthetix.synthetixState().issuanceData(account)
-     * @dev onlySynthetix to call me on synthetix.issue() & synthetix.burn() calls to store the locked DVDX
+     * @param debtEntryIndex The index in the global debt ledger. dvdx.dvdxState().issuanceData(account)
+     * @dev onlyDVDX to call me on dvdx.issue() & dvdx.burn() calls to store the locked DVDX
      * per fee period so we know to allocate the correct proportions of fees and rewards per period
      */
     function appendAccountIssuanceRecord(address account, uint debtRatio, uint debtEntryIndex)
         external
-        onlySynthetix
+        onlyDVDX
     {
         feePoolState.appendAccountIssuanceRecord(account, debtRatio, debtEntryIndex, recentFeePeriods[0].startingDebtIndex);
 
@@ -239,15 +224,15 @@ contract FeePool is Proxyable, SelfDestructible, LimitedSetup {
     }
 
     /**
-     * @notice Set the synthetix contract
+     * @notice Set the dvdx contract
      */
-    function setSynthetix(Synthetix _synthetix)
+    function setDVDX(DVDX _dvdx)
         external
         optionalProxy_onlyOwner
     {
-        require(address(_synthetix) != address(0), "New Synthetix must be non-zero");
+        require(address(_dvdx) != address(0), "New DVDX must be non-zero");
 
-        synthetix = _synthetix;
+        dvdx = _dvdx;
     }
 
     function setTargetThreshold(uint _percent)
@@ -259,16 +244,16 @@ contract FeePool is Proxyable, SelfDestructible, LimitedSetup {
     }
 
     /**
-     * @notice The Synthetix contract informs us when fees are paid.
+     * @notice The DVDX contract informs us when fees are paid.
      */
     function feePaid(bytes4 currencyKey, uint amount)
         external
-        onlySynthetix
+        onlyDVDX
     {
         uint xdrAmount;
 
         if (currencyKey != "XDR") {
-            xdrAmount = synthetix.effectiveValue(currencyKey, amount, "XDR");
+            xdrAmount = dvdx.effectiveValue(currencyKey, amount, "XDR");
         } else {
             xdrAmount = amount;
         }
@@ -278,11 +263,11 @@ contract FeePool is Proxyable, SelfDestructible, LimitedSetup {
     }
 
     /**
-     * @notice The Synthetix contract informs us when DVDXRewards are minted to RewardEscrow to be claimed.
+     * @notice The DVDX contract informs us when DVDXRewards are minted to RewardEscrow to be claimed.
      */
     function rewardsMinted(uint amount)
         external
-        onlySynthetix
+        onlyDVDX
     {
         // Add the newly minted DVDXrewards on top of the rolling unclaimed amount
         recentFeePeriods[0].rewardsToDistribute = recentFeePeriods[0].rewardsToDistribute.add(amount);
@@ -332,7 +317,7 @@ contract FeePool is Proxyable, SelfDestructible, LimitedSetup {
         // Open up the new fee period. Take a snapshot of the total value of the system.
         // Increment periodId from the recent closed period feePeriodId
         recentFeePeriods[0].feePeriodId = recentFeePeriods[1].feePeriodId.add(1);
-        recentFeePeriods[0].startingDebtIndex = synthetixState.debtLedgerLength();
+        recentFeePeriods[0].startingDebtIndex = dvdxState.debtLedgerLength();
         recentFeePeriods[0].startTime = block.timestamp;
 
         emitFeePeriodClosed(recentFeePeriods[1].feePeriodId);
@@ -529,10 +514,10 @@ contract FeePool is Proxyable, SelfDestructible, LimitedSetup {
         require(account != address(0), "Account can't be 0");
         require(account != address(this), "Can't send fees to fee pool");
         require(account != address(proxy), "Can't send fees to proxy");
-        require(account != address(synthetix), "Can't send fees to synthetix");
+        require(account != address(dvdx), "Can't send fees to dvdx");
 
-        Synth xdrSynth = synthetix.synths("XDR");
-        Synth destinationSynth = synthetix.synths(destinationCurrencyKey);
+        Synth xdrSynth = dvdx.synths("XDR");
+        Synth destinationSynth = dvdx.synths(destinationCurrencyKey);
 
         // Note: We don't need to check the fee pool balance as the burn() below will do a safe subtraction which requires
         // the subtraction to not overflow, which would happen if the balance is not sufficient.
@@ -541,7 +526,7 @@ contract FeePool is Proxyable, SelfDestructible, LimitedSetup {
         xdrSynth.burn(FEE_ADDRESS, xdrAmount);
 
         // How much should they get in the destination currency?
-        uint destinationAmount = synthetix.effectiveValue("XDR", xdrAmount, destinationCurrencyKey);
+        uint destinationAmount = dvdx.effectiveValue("XDR", xdrAmount, destinationCurrencyKey);
 
         // There's no fee on withdrawing fees, as that'd be way too meta.
 
@@ -566,7 +551,7 @@ contract FeePool is Proxyable, SelfDestructible, LimitedSetup {
         require(account != address(0), "Account can't be 0");
         require(account != address(this), "Can't send rewards to fee pool");
         require(account != address(proxy), "Can't send rewards to proxy");
-        require(account != address(synthetix), "Can't send rewards to synthetix");
+        require(account != address(dvdx), "Can't send rewards to dvdx");
 
         // Record vesting entry for claiming address and amount
         // DVDXalready minted to rewardEscrow balance
@@ -681,7 +666,7 @@ contract FeePool is Proxyable, SelfDestructible, LimitedSetup {
             totalFees = totalFees.sub(recentFeePeriods[i].feesClaimed);
         }
 
-        return synthetix.effectiveValue("XDR", totalFees, currencyKey);
+        return dvdx.effectiveValue("XDR", totalFees, currencyKey);
     }
 
     /**
@@ -728,7 +713,7 @@ contract FeePool is Proxyable, SelfDestructible, LimitedSetup {
         // And convert totalFees to their desired currency
         // Return totalRewards as is in DVDXamount
         return (
-            synthetix.effectiveValue("XDR", totalFees, currencyKey),
+            dvdx.effectiveValue("XDR", totalFees, currencyKey),
             totalRewards
         );
     }
@@ -745,8 +730,8 @@ contract FeePool is Proxyable, SelfDestructible, LimitedSetup {
         // Threshold is calculated from ratio % above the target ratio (issuanceRatio).
         //  0  <  10%:   Claimable
         // 10% > above:  Unable to claim
-        uint ratio = synthetix.collateralisationRatio(account);
-        uint targetRatio = synthetix.synthetixState().issuanceRatio();
+        uint ratio = dvdx.collateralisationRatio(account);
+        uint targetRatio = dvdx.dvdxState().issuanceRatio();
 
         // Claimable if collateral ratio below target ratio
         if (ratio < targetRatio) {
@@ -784,7 +769,7 @@ contract FeePool is Proxyable, SelfDestructible, LimitedSetup {
         if (debtEntryIndex == 0 && userOwnershipPercentage == 0) return nullResults;
 
         // If there are no XDR synths, then they don't have any fees
-        if (synthetix.totalIssuedSynths("XDR") == 0) return nullResults;
+        if (dvdx.totalIssuedSynths("XDR") == 0) return nullResults;
 
         // The [0] fee period is not yet ready to claim, but it is a fee period that they can have
         // fees owing for, so we need to report on it anyway.
@@ -865,12 +850,12 @@ contract FeePool is Proxyable, SelfDestructible, LimitedSetup {
         returns (uint)
     {
         // Condition to check if debtLedger[] has value otherwise return 0
-        if (closingDebtIndex > synthetixState.debtLedgerLength()) return 0;
+        if (closingDebtIndex > dvdxState.debtLedgerLength()) return 0;
 
         // Figure out their global debt percentage delta at end of fee Period.
         // This is a high precision integer.
-        uint feePeriodDebtOwnership = synthetixState.debtLedger(closingDebtIndex)
-            .divideDecimalRoundPrecise(synthetixState.debtLedger(debtEntryIndex))
+        uint feePeriodDebtOwnership = dvdxState.debtLedger(closingDebtIndex)
+            .divideDecimalRoundPrecise(dvdxState.debtLedger(debtEntryIndex))
             .multiplyDecimalRoundPrecise(ownershipPercentage);
 
         return feePeriodDebtOwnership;
@@ -918,7 +903,7 @@ contract FeePool is Proxyable, SelfDestructible, LimitedSetup {
         view
         returns (uint)
     {
-        uint targetRatio = synthetix.synthetixState().issuanceRatio();
+        uint targetRatio = dvdx.dvdxState().issuanceRatio();
 
         return targetRatio.multiplyDecimal(SafeDecimalMath.unit().add(TARGET_THRESHOLD));
     }
@@ -945,9 +930,9 @@ contract FeePool is Proxyable, SelfDestructible, LimitedSetup {
         _;
     }
 
-    modifier onlySynthetix
+    modifier onlyDVDX
     {
-        require(msg.sender == address(synthetix), "Only the synthetix contract can perform this action");
+        require(msg.sender == address(dvdx), "Only the dvdx contract can perform this action");
         _;
     }
 

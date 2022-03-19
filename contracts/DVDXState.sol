@@ -1,25 +1,12 @@
 /*
------------------------------------------------------------------
-FILE INFORMATION
------------------------------------------------------------------
-
-file:       SynthetixState.sol
-version:    1.0
-author:     Kevin Brown
-date:       2018-10-19
-
------------------------------------------------------------------
-MODULE DESCRIPTION
------------------------------------------------------------------
-
 A contract that holds issuance state and preferred currency of
-users in the Synthetix system.
+users in the DVDX system.
 
-This contract is used side by side with the Synthetix contract
+This contract is used side by side with the DVDX contract
 to make it easier to upgrade the contract logic while maintaining
 issuance state.
 
-The Synthetix contract is also quite large and on the edge of
+The DVDX contract is also quite large and on the edge of
 being beyond the contract size limit without moving this information
 out to another contract.
 
@@ -29,23 +16,21 @@ using it as its store of issuance data.
 When a new contract is deployed, it links to the existing
 state contract, whose owner would then change its associated
 contract to the new one.
-
------------------------------------------------------------------
 */
 
 //SPDX-License-Identifier: Unlicense
 pragma solidity ^0.8.0;
 
-import "./Synthetix.sol";
+import "./DVDX.sol";
 import "./LimitedSetup.sol";
 import "./SafeDecimalMath.sol";
 import "./State.sol";
 
 /**
- * @title Synthetix State
- * @notice Stores issuance information and preferred currency information of the Synthetix contract.
+ * @title DVDX State
+ * @notice Stores issuance information and preferred currency information of the DVDX contract.
  */
-contract SynthetixState is State, LimitedSetup {
+contract DVDXState is State, LimitedSetup {
     using SafeMath for uint;
     using SafeDecimalMath for uint;
 
@@ -184,7 +169,7 @@ contract SynthetixState is State, LimitedSetup {
     }
 
     /**
-     * @notice Import issuer data from the old Synthetix contract before multicurrency
+     * @notice Import issuer data from the old DVDX contract before multicurrency
      * @dev Only callable by the contract owner, and only for 1 week after deployment.
      */
     function importIssuerData(address[] memory accounts, uint[] memory USDxAmounts)
@@ -200,18 +185,18 @@ contract SynthetixState is State, LimitedSetup {
     }
 
     /**
-     * @notice Import issuer data from the old Synthetix contract before multicurrency
+     * @notice Import issuer data from the old DVDX contract before multicurrency
      * @dev Only used from importIssuerData above, meant to be disposable
      */
     function _addToDebtRegister(address account, uint amount)
         internal
     {
-        // This code is duplicated from Synthetix so that we can call it directly here
+        // This code is duplicated from DVDX so that we can call it directly here
         // during setup only.
-        Synthetix synthetix = Synthetix(associatedContract);
+        DVDX dvdx = DVDX(associatedContract);
 
         // What is the value of the requested debt in XDRs?
-        uint xdrValue = synthetix.effectiveValue("USDx", amount, "XDR");
+        uint xdrValue = dvdx.effectiveValue("USDx", amount, "XDR");
 
         // What is the value that we've previously imported?
         uint totalDebtIssued = importedXDRAmount;
@@ -231,7 +216,7 @@ contract SynthetixState is State, LimitedSetup {
         // The delta is a high precision integer.
         uint delta = SafeDecimalMath.preciseUnit().sub(debtPercentage);
 
-        uint existingDebt = synthetix.debtBalanceOf(account, "XDR");
+        uint existingDebt = dvdx.debtBalanceOf(account, "XDR");
 
         // And what does their debt ownership look like including this previous stake?
         if (existingDebt > 0) {

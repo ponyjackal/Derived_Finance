@@ -1,17 +1,4 @@
 /*
------------------------------------------------------------------
-FILE INFORMATION
------------------------------------------------------------------
-
-file:       PurgeableSynth.sol
-version:    1.0
-author:     Justin J. Moses
-date:       2019-05-22
-
------------------------------------------------------------------
-MODULE DESCRIPTION
------------------------------------------------------------------
-
 Purgeable synths are a subclass of Synth that allows the owner
 to exchange all holders of the Synth back into USDx.
 
@@ -20,7 +7,6 @@ no longer used, purge allows the owner to
 
 These are used only for frozen or deprecated synths, and the total supply is
 hard-coded to
------------------------------------------------------------------
 */
 
 
@@ -44,10 +30,10 @@ contract PurgeableSynth is Synth {
 
     /* ========== CONSTRUCTOR ========== */
 
-    constructor(address _proxy, TokenState _tokenState, Synthetix _synthetix, IFeePool _feePool,
+    constructor(address _proxy, TokenState _tokenState, DVDX _dvdx, IFeePool _feePool,
         string memory _tokenName, string memory _tokenSymbol, address _owner, bytes4 _currencyKey, ExchangeRates _exchangeRates
     )
-        Synth(_proxy, _tokenState, _synthetix, _feePool, _tokenName, _tokenSymbol, _owner, _currencyKey)
+        Synth(_proxy, _tokenState, _dvdx, _feePool, _tokenName, _tokenSymbol, _owner, _currencyKey)
     {
         exchangeRates = _exchangeRates;
     }
@@ -76,7 +62,7 @@ contract PurgeableSynth is Synth {
             uint amountHeld = balanceOf(holder);
 
             if (amountHeld > 0) {
-                synthetix.synthInitiatedExchange(holder, currencyKey, amountHeld, "USDx", holder);
+                dvdx.synthInitiatedExchange(holder, currencyKey, amountHeld, "USDx", holder);
                 emitPurged(holder, amountHeld);
             }
 

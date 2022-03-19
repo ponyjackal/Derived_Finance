@@ -1,24 +1,8 @@
 /*
------------------------------------------------------------------
-FILE INFORMATION
------------------------------------------------------------------
-
-file:       FeePoolEternalStorage.sol
-version:    1.0
-author:     Clinton Ennis
-            Jackson Chan
-date:       2019-04-05
-
------------------------------------------------------------------
-MODULE DESCRIPTION
------------------------------------------------------------------
-
 The FeePoolEternalStorage is for any state the FeePool contract
 needs to persist between upgrades to the FeePool logic.
 
 Please see EternalStorage.sol
-
------------------------------------------------------------------
 */
 
 //SPDX-License-Identifier: Unlicense

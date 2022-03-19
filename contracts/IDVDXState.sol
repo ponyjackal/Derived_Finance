@@ -1,7 +1,7 @@
 //SPDX-License-Identifier: Unlicense
 pragma solidity ^0.8.0;
 
-abstract contract ISynthetixState {
+abstract contract IDVDXState {
     // A struct for handing values associated with an individual user's debt position
     struct IssuanceData {
         // Percentage of the total debt owned at the time

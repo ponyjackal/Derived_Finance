@@ -1,24 +1,9 @@
 /*
------------------------------------------------------------------
-FILE INFORMATION
------------------------------------------------------------------
-
-file:       RewardEscrow.sol
-version:    1.0
-author:     Jackson Chan
-            Clinton Ennis
-
-date:       2019-03-01
-
------------------------------------------------------------------
-MODULE DESCRIPTION
------------------------------------------------------------------
 Escrows the DVDXrewards from the inflationary supply awarded to
 users for staking their DVDXand maintaining the c-rationn target.
 
 SNW rewards are escrowed for 1 year from the claim date and users
 can call vest in 12 months time.
------------------------------------------------------------------
 */
 
 //SPDX-License-Identifier: Unlicense
@@ -28,7 +13,7 @@ pragma solidity ^0.8.0;
 import "./SafeDecimalMath.sol";
 import "./Owned.sol";
 import "./IFeePool.sol";
-import "./ISynthetix.sol";
+import "./IDVDX.sol";
 
 /**
  * @title A contract to hold escrowed DVDXand free them at given schedules.
@@ -37,8 +22,8 @@ contract RewardEscrow is Owned {
 
     using SafeMath for uint;
 
-    /* The corresponding Synthetix contract. */
-    ISynthetix public synthetix;
+    /* The corresponding DVDX contract. */
+    IDVDX public dvdx;
 
     IFeePool public feePool;
 
@@ -46,13 +31,13 @@ contract RewardEscrow is Owned {
      * These are the times at which each given quantity of DVDXvests. */
     mapping(address => uint[2][]) public vestingSchedules;
 
-    /* An account's total escrowed synthetix balance to save recomputing this for fee extraction purposes. */
+    /* An account's total escrowed dvdx balance to save recomputing this for fee extraction purposes. */
     mapping(address => uint) public totalEscrowedAccountBalance;
 
-    /* An account's total vested reward synthetix. */
+    /* An account's total vested reward dvdx. */
     mapping(address => uint) public totalVestedAccountBalance;
 
-    /* The total remaining escrowed balance, for verifying the actual synthetix balance of this contract against. */
+    /* The total remaining escrowed balance, for verifying the actual dvdx balance of this contract against. */
     uint public totalEscrowedBalance;
 
     uint constant TIME_INDEX = 0;
@@ -65,10 +50,10 @@ contract RewardEscrow is Owned {
 
     /* ========== CONSTRUCTOR ========== */
 
-    constructor(address _owner, ISynthetix _synthetix, IFeePool _feePool)
+    constructor(address _owner, IDVDX _dvdx, IFeePool _feePool)
     Owned(_owner)
     {
-        synthetix = _synthetix;
+        dvdx = _dvdx;
         feePool = _feePool;
     }
 
@@ -76,14 +61,14 @@ contract RewardEscrow is Owned {
     /* ========== SETTERS ========== */
 
     /**
-     * @notice set the synthetix contract address as we need to transfer DVDXwhen the user vests
+     * @notice set the dvdx contract address as we need to transfer DVDXwhen the user vests
      */
-    function setSynthetix(ISynthetix _synthetix)
+    function setDVDX(IDVDX _dvdx)
     external
     onlyOwner
     {
-        synthetix = _synthetix;
-        emit SynthetixUpdated(address(_synthetix));
+        dvdx = _dvdx;
+        emit DVDXUpdated(address(_dvdx));
     }
 
     /**
@@ -125,7 +110,7 @@ contract RewardEscrow is Owned {
 
     /**
      * @notice Get a particular schedule entry for an account.
-     * @return A pair of uints: (timestamp, synthetix quantity).
+     * @return A pair of uints: (timestamp, dvdx quantity).
      */
     function getVestingScheduleEntry(address account, uint index)
     public
@@ -176,7 +161,7 @@ contract RewardEscrow is Owned {
 
     /**
      * @notice Obtain the next schedule entry that will vest for a given user.
-     * @return A pair of uints: (timestamp, synthetix quantity). */
+     * @return A pair of uints: (timestamp, dvdx quantity). */
     function getNextVestingEntry(address account)
     public
     view
@@ -234,7 +219,7 @@ contract RewardEscrow is Owned {
 
     /**
      * @notice Add a new vesting entry at a given time and quantity to an account's schedule.
-     * @dev A call to this should accompany a previous successfull call to synthetix.transfer(tewardEscrow, amount),
+     * @dev A call to this should accompany a previous successfull call to dvdx.transfer(tewardEscrow, amount),
      * to ensure that when the funds are withdrawn, there is enough balance.
      * Note; although this function could technically be used to produce unbounded
      * arrays, it's only withinn the 4 year period of the weekly inflation schedule.
@@ -250,7 +235,7 @@ contract RewardEscrow is Owned {
 
         /* There must be enough balance in the contract to provide for the vesting entry. */
         totalEscrowedBalance = totalEscrowedBalance.add(quantity);
-        require(totalEscrowedBalance <= synthetix.balanceOf(address(this)), "Must be enough balance in the contract to provide for the vesting entry");
+        require(totalEscrowedBalance <= dvdx.balanceOf(address(this)), "Must be enough balance in the contract to provide for the vesting entry");
 
         /* Disallow arbitrarily long vesting schedules in light of the gas limit. */
         uint scheduleLength = vestingSchedules[account].length;
@@ -300,7 +285,7 @@ contract RewardEscrow is Owned {
             totalEscrowedBalance = totalEscrowedBalance.sub(total);
             totalEscrowedAccountBalance[msg.sender] = totalEscrowedAccountBalance[msg.sender].sub(total);
             totalVestedAccountBalance[msg.sender] = totalVestedAccountBalance[msg.sender].add(total);
-            synthetix.transfer(msg.sender, total);
+            dvdx.transfer(msg.sender, total);
             emit Vested(msg.sender, block.timestamp, total);
         }
     }
@@ -317,7 +302,7 @@ contract RewardEscrow is Owned {
 
     /* ========== EVENTS ========== */
 
-    event SynthetixUpdated(address newSynthetix);
+    event DVDXUpdated(address newDVDX);
 
     event FeePoolUpdated(address newFeePool);
 

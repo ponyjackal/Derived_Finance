@@ -1,18 +1,4 @@
 /*
------------------------------------------------------------------
-FILE INFORMATION
------------------------------------------------------------------
-
-file:       Proxy.sol
-version:    1.3
-author:     Anton Jurisevic
-
-date:       2018-05-29
-
------------------------------------------------------------------
-MODULE DESCRIPTION
------------------------------------------------------------------
-
 A proxy contract that, if it does not recognise the function
 being called on it, passes all value and call data to an
 underlying target contract.
@@ -25,8 +11,6 @@ msg.sender and store data at the proxy address. The latter will not.
 Therefore, any contract the proxy wraps in the CALL style must
 implement the Proxyable interface, in order that it can pass msg.sender
 into the underlying contract as the state parameter, messageSender.
-
------------------------------------------------------------------
 */
 
 

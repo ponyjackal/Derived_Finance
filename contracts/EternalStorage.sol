@@ -1,19 +1,4 @@
 /*
------------------------------------------------------------------
-FILE INFORMATION
------------------------------------------------------------------
-
-file:       EternalStorage.sol
-version:    1.0
-author:     Clinton Ennise
-            Jackson Chan
-
-date:       2019-02-01
-
------------------------------------------------------------------
-MODULE DESCRIPTION
------------------------------------------------------------------
-
 This contract is used with external state storage contracts for
 decoupled data storage.
 
@@ -25,8 +10,6 @@ storage contract
 The first deployed storage contract would create this eternal storage.
 Favour use of keccak256 key over sha3 as future version of solidity
 > 0.5.0 will be deprecated.
-
------------------------------------------------------------------
 */
 
 //SPDX-License-Identifier: Unlicense

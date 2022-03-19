@@ -2,9 +2,9 @@
 pragma solidity ^0.8.0;
 
 /**
- * @title SynthetixEscrow interface
+ * @title DVDXEscrow interface
  */
-interface ISynthetixEscrow {
+interface IDVDXEscrow {
     function balanceOf(address account) external view returns (uint);
     function appendVestingEntry(address account, uint quantity) external;
 }

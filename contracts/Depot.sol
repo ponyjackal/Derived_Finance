@@ -1,31 +1,16 @@
 /*
------------------------------------------------------------------
-FILE INFORMATION
------------------------------------------------------------------
-
-file:       Depot.sol
-version:    3.0
-author:     Kevin Brown
-date:       2018-10-23
-
------------------------------------------------------------------
-MODULE DESCRIPTION
------------------------------------------------------------------
-
 Depot contract. The Depot provides
 a way for users to acquire synths (Synth.sol) and DVDX
-(Synthetix.sol) by paying ETH and a way for users to acquire DVDX
-(Synthetix.sol) by paying synths. Users can also deposit their synths
+(DVDX.sol) by paying ETH and a way for users to acquire DVDX
+(DVDX.sol) by paying synths. Users can also deposit their synths
 and allow other users to purchase them with ETH. The ETH is sent
 to the user who offered their synths for sale.
 
 This smart contract contains a balance of each token, and
-allows the owner of the contract (the Synthetix Foundation) to
-manage the available balance of synthetix at their discretion, while
+allows the owner of the contract (the DVDX Foundation) to
+manage the available balance of dvdx at their discretion, while
 users are allowed to deposit and withdraw their own synth deposits
 if they have not yet been taken up by another user.
-
------------------------------------------------------------------
 */
 
 //SPDX-License-Identifier: Unlicense
@@ -34,7 +19,7 @@ pragma solidity ^0.8.0;
 import "./SelfDestructible.sol";
 import "./Pausable.sol";
 import "./SafeDecimalMath.sol";
-import "./ISynthetix.sol";
+import "./IDVDX.sol";
 import "./ISynth.sol";
 import "./IFeePool.sol";
 
@@ -46,7 +31,7 @@ contract Depot is SelfDestructible, Pausable {
     using SafeDecimalMath for uint;
 
     /* ========== STATE VARIABLES ========== */
-    ISynthetix public synthetix;
+    IDVDX public dvdx;
     ISynth public synth;
     IFeePool public feePool;
 
@@ -116,11 +101,11 @@ contract Depot is SelfDestructible, Pausable {
      * @dev Constructor
      * @param _owner The owner of this contract.
      * @param _fundsWallet The recipient of ETH and Synths that are sent to this contract while exchanging.
-     * @param _synthetix The Synthetix contract we'll interact with for balances and sending.
+     * @param _dvdx The DVDX contract we'll interact with for balances and sending.
      * @param _synth The Synth contract we'll interact with for balances and sending.
      * @param _oracle The address which is able to update price information.
      * @param _usdToEthPrice The current price of ETH in USD, expressed in UNIT.
-     * @param _usdToDvdxPrice The current price of Synthetix in USD, expressed in UNIT.
+     * @param _usdToDvdxPrice The current price of DVDX in USD, expressed in UNIT.
      */
     constructor(
         // Ownable
@@ -130,7 +115,7 @@ contract Depot is SelfDestructible, Pausable {
         address _fundsWallet,
 
         // Other contracts needed
-        ISynthetix _synthetix,
+        IDVDX _dvdx,
         ISynth _synth,
 		IFeePool _feePool,
 
@@ -144,7 +129,7 @@ contract Depot is SelfDestructible, Pausable {
         Pausable()
     {
         fundsWallet = _fundsWallet;
-        synthetix = _synthetix;
+        dvdx = _dvdx;
         synth = _synth;
         feePool = _feePool;
         oracle = _oracle;
@@ -168,7 +153,7 @@ contract Depot is SelfDestructible, Pausable {
     }
 
     /**
-     * @notice Set the Oracle that pushes the synthetix price to this contract
+     * @notice Set the Oracle that pushes the dvdx price to this contract
      * @param _oracle The new oracle address
      */
     function setOracle(address _oracle)
@@ -192,15 +177,15 @@ contract Depot is SelfDestructible, Pausable {
     }
 
     /**
-     * @notice Set the Synthetix contract that the issuance controller uses to issue DVDX.
-     * @param _synthetix The new synthetix contract target
+     * @notice Set the DVDX contract that the issuance controller uses to issue DVDX.
+     * @param _dvdx The new dvdx contract target
      */
-    function setSynthetix(ISynthetix _synthetix)
+    function setDVDX(IDVDX _dvdx)
         external
         onlyOwner
     {
-        synthetix = _synthetix;
-        emit SynthetixUpdated(_synthetix);
+        dvdx = _dvdx;
+        emit DVDXUpdated(_dvdx);
     }
 
     /**
@@ -233,10 +218,10 @@ contract Depot is SelfDestructible, Pausable {
     /**
      * @notice Access point for the oracle to update the prices of DVDX/ eth.
      * @param newEthPrice The current price of ether in USD, specified to 18 decimal places.
-     * @param newSynthetixPrice The current price of DVDXin USD, specified to 18 decimal places.
+     * @param newDVDXPrice The current price of DVDXin USD, specified to 18 decimal places.
      * @param timeSent The timestamp from the oracle when the transaction was created. This ensures we don't consider stale prices as current in times of heavy network congestion.
      */
-    function updatePrices(uint newEthPrice, uint newSynthetixPrice, uint timeSent)
+    function updatePrices(uint newEthPrice, uint newDVDXPrice, uint timeSent)
         external
         onlyOracle
     {
@@ -246,7 +231,7 @@ contract Depot is SelfDestructible, Pausable {
         require(timeSent < (block.timestamp + ORACLE_FUTURE_LIMIT), "Time must be less than now + ORACLE_FUTURE_LIMIT");
 
         usdToEthPrice = newEthPrice;
-        usdToDvdxPrice = newSynthetixPrice;
+        usdToDvdxPrice = newDVDXPrice;
         lastPriceUpdateTime = timeSent;
 
         emit PricesUpdated(usdToEthPrice, usdToDvdxPrice, lastPriceUpdateTime);
@@ -304,7 +289,7 @@ contract Depot is SelfDestructible, Pausable {
                     // Transfer the ETH to the depositor. Send is used instead of transfer
                     // so a non payable contract won't block the FIFO queue on a failed
                     // ETH payable for synths transaction. The proceeds to be sent to the
-                    // synthetix foundation funds wallet. This is to protect all depositors
+                    // dvdx foundation funds wallet. This is to protect all depositors
                     // in the queue in this rare case that may occur.
                     ethToSend = remainingToFulfill.divideDecimal(usdToEthPrice);
 
@@ -340,7 +325,7 @@ contract Depot is SelfDestructible, Pausable {
                     // Now fulfill by transfering the ETH to the depositor. Send is used instead of transfer
                     // so a non payable contract won't block the FIFO queue on a failed
                     // ETH payable for synths transaction. The proceeds to be sent to the
-                    // synthetix foundation funds wallet. This is to protect all depositors
+                    // dvdx foundation funds wallet. This is to protect all depositors
                     // in the queue in this rare case that may occur.
                     ethToSend = deposit.amount.divideDecimal(usdToEthPrice);
 
@@ -406,7 +391,7 @@ contract Depot is SelfDestructible, Pausable {
     /**
      * @notice Exchange ETH to DVDX.
      */
-    function exchangeEtherForSynthetix()
+    function exchangeEtherForDVDX()
         public
         payable
         pricesNotStale
@@ -414,26 +399,26 @@ contract Depot is SelfDestructible, Pausable {
         returns (uint) // Returns the number of DVDXreceived
     {
         // How many DVDXare they going to be receiving?
-        uint synthetixToSend = synthetixReceivedForEther(msg.value);
+        uint dvdxToSend = dvdxReceivedForEther(msg.value);
 
         // Store the ETH in our funds wallet
         payable(fundsWallet).transfer(msg.value);
 
         // And send them the DVDX.
-        synthetix.transfer(msg.sender, synthetixToSend);
+        dvdx.transfer(msg.sender, dvdxToSend);
 
-        emit Exchange("ETH", msg.value, "DVDX", synthetixToSend);
+        emit Exchange("ETH", msg.value, "DVDX", dvdxToSend);
 
-        return synthetixToSend;
+        return dvdxToSend;
     }
 
     /**
      * @notice Exchange ETH to DVDXwhile insisting on a particular set of rates. This allows a user to
      *         exchange while protecting against frontrunning by the contract owner on the exchange rates.
      * @param guaranteedEtherRate The ether exchange rate which must be honored or the call will revert.
-     * @param guaranteedSynthetixRate The synthetix exchange rate which must be honored or the call will revert.
+     * @param guaranteedDVDXRate The dvdx exchange rate which must be honored or the call will revert.
      */
-    function exchangeEtherForSynthetixAtRate(uint guaranteedEtherRate, uint guaranteedSynthetixRate)
+    function exchangeEtherForDVDXAtRate(uint guaranteedEtherRate, uint guaranteedDVDXRate)
         public
         payable
         pricesNotStale
@@ -441,9 +426,9 @@ contract Depot is SelfDestructible, Pausable {
         returns (uint) // Returns the number of DVDXreceived
     {
         require(guaranteedEtherRate == usdToEthPrice, "Guaranteed ether rate would not be received");
-        require(guaranteedSynthetixRate == usdToDvdxPrice, "Guaranteed synthetix rate would not be received");
+        require(guaranteedDVDXRate == usdToDvdxPrice, "Guaranteed dvdx rate would not be received");
 
-        return exchangeEtherForSynthetix();
+        return exchangeEtherForDVDX();
     }
 
 
@@ -451,14 +436,14 @@ contract Depot is SelfDestructible, Pausable {
      * @notice Exchange USDx for DVDX
      * @param synthAmount The amount of synths the user wishes to exchange.
      */
-    function exchangeSynthsForSynthetix(uint synthAmount)
+    function exchangeSynthsForDVDX(uint synthAmount)
         public
         pricesNotStale
         notPaused
         returns (uint) // Returns the number of DVDXreceived
     {
         // How many DVDX are they going to be receiving?
-        uint synthetixToSend = synthetixReceivedForSynths(synthAmount);
+        uint dvdxToSend = dvdxReceivedForSynths(synthAmount);
 
         // Ok, transfer the Synths to our funds wallet.
         // These do not go in the deposit queue as they aren't for sale as such unless
@@ -466,20 +451,20 @@ contract Depot is SelfDestructible, Pausable {
         synth.transferFrom(msg.sender, fundsWallet, synthAmount);
 
         // And send them the DVDX.
-        synthetix.transfer(msg.sender, synthetixToSend);
+        dvdx.transfer(msg.sender, dvdxToSend);
 
-        emit Exchange("USDx", synthAmount, "DVDX", synthetixToSend);
+        emit Exchange("USDx", synthAmount, "DVDX", dvdxToSend);
 
-        return synthetixToSend;
+        return dvdxToSend;
     }
 
     /**
      * @notice Exchange USDx for DVDXwhile insisting on a particular rate. This allows a user to
      *         exchange while protecting against frontrunning by the contract owner on the exchange rate.
      * @param synthAmount The amount of synths the user wishes to exchange.
-     * @param guaranteedRate A rate (synthetix price) the caller wishes to insist upon.
+     * @param guaranteedRate A rate (dvdx price) the caller wishes to insist upon.
      */
-    function exchangeSynthsForSynthetixAtRate(uint synthAmount, uint guaranteedRate)
+    function exchangeSynthsForDVDXAtRate(uint synthAmount, uint guaranteedRate)
         public
         pricesNotStale
         notPaused
@@ -487,22 +472,22 @@ contract Depot is SelfDestructible, Pausable {
     {
         require(guaranteedRate == usdToDvdxPrice, "Guaranteed rate would not be received");
 
-        return exchangeSynthsForSynthetix(synthAmount);
+        return exchangeSynthsForDVDX(synthAmount);
     }
 
     /**
      * @notice Allows the owner to withdraw DVDX from this contract if needed.
      * @param amount The amount of DVDXto attempt to withdraw (in 18 decimal places).
      */
-    function withdrawSynthetix(uint amount)
+    function withdrawDVDX(uint amount)
         external
         onlyOwner
     {
-        synthetix.transfer(owner, amount);
+        dvdx.transfer(owner, amount);
 
         // We don't emit our own events here because we assume that anyone
         // who wants to watch what the Issuance Controller is doing can
-        // just watch ERC20 events from the Synth and/or Synthetix contracts
+        // just watch ERC20 events from the Synth and/or DVDX contracts
         // filtered to our address.
     }
 
@@ -612,7 +597,7 @@ contract Depot is SelfDestructible, Pausable {
      *         an amount of synths.
      * @param amount The amount of synths (in 18 decimal places) you want to ask about
      */
-    function synthetixReceivedForSynths(uint amount)
+    function dvdxReceivedForSynths(uint amount)
         public
         view
         returns (uint)
@@ -629,7 +614,7 @@ contract Depot is SelfDestructible, Pausable {
      *         an amount of ether.
      * @param amount The amount of ether (in wei) you want to ask about
      */
-    function synthetixReceivedForEther(uint amount)
+    function dvdxReceivedForEther(uint amount)
         public
         view
         returns (uint)
@@ -638,7 +623,7 @@ contract Depot is SelfDestructible, Pausable {
         uint valueSentInSynths = amount.multiplyDecimal(usdToEthPrice);
 
         // Now, how many DVDXwill that USD amount buy?
-        return synthetixReceivedForSynths(valueSentInSynths);
+        return dvdxReceivedForSynths(valueSentInSynths);
     }
 
     /**
@@ -684,9 +669,9 @@ contract Depot is SelfDestructible, Pausable {
     event FundsWalletUpdated(address newFundsWallet);
     event OracleUpdated(address newOracle);
     event SynthUpdated(ISynth newSynthContract);
-    event SynthetixUpdated(ISynthetix newSynthetixContract);
+    event DVDXUpdated(IDVDX newDVDXContract);
     event PriceStalePeriodUpdated(uint priceStalePeriod);
-    event PricesUpdated(uint newEthPrice, uint newSynthetixPrice, uint timeSent);
+    event PricesUpdated(uint newEthPrice, uint newDVDXPrice, uint timeSent);
     event Exchange(string fromCurrency, uint fromAmount, string toCurrency, uint toAmount);
     event SynthWithdrawal(address user, uint amount);
     event SynthDeposit(address indexed user, uint amount, uint indexed depositIndex);

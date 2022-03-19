@@ -2,23 +2,23 @@
 pragma solidity ^0.8.0;
 
 /**
- * @title Synthetix interface contract
+ * @title DVDX interface contract
  * @dev pseudo interface, actually declared as contract to hold the public getters 
  */
-import "./ISynthetixState.sol";
+import "./IDVDXState.sol";
 import "./ISynth.sol";
-import "./ISynthetixEscrow.sol";
+import "./IDVDXEscrow.sol";
 import "./IFeePool.sol";
 import "./IExchangeRates.sol";
 
-abstract contract ISynthetix {
+abstract contract IDVDX {
 
     // ========== PUBLIC STATE VARIABLES ==========
 
     IFeePool public feePool;
-    ISynthetixEscrow public escrow;
-    ISynthetixEscrow public rewardEscrow;
-    ISynthetixState public synthetixState;
+    IDVDXEscrow public escrow;
+    IDVDXEscrow public rewardEscrow;
+    IDVDXState public dvdxState;
     IExchangeRates public exchangeRates;
 
     // ========== PUBLIC FUNCTIONS ==========
